@@ -474,7 +474,24 @@ static CCTexture2DPixelFormat defaultAlphaPixelFormat_ = kCCTexture2DPixelFormat
 	NSAssert( uifont, @"Invalid font");
 
 	// MUST have the same order declared on ccTypes
-	NSInteger linebreaks[] = {UILineBreakModeWordWrap, UILineBreakModeCharacterWrap, UILineBreakModeClip, UILineBreakModeHeadTruncation, UILineBreakModeTailTruncation, UILineBreakModeMiddleTruncation};
+    //--ironhead changed cocos2d
+	NSInteger linebreaks[] =
+//    {
+//        UILineBreakModeWordWrap,
+//        UILineBreakModeCharacterWrap,
+//        UILineBreakModeClip,
+//        UILineBreakModeHeadTruncation,
+//        UILineBreakModeTailTruncation,
+//        UILineBreakModeMiddleTruncation,
+//    };
+    {
+        NSLineBreakByWordWrapping,
+        NSLineBreakByCharWrapping,
+        NSLineBreakByClipping,
+        NSLineBreakByTruncatingHead,
+        NSLineBreakByTruncatingTail,
+        NSLineBreakByTruncatingMiddle,
+    };
 
 	NSUInteger textureWidth = ccNextPOT(dimensions.width);
 	NSUInteger textureHeight = ccNextPOT(dimensions.height);
@@ -525,8 +542,19 @@ static CCTexture2DPixelFormat defaultAlphaPixelFormat_ = kCCTexture2DPixelFormat
     }
 
 	// must follow the same order of CCTextureAligment
-	NSUInteger alignments[] = { UITextAlignmentLeft, UITextAlignmentCenter, UITextAlignmentRight };
-	
+    //--ironhead changed cocos2d
+	NSUInteger alignments[] =
+//    {
+//        UITextAlignmentLeft,
+//        UITextAlignmentCenter,
+//        UITextAlignmentRight,
+//    };
+    {
+        NSTextAlignmentLeft,
+        NSTextAlignmentCenter,
+        NSTextAlignmentRight,
+    };
+
 	[string drawInRect:drawArea withFont:uifont lineBreakMode:linebreaks[lineBreakMode] alignment:alignments[hAlignment]];
 
 	UIGraphicsPopContext();
@@ -634,11 +662,12 @@ static CCTexture2DPixelFormat defaultAlphaPixelFormat_ = kCCTexture2DPixelFormat
 		return nil;
 	}
 
+    //--ironhead changed cocos2d
 	// Is it a multiline ? sizeWithFont: only works with single line.
 	CGSize boundingSize = CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX);
 	dim = [string sizeWithFont:font
 			 constrainedToSize:boundingSize
-				 lineBreakMode:UILineBreakModeWordWrap];
+				 lineBreakMode:NSLineBreakByWordWrapping];
 
 	return [self initWithString:string dimensions:dim hAlignment:kCCTextAlignmentCenter vAlignment:kCCVerticalTextAlignmentTop lineBreakMode:kCCLineBreakModeWordWrap font:font];
 
