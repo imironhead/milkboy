@@ -124,6 +124,17 @@
 		F48944FB1743970000897354 /* fps_images.GlyphProject in Resources */ = {isa = PBXBuildFile; fileRef = F48944F71743970000897354 /* fps_images.GlyphProject */; };
 		F48944FC1743970000897354 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = F48944F81743970000897354 /* fps_images.png */; };
 		F48945071743C8C800897354 /* Texture in Resources */ = {isa = PBXBuildFile; fileRef = F48945061743C8C700897354 /* Texture */; };
+		F48945341745ED1800897354 /* UIntersection2d.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451A1745ED1800897354 /* UIntersection2d.m */; };
+		F48945351745ED1800897354 /* ULine.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451C1745ED1800897354 /* ULine.m */; };
+		F48945361745ED1800897354 /* UMath.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451E1745ED1800897354 /* UMath.m */; };
+		F48945371745ED1800897354 /* UMathConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945201745ED1800897354 /* UMathConstant.m */; };
+		F48945381745ED1800897354 /* UMatrix3.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945231745ED1800897354 /* UMatrix3.m */; };
+		F48945391745ED1800897354 /* UMatrix4.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945251745ED1800897354 /* UMatrix4.m */; };
+		F489453A1745ED1800897354 /* URandom.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945291745ED1800897354 /* URandom.m */; };
+		F489453B1745ED1800897354 /* URect.m in Sources */ = {isa = PBXBuildFile; fileRef = F489452B1745ED1800897354 /* URect.m */; };
+		F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */ = {isa = PBXBuildFile; fileRef = F489452D1745ED1800897354 /* UTransform2dAffine.m */; };
+		F489453E1745ED1800897354 /* UVector2.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945311745ED1800897354 /* UVector2.m */; };
+		F489453F1745ED1800897354 /* UVector3.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945331745ED1800897354 /* UVector3.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -374,6 +385,31 @@
 		F48944F71743970000897354 /* fps_images.GlyphProject */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = fps_images.GlyphProject; path = "cocos2d-iphone-2.0/Resources/Fonts/fps_images.GlyphProject"; sourceTree = "<group>"; };
 		F48944F81743970000897354 /* fps_images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fps_images.png; path = "cocos2d-iphone-2.0/Resources/Fonts/fps_images.png"; sourceTree = "<group>"; };
 		F48945061743C8C700897354 /* Texture */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Texture; sourceTree = "<group>"; };
+		F48945191745ED1800897354 /* UIntersection2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIntersection2d.h; path = UEngine/Math/UIntersection2d.h; sourceTree = "<group>"; };
+		F489451A1745ED1800897354 /* UIntersection2d.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIntersection2d.m; path = UEngine/Math/UIntersection2d.m; sourceTree = "<group>"; };
+		F489451B1745ED1800897354 /* ULine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ULine.h; path = UEngine/Math/ULine.h; sourceTree = "<group>"; };
+		F489451C1745ED1800897354 /* ULine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ULine.m; path = UEngine/Math/ULine.m; sourceTree = "<group>"; };
+		F489451D1745ED1800897354 /* UMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UMath.h; path = UEngine/Math/UMath.h; sourceTree = "<group>"; };
+		F489451E1745ED1800897354 /* UMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UMath.m; path = UEngine/Math/UMath.m; sourceTree = "<group>"; };
+		F489451F1745ED1800897354 /* UMathConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UMathConstant.h; path = UEngine/Math/UMathConstant.h; sourceTree = "<group>"; };
+		F48945201745ED1800897354 /* UMathConstant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UMathConstant.m; path = UEngine/Math/UMathConstant.m; sourceTree = "<group>"; };
+		F48945211745ED1800897354 /* UMathTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UMathTypes.h; path = UEngine/Math/UMathTypes.h; sourceTree = "<group>"; };
+		F48945221745ED1800897354 /* UMatrix3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UMatrix3.h; path = UEngine/Math/UMatrix3.h; sourceTree = "<group>"; };
+		F48945231745ED1800897354 /* UMatrix3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UMatrix3.m; path = UEngine/Math/UMatrix3.m; sourceTree = "<group>"; };
+		F48945241745ED1800897354 /* UMatrix4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UMatrix4.h; path = UEngine/Math/UMatrix4.h; sourceTree = "<group>"; };
+		F48945251745ED1800897354 /* UMatrix4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UMatrix4.m; path = UEngine/Math/UMatrix4.m; sourceTree = "<group>"; };
+		F48945261745ED1800897354 /* UNeon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UNeon.h; path = UEngine/Math/UNeon.h; sourceTree = "<group>"; };
+		F48945271745ED1800897354 /* UQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UQuaternion.h; path = UEngine/Math/UQuaternion.h; sourceTree = "<group>"; };
+		F48945281745ED1800897354 /* URandom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URandom.h; path = UEngine/Math/URandom.h; sourceTree = "<group>"; };
+		F48945291745ED1800897354 /* URandom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = URandom.m; path = UEngine/Math/URandom.m; sourceTree = "<group>"; };
+		F489452A1745ED1800897354 /* URect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URect.h; path = UEngine/Math/URect.h; sourceTree = "<group>"; };
+		F489452B1745ED1800897354 /* URect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = URect.m; path = UEngine/Math/URect.m; sourceTree = "<group>"; };
+		F489452C1745ED1800897354 /* UTransform2dAffine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UTransform2dAffine.h; path = UEngine/Math/UTransform2dAffine.h; sourceTree = "<group>"; };
+		F489452D1745ED1800897354 /* UTransform2dAffine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UTransform2dAffine.m; path = UEngine/Math/UTransform2dAffine.m; sourceTree = "<group>"; };
+		F48945301745ED1800897354 /* UVector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UVector2.h; path = UEngine/Math/UVector2.h; sourceTree = "<group>"; };
+		F48945311745ED1800897354 /* UVector2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector2.m; path = UEngine/Math/UVector2.m; sourceTree = "<group>"; };
+		F48945321745ED1800897354 /* UVector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UVector3.h; path = UEngine/Math/UVector3.h; sourceTree = "<group>"; };
+		F48945331745ED1800897354 /* UVector3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector3.m; path = UEngine/Math/UVector3.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -406,6 +442,7 @@
 				F48943591743706300897354 /* Products */,
 				F4894386174371AE00897354 /* Resource */,
 				F48943661743706400897354 /* Supporting Files */,
+				F48945161745EBE200897354 /* UEngine */,
 				F48945061743C8C700897354 /* Texture */,
 			);
 			sourceTree = "<group>";
@@ -938,6 +975,46 @@
 			name = GL;
 			sourceTree = "<group>";
 		};
+		F48945161745EBE200897354 /* UEngine */ = {
+			isa = PBXGroup;
+			children = (
+				F48945181745ECF500897354 /* UMath */,
+			);
+			name = UEngine;
+			sourceTree = "<group>";
+		};
+		F48945181745ECF500897354 /* UMath */ = {
+			isa = PBXGroup;
+			children = (
+				F48945191745ED1800897354 /* UIntersection2d.h */,
+				F489451A1745ED1800897354 /* UIntersection2d.m */,
+				F489451B1745ED1800897354 /* ULine.h */,
+				F489451C1745ED1800897354 /* ULine.m */,
+				F489451D1745ED1800897354 /* UMath.h */,
+				F489451E1745ED1800897354 /* UMath.m */,
+				F489451F1745ED1800897354 /* UMathConstant.h */,
+				F48945201745ED1800897354 /* UMathConstant.m */,
+				F48945211745ED1800897354 /* UMathTypes.h */,
+				F48945221745ED1800897354 /* UMatrix3.h */,
+				F48945231745ED1800897354 /* UMatrix3.m */,
+				F48945241745ED1800897354 /* UMatrix4.h */,
+				F48945251745ED1800897354 /* UMatrix4.m */,
+				F48945261745ED1800897354 /* UNeon.h */,
+				F48945271745ED1800897354 /* UQuaternion.h */,
+				F48945281745ED1800897354 /* URandom.h */,
+				F48945291745ED1800897354 /* URandom.m */,
+				F489452A1745ED1800897354 /* URect.h */,
+				F489452B1745ED1800897354 /* URect.m */,
+				F489452C1745ED1800897354 /* UTransform2dAffine.h */,
+				F489452D1745ED1800897354 /* UTransform2dAffine.m */,
+				F48945301745ED1800897354 /* UVector2.h */,
+				F48945311745ED1800897354 /* UVector2.m */,
+				F48945321745ED1800897354 /* UVector3.h */,
+				F48945331745ED1800897354 /* UVector3.m */,
+			);
+			name = UMath;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1108,6 +1185,17 @@
 				F48944EE1743866200897354 /* vec4.c in Sources */,
 				F48944F11743867900897354 /* mat4stack.c in Sources */,
 				F48944F21743867900897354 /* matrix.c in Sources */,
+				F48945341745ED1800897354 /* UIntersection2d.m in Sources */,
+				F48945351745ED1800897354 /* ULine.m in Sources */,
+				F48945361745ED1800897354 /* UMath.m in Sources */,
+				F48945371745ED1800897354 /* UMathConstant.m in Sources */,
+				F48945381745ED1800897354 /* UMatrix3.m in Sources */,
+				F48945391745ED1800897354 /* UMatrix4.m in Sources */,
+				F489453A1745ED1800897354 /* URandom.m in Sources */,
+				F489453B1745ED1800897354 /* URect.m in Sources */,
+				F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */,
+				F489453E1745ED1800897354 /* UVector2.m in Sources */,
+				F489453F1745ED1800897354 /* UVector3.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
