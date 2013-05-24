@@ -73,6 +73,9 @@
     //--You can change anytime.
     [CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
 
+    //--
+    [CCTexture2D PVRImagesHavePremultipliedAlpha:TRUE];
+
     // If the 1st suffix is not found, then the fallback suffixes are going to used. If none is found, it will try with the name without suffix.
     // On iPad HD  : "-ipadhd", "-ipad",  "-hd"
     // On iPad     : "-ipad", "-hd"
@@ -84,34 +87,8 @@
     [sharedFileUtils setiPadSuffix:@"-hd"];                     //--Default on iPad is "ipad"
     [sharedFileUtils setiPadRetinaDisplaySuffix:@"-xd"];        //--Default on iPad RetinaDisplay is "-ipadhd"
 
-    //--test scene
-    CCScene *scene = [CCScene node];
-
-    [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"Texture/test.plist"];
-
-    CCSpriteBatchNode* node = [CCSpriteBatchNode batchNodeWithFile:@"Texture/test.pvr.ccz"];
-
-    [node.texture setAliasTexParameters];
-
-    CCLayer* layer = [CCLayer new];
-
-    [scene addChild:layer];
-
-    [layer addChild:node];
-
-    CCSprite* sprite = [CCSprite spriteWithSpriteFrameName:@"back.png"];
-
-    sprite.position = ccp(160.0f, 240.0f);
-
-    [node addChild:sprite];
-
-    sprite = [CCSprite spriteWithSpriteFrameName:@"boy.png"];
-
-    sprite.position = ccp(160.0f, 240.0f);
-
-    sprite.scale = 4.0f;
-
-    [node addChild:sprite];
+    //--scene
+    CCScene *scene = [NSClassFromString(@"MSceneLocalGame") new];
 
     //--go
     [self.director pushScene:scene];

@@ -124,6 +124,10 @@
 		F48944FB1743970000897354 /* fps_images.GlyphProject in Resources */ = {isa = PBXBuildFile; fileRef = F48944F71743970000897354 /* fps_images.GlyphProject */; };
 		F48944FC1743970000897354 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = F48944F81743970000897354 /* fps_images.png */; };
 		F48945071743C8C800897354 /* Texture in Resources */ = {isa = PBXBuildFile; fileRef = F48945061743C8C700897354 /* Texture */; };
+		F489450A1744B41200897354 /* MGame.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945091744B41200897354 /* MGame.m */; };
+		F489450E1744B92E00897354 /* MBoy.m in Sources */ = {isa = PBXBuildFile; fileRef = F489450D1744B92E00897354 /* MBoy.m */; };
+		F48945111745CB4600897354 /* MTowerStep.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945101745CB4500897354 /* MTowerStep.m */; };
+		F48945151745DD1D00897354 /* MTowerStage.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945141745DD1D00897354 /* MTowerStage.m */; };
 		F48945341745ED1800897354 /* UIntersection2d.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451A1745ED1800897354 /* UIntersection2d.m */; };
 		F48945351745ED1800897354 /* ULine.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451C1745ED1800897354 /* ULine.m */; };
 		F48945361745ED1800897354 /* UMath.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451E1745ED1800897354 /* UMath.m */; };
@@ -135,6 +139,8 @@
 		F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */ = {isa = PBXBuildFile; fileRef = F489452D1745ED1800897354 /* UTransform2dAffine.m */; };
 		F489453E1745ED1800897354 /* UVector2.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945311745ED1800897354 /* UVector2.m */; };
 		F489453F1745ED1800897354 /* UVector3.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945331745ED1800897354 /* UVector3.m */; };
+		F48945421746105C00897354 /* MLayerTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945411746105B00897354 /* MLayerTower.m */; };
+		F489454517461A0800897354 /* MSceneLocalGame.m in Sources */ = {isa = PBXBuildFile; fileRef = F489454417461A0800897354 /* MSceneLocalGame.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,9 +155,6 @@
 		F489436D1743706400897354 /* Milkboy-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Milkboy-Prefix.pch"; sourceTree = "<group>"; };
 		F489436E1743706400897354 /* MAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MAppDelegate.h; sourceTree = "<group>"; };
 		F489436F1743706400897354 /* MAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MAppDelegate.m; sourceTree = "<group>"; };
-		F48943711743706400897354 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		F48943731743706400897354 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		F48943751743706400897354 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		F4894387174371CA00897354 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resource/Default-568h@2x.png"; sourceTree = "<group>"; };
 		F4894388174371CA00897354 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resource/Default.png; sourceTree = "<group>"; };
 		F4894389174371CA00897354 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Resource/Default@2x.png"; sourceTree = "<group>"; };
@@ -385,6 +388,16 @@
 		F48944F71743970000897354 /* fps_images.GlyphProject */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; name = fps_images.GlyphProject; path = "cocos2d-iphone-2.0/Resources/Fonts/fps_images.GlyphProject"; sourceTree = "<group>"; };
 		F48944F81743970000897354 /* fps_images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fps_images.png; path = "cocos2d-iphone-2.0/Resources/Fonts/fps_images.png"; sourceTree = "<group>"; };
 		F48945061743C8C700897354 /* Texture */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Texture; sourceTree = "<group>"; };
+		F48945081744B41200897354 /* MGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGame.h; sourceTree = "<group>"; };
+		F48945091744B41200897354 /* MGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGame.m; sourceTree = "<group>"; };
+		F489450B1744B4CE00897354 /* MType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MType.h; sourceTree = "<group>"; };
+		F489450C1744B92E00897354 /* MBoy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBoy.h; sourceTree = "<group>"; };
+		F489450D1744B92E00897354 /* MBoy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBoy.m; sourceTree = "<group>"; };
+		F489450F1745CB4500897354 /* MTowerStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTowerStep.h; sourceTree = "<group>"; };
+		F48945101745CB4500897354 /* MTowerStep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTowerStep.m; sourceTree = "<group>"; };
+		F48945121745CC5F00897354 /* MConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MConstant.h; sourceTree = "<group>"; };
+		F48945131745DD1D00897354 /* MTowerStage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTowerStage.h; sourceTree = "<group>"; };
+		F48945141745DD1D00897354 /* MTowerStage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTowerStage.m; sourceTree = "<group>"; };
 		F48945191745ED1800897354 /* UIntersection2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIntersection2d.h; path = UEngine/Math/UIntersection2d.h; sourceTree = "<group>"; };
 		F489451A1745ED1800897354 /* UIntersection2d.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIntersection2d.m; path = UEngine/Math/UIntersection2d.m; sourceTree = "<group>"; };
 		F489451B1745ED1800897354 /* ULine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ULine.h; path = UEngine/Math/ULine.h; sourceTree = "<group>"; };
@@ -410,6 +423,10 @@
 		F48945311745ED1800897354 /* UVector2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector2.m; path = UEngine/Math/UVector2.m; sourceTree = "<group>"; };
 		F48945321745ED1800897354 /* UVector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UVector3.h; path = UEngine/Math/UVector3.h; sourceTree = "<group>"; };
 		F48945331745ED1800897354 /* UVector3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector3.m; path = UEngine/Math/UVector3.m; sourceTree = "<group>"; };
+		F48945401746105B00897354 /* MLayerTower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTower.h; sourceTree = "<group>"; };
+		F48945411746105B00897354 /* MLayerTower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTower.m; sourceTree = "<group>"; };
+		F489454317461A0800897354 /* MSceneLocalGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSceneLocalGame.h; sourceTree = "<group>"; };
+		F489454417461A0800897354 /* MSceneLocalGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSceneLocalGame.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -437,11 +454,11 @@
 			children = (
 				F489438E174372C100897354 /* Cocos2d */,
 				F489438D174372BA00897354 /* CocosDenshion */,
-				F48943651743706400897354 /* Milkboy */,
+				F48943651743706400897354 /* App */,
+				F48943661743706400897354 /* Milkboy */,
 				F489435A1743706300897354 /* Frameworks */,
 				F48943591743706300897354 /* Products */,
 				F4894386174371AE00897354 /* Resource */,
-				F48943661743706400897354 /* Supporting Files */,
 				F48945161745EBE200897354 /* UEngine */,
 				F48945061743C8C700897354 /* Texture */,
 			);
@@ -471,27 +488,38 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F48943651743706400897354 /* Milkboy */ = {
+		F48943651743706400897354 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				F48943681743706400897354 /* InfoPlist.strings */,
+				F489436B1743706400897354 /* main.m */,
 				F489436E1743706400897354 /* MAppDelegate.h */,
 				F489436F1743706400897354 /* MAppDelegate.m */,
+				F48943671743706400897354 /* Milkboy-Info.plist */,
+				F489436D1743706400897354 /* Milkboy-Prefix.pch */,
 			);
+			name = App;
 			path = Milkboy;
 			sourceTree = "<group>";
 		};
-		F48943661743706400897354 /* Supporting Files */ = {
+		F48943661743706400897354 /* Milkboy */ = {
 			isa = PBXGroup;
 			children = (
-				F48943671743706400897354 /* Milkboy-Info.plist */,
-				F48943681743706400897354 /* InfoPlist.strings */,
-				F489436B1743706400897354 /* main.m */,
-				F489436D1743706400897354 /* Milkboy-Prefix.pch */,
-				F48943711743706400897354 /* Default.png */,
-				F48943731743706400897354 /* Default@2x.png */,
-				F48943751743706400897354 /* Default-568h@2x.png */,
+				F48945121745CC5F00897354 /* MConstant.h */,
+				F489450C1744B92E00897354 /* MBoy.h */,
+				F489450D1744B92E00897354 /* MBoy.m */,
+				F48945081744B41200897354 /* MGame.h */,
+				F48945091744B41200897354 /* MGame.m */,
+				F48945401746105B00897354 /* MLayerTower.h */,
+				F48945411746105B00897354 /* MLayerTower.m */,
+				F489454317461A0800897354 /* MSceneLocalGame.h */,
+				F489454417461A0800897354 /* MSceneLocalGame.m */,
+				F48945131745DD1D00897354 /* MTowerStage.h */,
+				F48945141745DD1D00897354 /* MTowerStage.m */,
+				F489450F1745CB4500897354 /* MTowerStep.h */,
+				F48945101745CB4500897354 /* MTowerStep.m */,
+				F489450B1744B4CE00897354 /* MType.h */,
 			);
-			name = "Supporting Files";
 			path = Milkboy;
 			sourceTree = "<group>";
 		};
@@ -1185,6 +1213,10 @@
 				F48944EE1743866200897354 /* vec4.c in Sources */,
 				F48944F11743867900897354 /* mat4stack.c in Sources */,
 				F48944F21743867900897354 /* matrix.c in Sources */,
+				F489450A1744B41200897354 /* MGame.m in Sources */,
+				F489450E1744B92E00897354 /* MBoy.m in Sources */,
+				F48945111745CB4600897354 /* MTowerStep.m in Sources */,
+				F48945151745DD1D00897354 /* MTowerStage.m in Sources */,
 				F48945341745ED1800897354 /* UIntersection2d.m in Sources */,
 				F48945351745ED1800897354 /* ULine.m in Sources */,
 				F48945361745ED1800897354 /* UMath.m in Sources */,
@@ -1196,6 +1228,8 @@
 				F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */,
 				F489453E1745ED1800897354 /* UVector2.m in Sources */,
 				F489453F1745ED1800897354 /* UVector3.m in Sources */,
+				F48945421746105C00897354 /* MLayerTower.m in Sources */,
+				F489454517461A0800897354 /* MSceneLocalGame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
