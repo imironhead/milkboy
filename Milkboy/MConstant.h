@@ -38,4 +38,15 @@ typedef enum _MTowerObjectGroup
 } MTowerObjectGroup;
 
 //------------------------------------------------------------------------------
+typedef enum _MTowerSpriteDepth
+{
+    MTowerSpriteDepthBack,
+    MTowerSpriteDepthStep,
+    MTowerSpriteDepthWall,
+    MTowerSpriteDepthChar,
+    MTowerSpriteDepthEffect,
+    MTowerSpriteDepthMenu,
+} MTowerSpriteDepth;
+
+//------------------------------------------------------------------------------
 

@@ -15,7 +15,6 @@
 @interface MTowerStage()
 @property (nonatomic, strong, readwrite) NSArray* steps;
 @property (nonatomic, strong, readwrite) NSArray* items;
-@property (nonatomic, strong, readwrite) NSArray* bricks;
 @property (nonatomic, assign, readwrite) uint32_t stageIndex;
 @property (nonatomic, assign, readwrite) uint32_t frameIndex;
 @property (nonatomic, assign, readwrite) uint32_t seed;
@@ -61,8 +60,6 @@
         self.steps = [NSMutableArray new];
         self.items = [NSMutableArray new];
 
-        self.bricks = [NSMutableArray new];
-
         //--
         [self buildBasement];
     }
@@ -87,35 +84,11 @@
         self.steps = [NSMutableArray new];
         self.items = [NSMutableArray new];
 
-        self.bricks = [NSMutableArray new];
-
         //
-        [self buildWalls];
         [self buildSteps];
     }
 
     return self;
-}
-
-//------------------------------------------------------------------------------
--(void) buildWalls
-{
-    MCollisionRange rangeFix = MCollisionRangeMake((float)(self.stageIndex * 600) - 600.0f, (float)(self.stageIndex * 600));
-
-    CCSpriteFrame* frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"back.png"];
-
-    while (rangeFix.lowerBound < rangeFix.upperBound)
-    {
-        CCSprite* sprite = [CCSprite spriteWithSpriteFrame:frame];
-
-        sprite.position = CGPointMake(
-            160.0f,
-            rangeFix.lowerBound + 16.0f);
-
-        [(NSMutableArray*)self.bricks addObject:sprite];
-
-        rangeFix.lowerBound += 32.0f;
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -219,8 +192,8 @@
 }
 
 //------------------------------------------------------------------------------
--(MTowerStepBase*) collideStepWithPosition:(UVector2)positionOld
-                                 velocity:(UVector2*)velocity
+-(MTowerStepBase*) collideStepWithPosition:(CGPoint)positionOld
+                                 velocity:(CGPoint*)velocity
                                     bound:(URect)bound
 {
     //--collide with upper edge of bounding rect of steps
@@ -235,7 +208,7 @@
     else
     {
         //--collide stage
-        UVector2 positionNew = UVector2Add(positionOld, *velocity);
+        CGPoint positionNew = ccpAdd(positionOld, *velocity);
 
         MCollisionRange range = self.rangeCollision;
 
@@ -292,7 +265,7 @@
 
             if (step)
             {
-                *velocity = UVector2Sub(positionNew, positionOld);
+                *velocity = ccpSub(positionNew, positionOld);
             }
         }
     }

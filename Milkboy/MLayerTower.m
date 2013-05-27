@@ -10,6 +10,7 @@
 #import "MLayerTower.h"
 #import "MTowerStage.h"
 #import "MTowerStep.h"
+#import "MWall.h"
 
 
 //------------------------------------------------------------------------------
@@ -18,6 +19,9 @@
 
 @property (nonatomic, assign, readwrite) float waterLevel;
 @property (nonatomic, assign, readwrite) float waterSpeed;
+
+@property (nonatomic, strong) MWall* wall;
+@property (nonatomic, strong) CCSpriteBatchNode* batchNodeSteps;
 
 @property (nonatomic, strong) NSMutableArray* stagesInTower;
 @property (nonatomic, strong) NSMutableArray* stagesVisible;
@@ -46,16 +50,35 @@
 
     if (self)
     {
-        //--
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"Texture/test.plist"];
-
+        //
         [self scheduleUpdateWithPriority:0];
 
         [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:1 swallowsTouches:TRUE];
 
         //--
+        CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+
+        [frameCache removeUnusedSpriteFrames];
+
+        [frameCache addSpriteFramesWithFile:@"Texture/back.plist"];
+        [frameCache addSpriteFramesWithFile:@"Texture/char.plist"];
+        [frameCache addSpriteFramesWithFile:@"Texture/step.plist"];
+        [frameCache addSpriteFramesWithFile:@"Texture/wall.plist"];
+
+        //--
         self.seedLarge = 1 + arc4random_uniform(65534);
         self.seedSmall = self.seedLarge;
+
+        //--
+        self.wall = [MWall new];
+
+        [self addChild:self.wall.spritesBack z:MTowerSpriteDepthBack];
+        [self addChild:self.wall.spritesWall z:MTowerSpriteDepthWall];
+
+        //--
+        self.batchNodeSteps = [CCSpriteBatchNode batchNodeWithFile:@"Texture/step.pvr.ccz" capacity:32];
+
+        [self addChild:self.batchNodeSteps z:MTowerSpriteDepthStep];
 
         //--initial stage
         MTowerStage* stage = [MTowerStage stageWithIndex:0 seed:0 matchGame:match != nil];
@@ -66,7 +89,7 @@
         //--boy
         self.boyLocal = [MBoyLocal new];
 
-        [self addChild:self.boyLocal.sprite z:2];
+        [self addChild:self.boyLocal.sprite z:MTowerSpriteDepthChar];
 
         if (match)
         {
@@ -84,12 +107,7 @@
         {
             for (MTowerStepBase* step in stage.steps)
             {
-                [self addChild:step.sprite z:1];
-            }
-
-            for (CCSprite* brick in stage.bricks)
-            {
-                [self addChild:brick z:0];
+                [self.batchNodeSteps addChild:step.sprite z:0];
             }
         }
 
@@ -116,6 +134,7 @@
 -(void) update:(ccTime)elapsed
 {
     [self updateLocalBoy];
+    [self updateStage];
     [self updateCamera];
     [self updateWaterLevel];
 }
@@ -139,20 +158,19 @@
     }
 
     //--
-    int32_t stageLower = 0;
-    int32_t stageUpper = 1;
+    MTowerStage* stage;
 
-    for (int32_t i = stageLower; i <= stageUpper; ++i)
+    for (stage in self.stagesVisible)
     {
-        [(MTowerStage*)self.stagesInTower[i] jumpToFrame:self.frameLocal refresh:TRUE];
+        [stage jumpToFrame:self.frameLocal refresh:TRUE];
     }
 
     //--adjust the velocity base on state
-    UVector2 vO;
-    UVector2 vB = UVector2Make(0.0f, 0.0f);
-    UVector2 vP = boy.position;
-    UVector2 vV = boy.velocity;
-    UVector2 aC = boy.acceleration;
+    CGPoint vO;
+    CGPoint vB = CGPointMake(0.0f, 0.0f);
+    CGPoint vP = boy.position;
+    CGPoint vV = boy.velocity;
+    CGPoint aC = boy.acceleration;
 
     URect boundBoy = boy.boundCollision;
 
@@ -186,22 +204,22 @@
     }
 
     //--collide wall
-    float wallL = 5.0f;
-    float wallR = 315.0f;
+    float wallL = 0.0f;
+    float wallR = 310.0f;
 
     if (boundBoy.left + vP.x + vV.x + vB.x < wallL)
     {
         vO.x = wallL + wallL - boundBoy.left - boundBoy.left - vP.x - vP.x - vB.x - vV.x;
         vO.y = vV.y;
 
-        vV = UVector2Make(-vV.x, vV.y);
+        vV = CGPointMake(-vV.x, vV.y);
     }
     else if (boundBoy.right + vP.x + vV.x + vB.x > wallR)
     {
         vO.x = wallR + wallR - boundBoy.right - boundBoy.right - vP.x - vP.x - vB.x - vV.x;
         vO.y = vV.y;
 
-        vV = UVector2Make(-vV.x, vV.y);
+        vV = CGPointMake(-vV.x, vV.y);
     }
     else
     {
@@ -250,9 +268,9 @@
     }
     else
     {
-        for (int32_t i = stageLower; i <= stageUpper; ++i)
+        for (stage in self.stagesVisible)
         {
-            step = [(MTowerStage*)self.stagesInTower[i] collideStepWithPosition:vP velocity:&vO bound:boundBoy];
+            step = [stage collideStepWithPosition:vP velocity:&vO bound:boundBoy];
 
             if (step)
             {
@@ -279,18 +297,95 @@
         }
     }
 
-    boy.position = UVector2Add(vP, vO);
+    boy.position = ccpAdd(vP, vO);
     boy.velocity = vV;
+}
+
+//------------------------------------------------------------------------------
+-(void) updateStage
+{
+    CGPoint p = self.boyLocal.position;
+
+    //--check upper bound only
+
+    MTowerStage* stage = [self.stagesInTower lastObject];
+
+    if (p.y + 512.0f > stage.rangeCollision.lowerBound)
+    {
+        stage = [MTowerStage stageWithIndex:stage.stageIndex + 1
+                                       seed:self.seedLarge
+                                  matchGame:FALSE];
+
+        [self.stagesInTower addObject:stage];
+    }
+
+    //--check lower bound only
+
+    //--check visibility
+    MTowerStage* stageU = [self.stagesVisible lastObject];
+    MTowerStage* stageB = [self.stagesVisible objectAtIndex:0];
+
+    if ((stageU.rangeCollision.lowerBound < p.y) ||
+        (stageB.rangeCollision.upperBound > p.y))
+    {
+        MVisibilityRange range;
+
+        MTowerStage* stage;
+
+        for (stage in self.stagesInTower)
+        {
+            range = stage.rangeCollision;
+
+            if ((range.lowerBound > p.y) || (range.upperBound < p.y))
+            {
+                continue;
+            }
+
+            break;
+        }
+
+        uint32_t idxL = (stage.stageIndex > 0) ? (stage.stageIndex - 1) : 0;
+        uint32_t idxU = idxL + 2;
+
+        MTowerStepBase* step;
+
+        //--remove sprites
+        [self.batchNodeSteps removeAllChildrenWithCleanup:NO];
+
+        [self.stagesVisible removeAllObjects];
+
+        for (stage in self.stagesInTower)
+        {
+            if (idxL > stage.stageIndex)
+            {
+                continue;
+            }
+
+            if (idxU < stage.stageIndex)
+            {
+                break;
+            }
+
+            for (step in stage.steps)
+            {
+                [self.batchNodeSteps addChild:step.sprite z:0];
+            }
+
+            [self.stagesVisible addObject:stage];
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
 -(void) updateCamera
 {
-    CGPoint p = UVector2ToCGPoint(self.boyLocal.position);
+    CGPoint p = self.boyLocal.position;
 
     self.labelPower.position = CGPointMake(p.x, p.y + 24.0f);
 
-    p.x = 0.0f;
+    self.wall.cameraPosition = p;
+
+    p.x = 5.0f;
     p.y = 120.0f - p.y;
 
     self.position = p;
@@ -330,7 +425,7 @@
 
     if (/*(self.state == JTowerStatePlaying) &&*/ boy.step)
     {
-        UVector2 v = boy.velocity;
+        CGPoint v = boy.velocity;
 
         v.y = floorf(11.0f * (1.0f + boy.power / boy.powerMax));
 

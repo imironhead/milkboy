@@ -51,8 +51,6 @@ typedef enum _MBoySpriteFrame
         [self.sprite.texture setAliasTexParameters];
 
         //--boy sprite
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"Texture/char.plist"];
-
         self.spriteBoy = [CCSprite spriteWithSpriteFrameName:@"char_move_00.png"];
 
         self.spriteBoy.scale = 2.0f;
@@ -96,9 +94,9 @@ typedef enum _MBoySpriteFrame
         //--initial state
         self.boundCollision = URectMake(-11.0f, -22.0f, 11.0f, 22.0f);
 
-        self.position = UVector2Make(25.0f, 23.0f);
-        self.velocity = UVector2Make(3.0f, 0.0f);
-        self.acceleration = UVector2Make(0.0f, -2.0f);
+        self.position = CGPointMake(25.0f, 23.0f);
+        self.velocity = CGPointMake(3.0f, 0.0f);
+        self.acceleration = CGPointMake(0.0f, -2.0f);
 
         self.power = 0.0f;
         self.powerAdd = 1.0f;
@@ -109,22 +107,16 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) dealloc
+-(void) setPosition:(CGPoint)position
 {
-    [[CCSpriteFrameCache sharedSpriteFrameCache] removeUnusedSpriteFrames];
-}
-
-//------------------------------------------------------------------------------
--(void) setPosition:(UVector2)position
-{
-    if (!UVector2EqualToUVector2(self->_position, position))
+    if (!CGPointEqualToPoint(self->_position, position))
     {
         self->_position = position;
 
-        self.spriteBoy.position = UVector2ToCGPoint(position);
+        self.spriteBoy.position = position;
         self.spriteHat.position = self.spriteBoy.position;
 
-        UVector2 velocity = self->_velocity;
+        CGPoint velocity = self->_velocity;
 
         if (velocity.y > 0.0f)
         {
@@ -161,9 +153,9 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) setVelocity:(UVector2)velocity
+-(void) setVelocity:(CGPoint)velocity
 {
-    if (!UVector2EqualToUVector2(self->_velocity, velocity))
+    if (!CGPointEqualToPoint(self->_velocity, velocity))
     {
         self->_velocity = velocity;
 

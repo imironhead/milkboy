@@ -141,6 +141,7 @@
 		F489453F1745ED1800897354 /* UVector3.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945331745ED1800897354 /* UVector3.m */; };
 		F48945421746105C00897354 /* MLayerTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945411746105B00897354 /* MLayerTower.m */; };
 		F489454517461A0800897354 /* MSceneLocalGame.m in Sources */ = {isa = PBXBuildFile; fileRef = F489454417461A0800897354 /* MSceneLocalGame.m */; };
+		F4ABCE931753026200B9FDE9 /* MWall.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE921753026200B9FDE9 /* MWall.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -427,6 +428,8 @@
 		F48945411746105B00897354 /* MLayerTower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTower.m; sourceTree = "<group>"; };
 		F489454317461A0800897354 /* MSceneLocalGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSceneLocalGame.h; sourceTree = "<group>"; };
 		F489454417461A0800897354 /* MSceneLocalGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSceneLocalGame.m; sourceTree = "<group>"; };
+		F4ABCE911753026200B9FDE9 /* MWall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWall.h; sourceTree = "<group>"; };
+		F4ABCE921753026200B9FDE9 /* MWall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWall.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -519,6 +522,8 @@
 				F489450F1745CB4500897354 /* MTowerStep.h */,
 				F48945101745CB4500897354 /* MTowerStep.m */,
 				F489450B1744B4CE00897354 /* MType.h */,
+				F4ABCE911753026200B9FDE9 /* MWall.h */,
+				F4ABCE921753026200B9FDE9 /* MWall.m */,
 			);
 			path = Milkboy;
 			sourceTree = "<group>";
@@ -1230,6 +1235,7 @@
 				F489453F1745ED1800897354 /* UVector3.m in Sources */,
 				F48945421746105C00897354 /* MLayerTower.m in Sources */,
 				F489454517461A0800897354 /* MSceneLocalGame.m in Sources */,
+				F4ABCE931753026200B9FDE9 /* MWall.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

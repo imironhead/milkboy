@@ -23,9 +23,9 @@
 @property (nonatomic, assign, readonly) float defaultPowerMax;
 @property (nonatomic, assign, readonly) float defaultPowerAdd;
 @property (nonatomic, assign, readonly) URect boundCollision;
-@property (nonatomic, assign) UVector2 position;
-@property (nonatomic, assign) UVector2 velocity;
-@property (nonatomic, assign) UVector2 acceleration;
+@property (nonatomic, assign) CGPoint position;
+@property (nonatomic, assign) CGPoint velocity;
+@property (nonatomic, assign) CGPoint acceleration;
 @property (nonatomic, assign) float power;
 @property (nonatomic, assign) float powerMax;
 @property (nonatomic, assign) float powerAdd;
