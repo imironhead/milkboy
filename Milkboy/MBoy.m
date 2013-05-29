@@ -28,8 +28,15 @@ typedef enum _MBoySpriteFrame
 @interface MBoyLocal()
 @property (nonatomic, strong, readwrite) CCSpriteBatchNode* sprite;
 @property (nonatomic, assign, readwrite) URect boundCollision;
+@property (nonatomic, assign, readwrite) uint32_t powerInteger;
+@property (nonatomic, assign, readwrite) uint32_t powerIntegerMax;
+@property (nonatomic, assign, readwrite) uint32_t powerDecimal;
+@property (nonatomic, assign, readwrite) uint32_t powerDecimalMax;
+@property (nonatomic, assign, readwrite) uint32_t powerDecimalDelta;
 @property (nonatomic, strong) CCSprite* spriteBoy;
 @property (nonatomic, strong) CCSprite* spriteHat;
+@property (nonatomic, strong) CCSprite* spritePowerBase;
+@property (nonatomic, strong) CCSprite* spritePowerMask;
 @property (nonatomic, strong) NSMutableArray* framesBoy;
 @property (nonatomic, strong) NSMutableArray* framesHat;
 @property (nonatomic, assign) NSUInteger indexFrameBoy;
@@ -45,7 +52,7 @@ typedef enum _MBoySpriteFrame
     if (self)
     {
         //--batch node
-        self.sprite = [CCSpriteBatchNode batchNodeWithFile:@"Texture/char.pvr.ccz" capacity:2];
+        self.sprite = [CCSpriteBatchNode batchNodeWithFile:@"Texture/char.pvr.ccz" capacity:4];
 
         //--nearest sampling
         [self.sprite.texture setAliasTexParameters];
@@ -56,7 +63,7 @@ typedef enum _MBoySpriteFrame
         self.spriteBoy.scale = 2.0f;
         self.spriteBoy.position = ccp(160.0f, 240.0f);
 
-        [self.sprite addChild:self.spriteBoy];
+        [self.sprite addChild:self.spriteBoy z:0];
 
         //--hat sprite
         self.spriteHat = [CCSprite spriteWithSpriteFrameName:@"char_hat_dash.png"];
@@ -64,7 +71,7 @@ typedef enum _MBoySpriteFrame
         self.spriteHat.scale = 2.0f;
         self.spriteHat.position = ccp(160.0f, 240.0f);
 
-        [self.sprite addChild:self.spriteHat];
+        [self.sprite addChild:self.spriteHat z:1];
 
         //--animation frames
         NSArray* frameNameBoy =
@@ -98,9 +105,23 @@ typedef enum _MBoySpriteFrame
         self.velocity = CGPointMake(3.0f, 0.0f);
         self.acceleration = CGPointMake(0.0f, -2.0f);
 
-        self.power = 0.0f;
-        self.powerAdd = 1.0f;
-        self.powerMax = 30.0f;
+        self.powerInteger      = 0;
+        self.powerIntegerMax   = 3;
+        self.powerDecimal      = 0;
+        self.powerDecimalMax   = 5;
+        self.powerDecimalDelta = 1;
+
+        //--power ui
+        self.spritePowerBase = [CCSprite spriteWithSpriteFrameName:@"char_power_back.png"];
+        self.spritePowerMask = [CCSprite spriteWithSpriteFrameName:@"char_power_mark.png"];
+
+        self.spritePowerBase.scaleY = 2.0f;
+        self.spritePowerMask.scaleY = 2.0f;
+
+        [self.sprite addChild:self.spritePowerBase z:10];
+        [self.sprite addChild:self.spritePowerMask z:11];
+
+        [self updatePowerUI];
     }
 
     return self;
@@ -149,6 +170,19 @@ typedef enum _MBoySpriteFrame
 
             [self.spriteBoy setDisplayFrame:self.framesBoy[self.indexFrameBoy]];
         }
+
+        //
+        CGPoint v = ccpSub(self.spritePowerMask.position, self.spritePowerBase.position);
+
+        CGPoint p = position;
+
+        p.y += 32.0f;
+
+        self.spritePowerBase.position = p;
+
+        p = ccpAdd(p, v);
+
+        self.spritePowerMask.position = p;
     }
 }
 
@@ -162,6 +196,60 @@ typedef enum _MBoySpriteFrame
         self.spriteBoy.flipX = (velocity.x < 0.0f);
         self.spriteHat.flipX = self.spriteBoy.flipX;
     }
+}
+
+//------------------------------------------------------------------------------
+-(void) updatePower:(BOOL)powerUp
+{
+    BOOL updateUI = FALSE;
+
+    if (powerUp)
+    {
+        if (self.step && (self.powerInteger < self.powerIntegerMax))
+        {
+            self.powerDecimal += self.powerDecimalDelta;
+
+            if (self.powerDecimal >= self.powerDecimalMax)
+            {
+                self.powerDecimal -= self.powerDecimalMax;
+
+                self.powerInteger += 1;
+
+                updateUI = TRUE;
+            }
+        }
+    }
+    else
+    {
+        if (self.powerInteger || self.powerDecimal)
+        {
+            self.powerInteger = 0;
+            self.powerDecimal = 0;
+
+            updateUI = TRUE;
+        }
+    }
+
+    if (updateUI)
+    {
+        [self updatePowerUI];
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) updatePowerUI
+{
+    CGPoint p = self->_position;
+
+    p.y += 32.0f;
+
+    self.spritePowerBase.scaleX = 4.0f * ((float)(self.powerIntegerMax + 2) / 12.0f);
+
+    self.spritePowerBase.position = p;
+
+    self.spritePowerMask.scaleX = 4.0f * ((float)(self.powerInteger) / 10.0f);
+
+    self.spritePowerMask.position = p;
 }
 
 //------------------------------------------------------------------------------

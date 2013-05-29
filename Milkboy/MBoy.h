@@ -23,12 +23,16 @@
 @property (nonatomic, assign, readonly) float defaultPowerMax;
 @property (nonatomic, assign, readonly) float defaultPowerAdd;
 @property (nonatomic, assign, readonly) URect boundCollision;
+@property (nonatomic, assign, readonly) uint32_t powerInteger;
+@property (nonatomic, assign, readonly) uint32_t powerIntegerMax;
+@property (nonatomic, assign, readonly) uint32_t powerDecimal;
+@property (nonatomic, assign, readonly) uint32_t powerDecimalMax;
+@property (nonatomic, assign, readonly) uint32_t powerDecimalDelta;
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, assign) CGPoint velocity;
 @property (nonatomic, assign) CGPoint acceleration;
-@property (nonatomic, assign) float power;
-@property (nonatomic, assign) float powerMax;
-@property (nonatomic, assign) float powerAdd;
 @property (nonatomic, assign) uint32_t coin;
 @property (nonatomic, weak) MTowerStepBase* step;
+
+-(void) updatePower:(BOOL)powerUp;
 @end

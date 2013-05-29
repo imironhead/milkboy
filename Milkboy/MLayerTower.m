@@ -31,8 +31,6 @@
 @property (nonatomic, assign) int32_t frameLocal;
 
 @property (nonatomic, assign) BOOL powerUp;
-
-@property (nonatomic, strong) CCLabelAtlas* labelPower;
 @end
 
 //------------------------------------------------------------------------------
@@ -112,19 +110,6 @@
         }
 
         self.waterLevel = 0.0f;
-
-        //
-        self.labelPower =
-            [CCLabelAtlas labelWithString:@"0"
-                              charMapFile:@"fps_images.png"
-                                itemWidth:12
-                               itemHeight:32
-                             startCharMap:'.'];
-
-        self.labelPower.position = ccp(100.0f, 100.0f);
-        self.labelPower.color = ccc3(0xff, 0xff, 0x80);
-
-        [self addChild:self.labelPower z:9];
     }
 
     return self;
@@ -145,17 +130,7 @@
     MBoyLocal* boy = self.boyLocal;
 
     //--power
-    if (self.powerUp && boy.step && (boy.power < boy.powerMax))
-    {
-        boy.power += boy.powerAdd;
-
-        if (boy.power > boy.powerMax)
-        {
-            boy.power = boy.powerMax;
-        }
-
-        self.labelPower.string = [NSString stringWithFormat:@"%d", (int32_t)(100.0f * boy.power / boy.powerMax)];
-    }
+    [boy updatePower:self.powerUp];
 
     //--
     MTowerStage* stage;
@@ -381,12 +356,10 @@
 {
     CGPoint p = self.boyLocal.position;
 
-    self.labelPower.position = CGPointMake(p.x, p.y + 24.0f);
-
     self.wall.cameraPosition = p;
 
     p.x = 5.0f;
-    p.y = 120.0f - p.y;
+    p.y = 240.0f - p.y;
 
     self.position = p;
 }
@@ -427,7 +400,9 @@
     {
         CGPoint v = boy.velocity;
 
-        v.y = floorf(11.0f * (1.0f + boy.power / boy.powerMax));
+        float s[] = {16.0f, 18.0f, 20.0f, 22.0f, 24.0f, 26.0f, 28.0f, 30.0f, 32.0f, 34.0f, 36.0f};
+
+        v.y = (boy.powerInteger > 9) ? 36.0f : s[boy.powerInteger];
 
 //        if (jumper.step.type == JTowerObjectTypeStepSpring)
 //        {
@@ -442,10 +417,6 @@
 
         boy.velocity = v;
     }
-
-    boy.power = 0.0f;
-
-    self.labelPower.string = @"0";
 }
 
 //------------------------------------------------------------------------------

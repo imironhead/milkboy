@@ -77,9 +77,9 @@
         CCSprite* spriteT = [self.spritesBack.children lastObject];
         CCSprite* spriteB = [self.spritesBack.children objectAtIndex:0];
 
-        if (cameraPosition.y + 240.0f + 120.0f >= spriteT.position.y)
+        if (cameraPosition.y + 240.0f >= spriteT.position.y)
         {
-            float bottom = 16.0f + 32.0f * floorf((cameraPosition.y - 256.0f + 120.0f) / 32.0f);
+            float bottom = 16.0f + 32.0f * floorf((cameraPosition.y - 256.0f) / 32.0f);
             float b = bottom;
 
             for (CCSprite* sprite in self.spritesBack.children)
@@ -109,9 +109,9 @@
                 }
             }
         }
-        else if (cameraPosition.y - 240.0f + 120.0f <= spriteB.position.y)
+        else if (cameraPosition.y - 240.0f <= spriteB.position.y)
         {
-            float bottom = 16.0f + 32.0f * floorf((cameraPosition.y - 256.0f + 120.0f) / 32.0f);
+            float bottom = 16.0f + 32.0f * floorf((cameraPosition.y - 256.0f) / 32.0f);
             float b = bottom;
 
             for (CCSprite* sprite in self.spritesBack.children)

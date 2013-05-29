@@ -199,6 +199,32 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
+            <key>char_power_back.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,116},{12,6}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{12,6}}</string>
+                <key>sourceSize</key>
+                <string>{12,6}</string>
+            </dict>
+            <key>char_power_mark.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,123},{10,4}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{10,4}}</string>
+                <key>sourceSize</key>
+                <string>{10,4}</string>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -209,7 +235,7 @@
             <key>size</key>
             <string>{128,128}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:1ef37093b74c95e48cfbd18a05268bf8$</string>
+            <string>$TexturePacker:SmartUpdate:d04c850d8f7b45c418a7e1f5427b9d10$</string>
             <key>textureFileName</key>
             <string>char.pvr.ccz</string>
         </dict>
