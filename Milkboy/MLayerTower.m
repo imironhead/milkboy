@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 #import "MBoy.h"
 #import "MLayerTower.h"
+#import "MTowerItem.h"
 #import "MTowerStage.h"
 #import "MTowerStep.h"
 #import "MWall.h"
@@ -107,6 +108,11 @@
             {
                 [self.batchNodeSteps addChild:step.sprite z:0];
             }
+
+            for (MTowerItemBase* item in stage.items)
+            {
+                [self.batchNodeSteps addChild:item.sprite z:1];
+            }
         }
 
         self.waterLevel = 0.0f;
@@ -118,8 +124,8 @@
 //------------------------------------------------------------------------------
 -(void) update:(ccTime)elapsed
 {
-    [self updateLocalBoy];
     [self updateStage];
+    [self updateLocalBoy];
     [self updateCamera];
     [self updateWaterLevel];
 }
@@ -131,14 +137,6 @@
 
     //--power
     [boy updatePower:self.powerUp];
-
-    //--
-    MTowerStage* stage;
-
-    for (stage in self.stagesVisible)
-    {
-        [stage jumpToFrame:self.frameLocal refresh:TRUE];
-    }
 
     //--adjust the velocity base on state
     CGPoint vO;
@@ -207,21 +205,6 @@
 
     if (step)
     {
-        //--collide item
-//        id<JTowerItem> item;
-//
-//        for (int32_t i = stageLower; i <= stageUpper; ++i)
-//        {
-//            item = [(JTowerStage*)self.stagesInTower[i] collideItemWithPosition:vP velocity:vO bound:boundJumper];
-//
-//            if (item)
-//            {
-//                //--post message to trigger this item and tell the match
-//
-//                break;
-//            }
-//        }
-
         //--collide the step
         URect boundStep = step.boundCollision;
 
@@ -243,7 +226,7 @@
     }
     else
     {
-        for (stage in self.stagesVisible)
+        for (MTowerStage* stage in self.stagesVisible)
         {
             step = [stage collideStepWithPosition:vP velocity:&vO bound:boundBoy];
 
@@ -272,6 +255,28 @@
         }
     }
 
+    //--collide item
+    NSArray* items;
+
+    for (MTowerStage* stage in self.stagesVisible)
+    {
+        items = [stage collideItemWithPosition:vP velocity:vO bound:boundBoy];
+
+        if (items && [items count])
+        {
+            for (MTowerItemBase* item in items)
+            {
+                if (item.type == MTowerObjectTypeItemMilk)
+                {
+                    [boy drinkMilk:1];
+                }
+
+                [item collected];
+            }
+        }
+    }
+
+    //
     boy.position = ccpAdd(vP, vO);
     boy.velocity = vV;
 }
@@ -322,6 +327,7 @@
         uint32_t idxL = (stage.stageIndex > 0) ? (stage.stageIndex - 1) : 0;
         uint32_t idxU = idxL + 2;
 
+        MTowerItemBase* item;
         MTowerStepBase* step;
 
         //--remove sprites
@@ -346,8 +352,20 @@
                 [self.batchNodeSteps addChild:step.sprite z:0];
             }
 
+            for (item in stage.items)
+            {
+                [self.batchNodeSteps addChild:item.sprite z:1];
+            }
+
             [self.stagesVisible addObject:stage];
         }
+    }
+
+    //--update visible stage
+
+    for (stage in self.stagesVisible)
+    {
+        [stage jumpToFrame:self.frameLocal refresh:TRUE];
     }
 }
 

@@ -14,7 +14,8 @@
 //------------------------------------------------------------------------------
 @interface MSceneLocalGame()
 @property (nonatomic, strong) MLayerTower* layerTower;
-@property (nonatomic, strong) CCLabelAtlas* labelFloor;
+@property (nonatomic, strong) CCLabelAtlas* labelDistance;
+@property (nonatomic, strong) CCLabelAtlas* labelMilkCount;
 @end
 
 //------------------------------------------------------------------------------
@@ -38,17 +39,29 @@
 
         [self addChild:layerMenu z:1];
 
-        self.labelFloor =
-            [CCLabelAtlas labelWithString:@"1"
+        self.labelDistance =
+            [CCLabelAtlas labelWithString:@"0 m"
                               charMapFile:@"fps_images.png"
                                 itemWidth:12
                                itemHeight:32
                              startCharMap:'.'];
 
-        self.labelFloor.position = ccp(160.0f, 450.0f);
-        self.labelFloor.color = ccc3(0xff, 0xff, 0x80);
+        self.labelDistance.position = ccp(80.0f, 450.0f);
+        self.labelDistance.color = ccc3(0xff, 0xff, 0x80);
 
-        [layerMenu addChild:self.labelFloor z:0];
+        [layerMenu addChild:self.labelDistance z:0];
+
+        self.labelMilkCount =
+            [CCLabelAtlas labelWithString:@"0 Milk"
+                              charMapFile:@"fps_images.png"
+                                itemWidth:12
+                               itemHeight:32
+                             startCharMap:'.'];
+
+        self.labelMilkCount.position = ccp(240.0f, 450.0f);
+        self.labelMilkCount.color = ccc3(0x80, 0x80, 0xff);
+
+        [layerMenu addChild:self.labelMilkCount z:0];
     }
 
     return self;
@@ -57,9 +70,11 @@
 //------------------------------------------------------------------------------
 -(void) update:(ccTime)elapsed
 {
-    int32_t f = (int32_t)ceilf(self.layerTower.boyLocal.position.y / 120.0f);
+    int32_t f = (int32_t)floorf(self.layerTower.boyLocal.position.y / 30.0f);
 
-    self.labelFloor.string = [NSString stringWithFormat:@"%d", f];
+    self.labelDistance.string = [NSString stringWithFormat:@"%d", f];
+
+    self.labelMilkCount.string = [NSString stringWithFormat:@"%d", self.layerTower.boyLocal.milkCount];
 }
 
 //------------------------------------------------------------------------------

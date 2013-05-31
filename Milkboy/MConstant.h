@@ -28,6 +28,7 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeItemCoin,
     MTowerObjectTypeItemDash,
     MTowerObjectTypeItemMagnet,
+    MTowerObjectTypeItemMilk,
 } MTowerObjectType;
 
 //------------------------------------------------------------------------------

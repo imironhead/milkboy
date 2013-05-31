@@ -12,6 +12,7 @@
 
 
 //------------------------------------------------------------------------------
+@class MTowerItemBase;
 @class MTowerStepBase;
 
 //------------------------------------------------------------------------------
@@ -25,8 +26,11 @@
 
 +(id) stageWithIndex:(uint32_t)index seed:(uint32_t)seed matchGame:(BOOL)matchGame;
 
+-(NSArray*) collideItemWithPosition:(CGPoint)position
+                           velocity:(CGPoint)velocity
+                              bound:(URect)bound;
 -(MTowerStepBase*) collideStepWithPosition:(CGPoint)position
-                                 velocity:(CGPoint*)velocity
-                                    bound:(URect)bound;
+                                  velocity:(CGPoint*)velocity
+                                     bound:(URect)bound;
 -(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh;
 @end

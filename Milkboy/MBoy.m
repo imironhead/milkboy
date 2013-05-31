@@ -253,4 +253,25 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
+-(BOOL) drinkMilk:(uint32_t)count
+{
+    BOOL levelUp = FALSE;
+
+    self->_milkCount += count;
+
+    if (self->_milkCount >= 10)
+    {
+        levelUp = TRUE;
+
+        self->_powerIntegerMax += self->_milkCount / 10;
+
+        self->_milkCount %= 10;
+
+        [self updatePowerUI];
+    }
+
+    return levelUp;
+}
+
+//------------------------------------------------------------------------------
 @end

@@ -142,6 +142,7 @@
 		F48945421746105C00897354 /* MLayerTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945411746105B00897354 /* MLayerTower.m */; };
 		F489454517461A0800897354 /* MSceneLocalGame.m in Sources */ = {isa = PBXBuildFile; fileRef = F489454417461A0800897354 /* MSceneLocalGame.m */; };
 		F4ABCE931753026200B9FDE9 /* MWall.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE921753026200B9FDE9 /* MWall.m */; };
+		F4ABCE96175656B600B9FDE9 /* MTowerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE95175656B600B9FDE9 /* MTowerItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -430,6 +431,8 @@
 		F489454417461A0800897354 /* MSceneLocalGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSceneLocalGame.m; sourceTree = "<group>"; };
 		F4ABCE911753026200B9FDE9 /* MWall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWall.h; sourceTree = "<group>"; };
 		F4ABCE921753026200B9FDE9 /* MWall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWall.m; sourceTree = "<group>"; };
+		F4ABCE94175656B600B9FDE9 /* MTowerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTowerItem.h; sourceTree = "<group>"; };
+		F4ABCE95175656B600B9FDE9 /* MTowerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTowerItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -517,6 +520,8 @@
 				F48945411746105B00897354 /* MLayerTower.m */,
 				F489454317461A0800897354 /* MSceneLocalGame.h */,
 				F489454417461A0800897354 /* MSceneLocalGame.m */,
+				F4ABCE94175656B600B9FDE9 /* MTowerItem.h */,
+				F4ABCE95175656B600B9FDE9 /* MTowerItem.m */,
 				F48945131745DD1D00897354 /* MTowerStage.h */,
 				F48945141745DD1D00897354 /* MTowerStage.m */,
 				F489450F1745CB4500897354 /* MTowerStep.h */,
@@ -1236,6 +1241,7 @@
 				F48945421746105C00897354 /* MLayerTower.m in Sources */,
 				F489454517461A0800897354 /* MSceneLocalGame.m in Sources */,
 				F4ABCE931753026200B9FDE9 /* MWall.m in Sources */,
+				F4ABCE96175656B600B9FDE9 /* MTowerItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

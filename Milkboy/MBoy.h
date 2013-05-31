@@ -31,8 +31,10 @@
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, assign) CGPoint velocity;
 @property (nonatomic, assign) CGPoint acceleration;
-@property (nonatomic, assign) uint32_t coin;
+@property (nonatomic, assign) uint32_t coinCount;
+@property (nonatomic, assign) uint32_t milkCount;
 @property (nonatomic, weak) MTowerStepBase* step;
 
 -(void) updatePower:(BOOL)powerUp;
+-(BOOL) drinkMilk:(uint32_t)count;
 @end
