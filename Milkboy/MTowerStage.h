@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import "MType.h"
-#import "UMath.h"
 
 
 //------------------------------------------------------------------------------
@@ -28,9 +27,9 @@
 
 -(NSArray*) collideItemWithPosition:(CGPoint)position
                            velocity:(CGPoint)velocity
-                              bound:(URect)bound;
+                              bound:(CGRect)bound;
 -(MTowerStepBase*) collideStepWithPosition:(CGPoint)position
                                   velocity:(CGPoint*)velocity
-                                     bound:(URect)bound;
+                                     bound:(CGRect)bound;
 -(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh;
 @end

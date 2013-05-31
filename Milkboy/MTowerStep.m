@@ -22,21 +22,21 @@
 }
 
 @property (nonatomic, strong, readwrite) CCSprite* sprite;
-@property (nonatomic, assign, readwrite) URect boundCollision;
+@property (nonatomic, assign, readwrite) CGRect boundCollision;
 @property (nonatomic, assign, readwrite) BOOL live;
 @end
 
 //------------------------------------------------------------------------------
 @implementation MTowerStepBase
 //------------------------------------------------------------------------------
-+(id) stepWithCollisionBound:(URect)bound usid:(uint32_t)usid seed:(uint32_t)seed
++(id) stepWithCollisionBound:(CGRect)bound usid:(uint32_t)usid seed:(uint32_t)seed
 {
     return [[self alloc] initWithCollisionBound:bound usid:usid seed:seed];
 }
 
 //------------------------------------------------------------------------------
 +(id) stepWithType:(MTowerObjectType)type
-    collisionBound:(URect)bound
+    collisionBound:(CGRect)bound
               usid:(uint32_t)usid
               seed:(uint32_t)seed
 {
@@ -78,7 +78,7 @@
 }
 
 //------------------------------------------------------------------------------
--(id) initWithCollisionBound:(URect)bound
+-(id) initWithCollisionBound:(CGRect)bound
                         usid:(uint32_t)usid
                         seed:(uint32_t)seed
 {
@@ -126,21 +126,17 @@
 //------------------------------------------------------------------------------
 -(MCollisionRange) rangeVisiblity
 {
-    URect bound = self.boundCollision;
-
     return MCollisionRangeMake(
-        bound.bottom,
-        bound.top);
+        CGRectGetMinY(self->_boundCollision),
+        CGRectGetMaxY(self->_boundCollision));
 }
 
 //------------------------------------------------------------------------------
 -(MCollisionRange) rangeCollision
 {
-    URect bound = self.boundCollision;
-
     return MCollisionRangeMake(
-        bound.bottom,
-        bound.top);
+        CGRectGetMinY(self->_boundCollision),
+        CGRectGetMaxY(self->_boundCollision));
 }
 
 //------------------------------------------------------------------------------
@@ -153,7 +149,7 @@
 //------------------------------------------------------------------------------
 @implementation MTowerStepSteady
 //------------------------------------------------------------------------------
--(id) initWithCollisionBound:(URect)bound
+-(id) initWithCollisionBound:(CGRect)bound
                         usid:(uint32_t)usid
                         seed:(int32_t)seed
 {
@@ -166,8 +162,8 @@
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step.png"];
 
         self.sprite.position = CGPointMake(
-            0.5f * (bound.left + bound.right),
-            0.5f * (bound.bottom + bound.top));
+            CGRectGetMidX(bound),
+            CGRectGetMidY(bound));
 
         self.boundCollision = bound;
     }

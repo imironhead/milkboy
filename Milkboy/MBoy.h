@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
-#import "UMath.h"
 
 
 //------------------------------------------------------------------------------
@@ -22,7 +21,7 @@
 @property (nonatomic, assign, readonly) float defaultGravity;
 @property (nonatomic, assign, readonly) float defaultPowerMax;
 @property (nonatomic, assign, readonly) float defaultPowerAdd;
-@property (nonatomic, assign, readonly) URect boundCollision;
+@property (nonatomic, assign, readonly) CGRect boundCollision;
 @property (nonatomic, assign, readonly) uint32_t powerInteger;
 @property (nonatomic, assign, readonly) uint32_t powerIntegerMax;
 @property (nonatomic, assign, readonly) uint32_t powerDecimal;

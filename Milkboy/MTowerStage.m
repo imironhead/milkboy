@@ -10,6 +10,7 @@
 #import "MTowerItem.h"
 #import "MTowerStage.h"
 #import "MTowerStep.h"
+#import "UMath.h"
 
 
 //------------------------------------------------------------------------------
@@ -126,7 +127,7 @@
     MCollisionRange rangeFix = MCollisionRangeMake((float)(self.stageIndex * 600) - 600.0f, (float)(self.stageIndex * 600));
     MCollisionRange rangeVar = rangeFix;
 
-    URect bound;
+    CGRect bound;
 
     uint32_t usidm = (MTowerObjectGroupStep << 31) | (self.stageIndex << 16);
     uint32_t usidi = 0;
@@ -138,13 +139,11 @@
 
     while (rangeFix.lowerBound < rangeFix.upperBound)
     {
-        bound.bottom = rangeFix.lowerBound;
-        bound.top    = rangeFix.lowerBound + stepHeight;
-
-        bound.left   =
-            stepColumnWidth * (float)randomStepColumn.randomInteger +
-            (float)randomStepVariance.randomInteger;
-        bound.right  = bound.left + stepWidth;
+        bound = CGRectMake(
+            stepColumnWidth * (float)randomStepColumn.randomInteger + (float)randomStepVariance.randomInteger,
+            rangeFix.lowerBound,
+            stepWidth,
+            stepHeight);
 
         usidc = (usidm | usidi);
 
@@ -216,11 +215,7 @@
 
     self.stepInterval = 600.0f;
 
-    URect bound = URectMake(
-        0.0f,
-        -16.0f,
-        320.0f,
-        0.0f);
+    CGRect bound = CGRectMake(0.0f, -16.0f, 320.0f, 16.0f);
 
     NSMutableArray* steps = (NSMutableArray*)self.steps;
 
@@ -237,7 +232,7 @@
 //------------------------------------------------------------------------------
 -(NSArray*) collideItemWithPosition:(CGPoint)positionOld
                            velocity:(CGPoint)velocity
-                              bound:(URect)bound
+                              bound:(CGRect)bound
 {
     MCollisionRange r = self.rangeCollision;
 
@@ -245,24 +240,35 @@
 
     NSMutableArray* items = nil;
 
-    if ((positionOld.y + bound.top    < r.lowerBound) ||
-        (positionOld.y + bound.bottom > r.upperBound))
+    float boundBoyMinY = CGRectGetMinY(bound);
+    float boundBoyMaxY = CGRectGetMaxY(bound);
+
+    if ((positionOld.y + boundBoyMaxY < r.lowerBound) ||
+        (positionOld.y + boundBoyMinY > r.upperBound))
     {
     }
-    else if ((positionNew.y + bound.top    < r.lowerBound) ||
-             (positionNew.y + bound.bottom > r.upperBound))
+    else if ((positionNew.y + boundBoyMaxY < r.lowerBound) ||
+             (positionNew.y + boundBoyMinY > r.upperBound))
     {
     }
     else
     {
         items = [NSMutableArray array];
 
-        URect boundItem;
+        CGRect boundItem;
+
+        float boundXMin;
+        float boundXMax;
+        float boundYMin;
+        float boundYMax;
 
         CGPoint pUpper;
         CGPoint pLower;
         CGPoint pLeft;
         CGPoint pRight;
+
+        float boundBoyMinX = CGRectGetMinX(bound);
+        float boundBoyMaxX = CGRectGetMaxX(bound);
 
         if (velocity.x > 0.0f)
         {
@@ -295,18 +301,18 @@
 
             boundItem = item.boundCollision;
 
-            boundItem.top    -= bound.bottom;
-            boundItem.bottom -= bound.top;
+            boundYMax = CGRectGetMaxY(boundItem) - boundBoyMinY;
+            boundYMin = CGRectGetMinY(boundItem) - boundBoyMaxY;
 
-            if ((pUpper.y < boundItem.bottom) || (pLower.y > boundItem.top))
+            if ((pUpper.y < boundYMin) || (pLower.y > boundYMax))
             {
                 continue;
             }
 
-            boundItem.left  -= bound.right;
-            boundItem.right -= bound.left;
+            boundXMax = CGRectGetMaxX(boundItem) - boundBoyMinX;
+            boundXMin = CGRectGetMinX(boundItem) - boundBoyMaxX;
 
-            if ((pLeft.x > boundItem.right) || (pRight.x < boundItem.left))
+            if ((pLeft.x > boundXMax) || (pRight.x < boundXMin))
             {
                 continue;
             }
@@ -318,26 +324,26 @@
                 continue;
             }
 
-            if (pLeft.x >= boundItem.left)
+            if (pLeft.x >= boundXMin)
             {
-                if (pLeft.y > boundItem.top)
+                if (pLeft.y > boundYMax)
                 {
                     if (ccpSegmentIntersect(
                         pLeft,
                         pRight,
-                        CGPointMake(boundItem.top, boundItem.left),
-                        CGPointMake(boundItem.top, boundItem.right)))
+                        CGPointMake(boundXMin, boundYMax),
+                        CGPointMake(boundXMax, boundYMax)))
                     {
                         [items addObject:item];
                     }
                 }
-                else if (pLeft.y < boundItem.bottom)
+                else if (pLeft.y < boundYMin)
                 {
                     if (ccpSegmentIntersect(
                         pLeft,
                         pRight,
-                        CGPointMake(boundItem.bottom, boundItem.left),
-                        CGPointMake(boundItem.bottom, boundItem.right)))
+                        CGPointMake(boundXMin, boundYMin),
+                        CGPointMake(boundXMax, boundYMin)))
                     {
                         [items addObject:item];
                     }
@@ -352,29 +358,29 @@
                 if (ccpSegmentIntersect(
                     pLeft,
                     pRight,
-                    CGPointMake(boundItem.left, boundItem.top),
-                    CGPointMake(boundItem.left, boundItem.bottom)))
+                    CGPointMake(boundXMin, boundYMin),
+                    CGPointMake(boundXMin, boundYMax)))
                 {
                     [items addObject:item];
                 }
-                else if (pLeft.y > boundItem.top)
+                else if (pLeft.y > boundYMax)
                 {
                     if (ccpSegmentIntersect(
                         pLeft,
                         pRight,
-                        CGPointMake(boundItem.top, boundItem.left),
-                        CGPointMake(boundItem.top, boundItem.right)))
+                        CGPointMake(boundXMin, boundYMax),
+                        CGPointMake(boundXMax, boundYMax)))
                     {
                         [items addObject:item];
                     }
                 }
-                else if (pLeft.y < boundItem.bottom)
+                else if (pLeft.y < boundYMin)
                 {
                     if (ccpSegmentIntersect(
                         pLeft,
                         pRight,
-                        CGPointMake(boundItem.bottom, boundItem.left),
-                        CGPointMake(boundItem.bottom, boundItem.right)))
+                        CGPointMake(boundXMin, boundYMin),
+                        CGPointMake(boundXMax, boundYMin)))
                     {
                         [items addObject:item];
                     }
@@ -389,7 +395,7 @@
 //------------------------------------------------------------------------------
 -(MTowerStepBase*) collideStepWithPosition:(CGPoint)positionOld
                                   velocity:(CGPoint*)velocity
-                                     bound:(URect)bound
+                                     bound:(CGRect)bound
 {
     //--collide with upper edge of bounding rect of steps
     MTowerStepBase* step = nil;
@@ -407,13 +413,16 @@
 
         MCollisionRange range = self.rangeCollision;
 
-        if ((range.lowerBound > positionOld.y + bound.top) && (range.lowerBound > positionNew.y + bound.top))
+        float boundBoyMinY = CGRectGetMinY(bound);
+        float boundBoyMaxY = CGRectGetMaxY(bound);
+
+        if ((range.lowerBound > positionOld.y + boundBoyMaxY) && (range.lowerBound > positionNew.y + boundBoyMaxY))
         {
             //--rect is under the stage
 
             step = nil;
         }
-        else if ((range.upperBound < positionOld.y + bound.bottom) && (range.upperBound < positionNew.y + bound.bottom))
+        else if ((range.upperBound < positionOld.y + boundBoyMinY) && (range.upperBound < positionNew.y + boundBoyMinY))
         {
             //--rect is on the top of stage
 
@@ -424,7 +433,14 @@
             //--collide
             float dx;
 
-            URect boundStep;
+            CGRect boundStep;
+
+            float boundBoyMinX = CGRectGetMinX(bound);
+            float boundBoyMaxX = CGRectGetMaxX(bound);
+
+            float boundStepMinX;
+            float boundStepMaxX;
+            float boundStepMaxY;
 
             for (MTowerStepBase* stepT in self.steps)
             {
@@ -435,11 +451,11 @@
 
                 boundStep = stepT.boundCollision;
 
-                boundStep.left  -= bound.right;
-                boundStep.right -= bound.left;
-                boundStep.top   -= bound.bottom;
+                boundStepMinX = CGRectGetMinX(boundStep) - boundBoyMaxX;
+                boundStepMaxX = CGRectGetMaxX(boundStep) - boundBoyMinX;
+                boundStepMaxY = CGRectGetMaxY(boundStep) - boundBoyMinY;
 
-                if ((positionOld.y <= boundStep.top) || (positionNew.y > boundStep.top))
+                if ((positionOld.y <= boundStepMaxY) || (positionNew.y > boundStepMaxY))
                 {
                     continue;
                 }
@@ -447,14 +463,14 @@
                 dx =
                     positionOld.x +
                     (positionNew.x - positionOld.x) *
-                    (boundStep.top - positionOld.y) / (positionNew.y - positionOld.y);
+                    (boundStepMaxY - positionOld.y) / (positionNew.y - positionOld.y);
 
-                if ((dx >= boundStep.left) && (dx <= boundStep.right))
+                if ((dx >= boundStepMinX) && (dx <= boundStepMaxX))
                 {
                     step = stepT;
 
                     positionNew.x = dx;
-                    positionNew.y = boundStep.top;
+                    positionNew.y = boundStepMaxY;
                 }
             }
 

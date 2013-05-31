@@ -27,7 +27,7 @@ typedef enum _MBoySpriteFrame
 //------------------------------------------------------------------------------
 @interface MBoyLocal()
 @property (nonatomic, strong, readwrite) CCSpriteBatchNode* sprite;
-@property (nonatomic, assign, readwrite) URect boundCollision;
+@property (nonatomic, assign, readwrite) CGRect boundCollision;
 @property (nonatomic, assign, readwrite) uint32_t powerInteger;
 @property (nonatomic, assign, readwrite) uint32_t powerIntegerMax;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimal;
@@ -99,7 +99,7 @@ typedef enum _MBoySpriteFrame
         self.indexFrameBoy = 0;
 
         //--initial state
-        self.boundCollision = URectMake(-11.0f, -22.0f, 11.0f, 22.0f);
+        self.boundCollision = CGRectMake(-11.0f, -22.0f, 22.0f, 44.0f);
 
         self.position = CGPointMake(25.0f, 23.0f);
         self.velocity = CGPointMake(3.0f, 0.0f);

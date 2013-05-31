@@ -23,7 +23,7 @@
 }
 
 @property (nonatomic, strong, readwrite) CCSprite* sprite;
-@property (nonatomic, assign, readwrite) URect boundCollision;
+@property (nonatomic, assign, readwrite) CGRect boundCollision;
 @property (nonatomic, assign, readwrite) BOOL live;
 @end
 
@@ -127,21 +127,17 @@
 //------------------------------------------------------------------------------
 -(MCollisionRange) rangeVisiblity
 {
-    URect bound = self.boundCollision;
-
     return MCollisionRangeMake(
-        bound.bottom,
-        bound.top);
+        CGRectGetMinY(self->_boundCollision),
+        CGRectGetMaxY(self->_boundCollision));
 }
 
 //------------------------------------------------------------------------------
 -(MCollisionRange) rangeCollision
 {
-    URect bound = self.boundCollision;
-
     return MCollisionRangeMake(
-        bound.bottom,
-        bound.top);
+        CGRectGetMinY(self->_boundCollision),
+        CGRectGetMaxY(self->_boundCollision));
 }
 
 //------------------------------------------------------------------------------
@@ -179,7 +175,7 @@
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
 
-        self.boundCollision = URectMake(position.x - 16.0f, position.y, position.x + 16.0f, position.y + 32.0f);
+        self.boundCollision = CGRectMake(position.x - 16.0f, position.y, 32.0f, 32.0f);
     }
 
     return self;

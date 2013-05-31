@@ -145,7 +145,10 @@
     CGPoint vV = boy.velocity;
     CGPoint aC = boy.acceleration;
 
-    URect boundBoy = boy.boundCollision;
+    CGRect boundBoy = boy.boundCollision;
+
+    float boundBoyMinX = vP.x + CGRectGetMinX(boundBoy);
+    float boundBoyMaxX = vP.x + CGRectGetMaxX(boundBoy);
 
     MTowerStepBase* step = boy.step;
 
@@ -180,16 +183,16 @@
     float wallL = 0.0f;
     float wallR = 310.0f;
 
-    if (boundBoy.left + vP.x + vV.x + vB.x < wallL)
+    if (boundBoyMinX + vV.x + vB.x < wallL)
     {
-        vO.x = wallL + wallL - boundBoy.left - boundBoy.left - vP.x - vP.x - vB.x - vV.x;
+        vO.x = wallL + wallL - boundBoyMinX - boundBoyMinX - vB.x - vV.x;
         vO.y = vV.y;
 
         vV = CGPointMake(-vV.x, vV.y);
     }
-    else if (boundBoy.right + vP.x + vV.x + vB.x > wallR)
+    else if (boundBoyMaxX + vV.x + vB.x > wallR)
     {
-        vO.x = wallR + wallR - boundBoy.right - boundBoy.right - vP.x - vP.x - vB.x - vV.x;
+        vO.x = wallR + wallR - boundBoyMaxX - boundBoyMaxX - vB.x - vV.x;
         vO.y = vV.y;
 
         vV = CGPointMake(-vV.x, vV.y);
@@ -206,11 +209,11 @@
     if (step)
     {
         //--collide the step
-        URect boundStep = step.boundCollision;
+        CGRect boundStep = step.boundCollision;
 
         if ((!step.live) ||
-            (vP.x + boundBoy.left  > boundStep.right) ||
-            (vP.x + boundBoy.right < boundStep.left))
+            (boundBoyMinX > CGRectGetMaxX(boundStep)) ||
+            (boundBoyMaxX < CGRectGetMinX(boundStep)))
         {
 //            if (boy.step.type == MTowerObjectTypeStepBrittle)
 //            {

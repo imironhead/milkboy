@@ -10,7 +10,6 @@
 #import "cocos2d.h"
 #import "MConstant.h"
 #import "MType.h"
-#import "UMath.h"
 
 
 //------------------------------------------------------------------------------
@@ -20,7 +19,7 @@
 @property (nonatomic, assign, readonly) MTowerObjectType type;
 @property (nonatomic, assign, readonly) uint32_t uiid;
 @property (nonatomic, assign, readonly) BOOL live;
-@property (nonatomic, assign, readonly) URect boundCollision;
+@property (nonatomic, assign, readonly) CGRect boundCollision;
 @property (nonatomic, assign, readonly) MCollisionRange rangeVisiblity;
 @property (nonatomic, assign, readonly) MCollisionRange rangeCollision;
 
