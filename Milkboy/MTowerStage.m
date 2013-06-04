@@ -177,6 +177,8 @@
     uint32_t uiidi = 0;
     uint32_t uiidc;
 
+    MTowerObjectType type;
+
     MTowerItemBase* item;
 
     NSMutableArray* items = (NSMutableArray*)self.items;
@@ -185,7 +187,7 @@
     {
         rangeFix.lowerBound += 30.0f;
 
-        if (arc4random_uniform(10))
+        if (arc4random_uniform(10) > 1)
         {
             continue;
         }
@@ -195,7 +197,17 @@
 
         uiidc = (uiidm | uiidi);
 
-        item = [MTowerItemBase itemWithType:MTowerObjectTypeItemMilk
+        switch (arc4random_uniform(9))
+        {
+        case 0:     type = MTowerObjectTypeItemMilkAgile;           break;
+        case 1:     type = MTowerObjectTypeItemMilkDash;            break;
+        case 2:     type = MTowerObjectTypeItemMilkDoubleJump;      break;
+        case 3:     type = MTowerObjectTypeItemMilkGlide;           break;
+        case 4:     type = MTowerObjectTypeItemMilkStrengthExtra;   break;
+        default:    type = MTowerObjectTypeItemMilkStrength;        break;
+        }
+
+        item = [MTowerItemBase itemWithType:type
                                    position:position
                                        uiid:uiidc
                                        seed:self.seed];

@@ -30,8 +30,6 @@
 @property (nonatomic, assign) uint32_t seedLarge;
 @property (nonatomic, assign) uint32_t seedSmall;
 @property (nonatomic, assign) int32_t frameLocal;
-
-@property (nonatomic, assign) BOOL powerUp;
 @end
 
 //------------------------------------------------------------------------------
@@ -136,7 +134,7 @@
     MBoyLocal* boy = self.boyLocal;
 
     //--power
-    [boy updatePower:self.powerUp];
+    [boy updatePower];
 
     //--adjust the velocity base on state
     CGPoint vO;
@@ -258,6 +256,10 @@
         }
     }
 
+    //--update before collide item (may dash)
+    boy.position = ccpAdd(vP, vO);
+    boy.velocity = vV;
+
     //--collide item
     NSArray* items;
 
@@ -269,19 +271,20 @@
         {
             for (MTowerItemBase* item in items)
             {
-                if (item.type == MTowerObjectTypeItemMilk)
+                if ((item.type == MTowerObjectTypeItemMilkAgile) ||
+                    (item.type == MTowerObjectTypeItemMilkDash) ||
+                    (item.type == MTowerObjectTypeItemMilkDoubleJump) ||
+                    (item.type == MTowerObjectTypeItemMilkGlide) ||
+                    (item.type == MTowerObjectTypeItemMilkStrength) ||
+                    (item.type == MTowerObjectTypeItemMilkStrengthExtra))
                 {
-                    [boy drinkMilk:1];
+                    [boy drinkMilk:item.type];
                 }
 
                 [item collected];
             }
         }
     }
-
-    //
-    boy.position = ccpAdd(vP, vO);
-    boy.velocity = vV;
 }
 
 //------------------------------------------------------------------------------
@@ -405,7 +408,7 @@
 //------------------------------------------------------------------------------
 -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent*)event
 {
-    self.powerUp = TRUE;
+    self.boyLocal.pressed = TRUE;
 
     return TRUE;
 }
@@ -413,37 +416,13 @@
 //------------------------------------------------------------------------------
 -(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent*)event
 {
-    self.powerUp = FALSE;
-
-    MBoyLocal* boy = self.boyLocal;
-
-    if (/*(self.state == JTowerStatePlaying) &&*/ boy.step)
-    {
-        CGPoint v = boy.velocity;
-
-        float s[] = {16.0f, 18.0f, 20.0f, 22.0f, 24.0f, 26.0f, 28.0f, 30.0f, 32.0f, 34.0f, 36.0f};
-
-        v.y = (boy.powerInteger > 9) ? 36.0f : s[boy.powerInteger];
-
-//        if (jumper.step.type == JTowerObjectTypeStepSpring)
-//        {
-//            v.y += 10.0f;
-//        }
-//        else if (jumper.step.type == JTowerObjectTypeStepBrittle)
-//        {
-//            [(JTowerStepBrittle*)jumper.step dismiss];
-//        }
-
-        boy.step = nil;
-
-        boy.velocity = v;
-    }
+    self.boyLocal.pressed = FALSE;
 }
 
 //------------------------------------------------------------------------------
 -(void) ccTouchCancelled:(UITouch*)touch withEvent:(UIEvent*)event
 {
-    self.powerUp = FALSE;
+    self.boyLocal.pressed = FALSE;
 }
 
 //------------------------------------------------------------------------------

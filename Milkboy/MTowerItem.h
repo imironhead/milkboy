@@ -23,9 +23,6 @@
 @property (nonatomic, assign, readonly) MCollisionRange rangeVisiblity;
 @property (nonatomic, assign, readonly) MCollisionRange rangeCollision;
 
-+(id) itemWithPosition:(CGPoint)position
-                  uiid:(uint32_t)uiid
-                  seed:(uint32_t)seed;
 +(id) itemWithType:(MTowerObjectType)type
           position:(CGPoint)position
               uiid:(uint32_t)uiid

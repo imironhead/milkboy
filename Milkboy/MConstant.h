@@ -25,10 +25,12 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeStepExpansive,
     MTowerObjectTypeStepRubber,
 
-    MTowerObjectTypeItemCoin,
-    MTowerObjectTypeItemDash,
-    MTowerObjectTypeItemMagnet,
-    MTowerObjectTypeItemMilk,
+    MTowerObjectTypeItemMilkAgile,
+    MTowerObjectTypeItemMilkDash,
+    MTowerObjectTypeItemMilkDoubleJump,
+    MTowerObjectTypeItemMilkGlide,
+    MTowerObjectTypeItemMilkStrength,
+    MTowerObjectTypeItemMilkStrengthExtra,
 } MTowerObjectType;
 
 //------------------------------------------------------------------------------
@@ -48,6 +50,16 @@ typedef enum _MTowerSpriteDepth
     MTowerSpriteDepthEffect,
     MTowerSpriteDepthMenu,
 } MTowerSpriteDepth;
+
+//------------------------------------------------------------------------------
+typedef enum _MBoyState
+{
+    MBoyStateInvalid = 0,
+    MBoyStateAgile,
+    MBoyStateDoubleJump,
+    MBoyStateGlide,
+    MBoyStateStrengthExtra,
+} MBoyState;
 
 //------------------------------------------------------------------------------
 

@@ -33,6 +33,7 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, assign, readwrite) uint32_t powerDecimal;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalDelta;
+@property (nonatomic, assign, readwrite) MBoyState state;
 @property (nonatomic, strong) CCSprite* spriteBoy;
 @property (nonatomic, strong) CCSprite* spriteHat;
 @property (nonatomic, strong) CCSprite* spritePowerBase;
@@ -40,6 +41,7 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, strong) NSMutableArray* framesBoy;
 @property (nonatomic, strong) NSMutableArray* framesHat;
 @property (nonatomic, assign) NSUInteger indexFrameBoy;
+@property (nonatomic, assign) BOOL doubleJumped;
 @end
 
 //------------------------------------------------------------------------------
@@ -110,6 +112,8 @@ typedef enum _MBoySpriteFrame
         self.powerDecimal      = 0;
         self.powerDecimalMax   = 5;
         self.powerDecimalDelta = 1;
+
+        self.state = MBoyStateInvalid;
 
         //--power ui
         self.spritePowerBase = [CCSprite spriteWithSpriteFrameName:@"char_power_back.png"];
@@ -199,11 +203,142 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) updatePower:(BOOL)powerUp
+-(CGPoint) acceleration
+{
+    CGPoint a = self->_acceleration;
+
+    if (self.state == MBoyStateGlide)
+    {
+        a.y += 1.0f;
+    }
+
+    return a;
+}
+
+//------------------------------------------------------------------------------
+-(void) setState:(MBoyState)state
+{
+    if (self->_state != state)
+    {
+        BOOL needUpdatePowerUI = FALSE;
+
+        if (self->_state == MBoyStateStrengthExtra)
+        {
+            needUpdatePowerUI = TRUE;
+
+            self.powerIntegerMax -= 2;
+
+            if (self.powerInteger > self.powerIntegerMax)
+            {
+                self.powerInteger = self.powerIntegerMax;
+            }
+        }
+        else if (state == MBoyStateStrengthExtra)
+        {
+            needUpdatePowerUI = TRUE;
+
+            self.powerIntegerMax += 2;
+
+            self.spriteHat.displayFrame =
+                [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_hat_power.png"];
+        }
+
+        if (self->_state == MBoyStateAgile)
+        {
+            self.powerDecimalDelta -= 2;
+        }
+        else if (state == MBoyStateAgile)
+        {
+            self.powerDecimalDelta += 2;
+
+            self.spriteHat.displayFrame =
+                [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_hat_magnet.png"];
+        }
+
+        if (state == MBoyStateDoubleJump)
+        {
+            self.spriteHat.displayFrame =
+                [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_hat_double.png"];
+        }
+        else if (state == MBoyStateGlide)
+        {
+            self.spriteHat.displayFrame =
+                [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_hat_fly.png"];
+        }
+
+        self->_state = state;
+
+        if (needUpdatePowerUI)
+        {
+            [self updatePowerUI];
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) setPressed:(BOOL)pressed
+{
+    if (self->_pressed != pressed)
+    {
+        self->_pressed = pressed;
+
+        if (pressed)
+        {
+        }
+        else
+        {
+            if (self.step)
+            {
+                CGPoint v = self.velocity;
+
+                float s[] = {16.0f, 18.0f, 20.0f, 22.0f, 24.0f, 26.0f, 28.0f, 30.0f, 32.0f, 34.0f, 36.0f};
+
+                v.y = (self.powerInteger > 9) ? 36.0f : s[self.powerInteger];
+
+                self.step = nil;
+
+                self.velocity = v;
+            }
+            else if (self.state == MBoyStateDoubleJump)
+            {
+                if (!self.doubleJumped)
+                {
+                    self.doubleJumped = TRUE;
+
+                    CGPoint v = self.velocity;
+
+                    v.y = 20.0f;
+
+                    self.velocity = v;
+                }
+            }
+            else if (self.state == MBoyStateGlide)
+            {
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) setStep:(MTowerStepBase*)step
+{
+    if (self->_step != step)
+    {
+        self->_step = step;
+
+        if (step)
+        {
+            self.doubleJumped = FALSE;
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) updatePower
 {
     BOOL updateUI = FALSE;
 
-    if (powerUp)
+    if (self.pressed)
     {
         if (self.step && (self.powerInteger < self.powerIntegerMax))
         {
@@ -253,24 +388,63 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(BOOL) drinkMilk:(uint32_t)count
+-(BOOL) drinkMilk:(MTowerObjectType)milk
 {
-    BOOL levelUp = FALSE;
-
-    self->_milkCount += count;
-
-    if (self->_milkCount >= 10)
+    switch (milk)
     {
-        levelUp = TRUE;
+    case MTowerObjectTypeItemMilkAgile:
+        {
+            self.state = MBoyStateAgile;
+        }
+        break;
+    case MTowerObjectTypeItemMilkDash:
+        {
+            CGPoint v = self.velocity;
 
-        self->_powerIntegerMax += self->_milkCount / 10;
+            v.y = 40.0f;
 
-        self->_milkCount %= 10;
+            self.step = nil;
 
-        [self updatePowerUI];
+            self.velocity = v;
+        }
+        break;
+    case MTowerObjectTypeItemMilkDoubleJump:
+        {
+            self.state = MBoyStateDoubleJump;
+        }
+        break;
+    case MTowerObjectTypeItemMilkGlide:
+        {
+            self.state = MBoyStateGlide;
+        }
+        break;
+    case MTowerObjectTypeItemMilkStrength:
+        {
+            self->_milkCount += 1;
+
+            if (self->_milkCount >= 10)
+            {
+                self->_powerIntegerMax += 1;
+
+                self->_milkCount -= 10;
+
+                [self updatePowerUI];
+            }
+        }
+        break;
+    case MTowerObjectTypeItemMilkStrengthExtra:
+        {
+            self.state = MBoyStateStrengthExtra;
+        }
+        break;
+    default:
+        {
+            NSAssert(0, @"[MBoyLocal drinkMilk:]");
+        }
+        break;
     }
 
-    return levelUp;
+    return TRUE;
 }
 
 //------------------------------------------------------------------------------

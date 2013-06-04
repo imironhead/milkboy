@@ -30,12 +30,6 @@
 //------------------------------------------------------------------------------
 @implementation MTowerItemBase
 //------------------------------------------------------------------------------
-+(id) itemWithPosition:(CGPoint)position uiid:(uint32_t)uiid seed:(uint32_t)seed
-{
-    return [[self alloc] initWithPosition:position uiid:uiid seed:seed];
-}
-
-//------------------------------------------------------------------------------
 +(id) itemWithType:(MTowerObjectType)type
           position:(CGPoint)position
               uiid:(uint32_t)uiid
@@ -45,9 +39,14 @@
 
     switch (type)
     {
-    case MTowerObjectTypeItemMilk:
+    case MTowerObjectTypeItemMilkAgile:
+    case MTowerObjectTypeItemMilkDash:
+    case MTowerObjectTypeItemMilkDoubleJump:
+    case MTowerObjectTypeItemMilkGlide:
+    case MTowerObjectTypeItemMilkStrength:
+    case MTowerObjectTypeItemMilkStrengthExtra:
         {
-            step = [[MTowerItemMilk alloc] initWithPosition:position uiid:uiid seed:seed];
+            step = [[MTowerItemMilk alloc] initWithType:type position:position uiid:uiid seed:seed];
         }
         break;
     default:
@@ -79,11 +78,12 @@
 }
 
 //------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  uiid:(uint32_t)uiid
-                  seed:(uint32_t)seed
+-(id) initWithType:(MTowerObjectType)type
+          position:(CGPoint)position
+              uiid:(uint32_t)uiid
+              seed:(uint32_t)seed
 {
-    NSAssert(0, @"[MTowerItemBase initWithCollisionBound: uiid: seed]");
+    NSAssert(0, @"[MTowerItemBase initWithType: position: uiid: seed]");
 
     return nil;
 }
@@ -159,23 +159,71 @@
 //------------------------------------------------------------------------------
 @implementation MTowerItemMilk
 //------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  uiid:(uint32_t)uiid
-                  seed:(int32_t)seed
+-(id) initWithType:(MTowerObjectType)type
+          position:(CGPoint)position
+              uiid:(uint32_t)uiid
+              seed:(int32_t)seed
 {
-    self = [super initWithType:MTowerObjectTypeItemMilk
+    self = [super initWithType:type
                           uiid:uiid
                           seed:seed];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"milk.png"];
+        NSString* frameName = @"item_milk_strength.png";
+
+        switch (type)
+        {
+        case MTowerObjectTypeItemMilkAgile:
+            {
+                frameName = @"item_milk_agile.png";
+            }
+            break;
+        case MTowerObjectTypeItemMilkDash:
+            {
+                frameName = @"item_milk_dash.png";
+            }
+            break;
+        case MTowerObjectTypeItemMilkDoubleJump:
+            {
+                frameName = @"item_milk_double_jump.png";
+            }
+            break;
+        case MTowerObjectTypeItemMilkGlide:
+            {
+                frameName = @"item_milk_glide.png";
+            }
+            break;
+        case MTowerObjectTypeItemMilkStrength:
+            {
+                frameName = @"item_milk_strength.png";
+            }
+            break;
+        case MTowerObjectTypeItemMilkStrengthExtra:
+            {
+                frameName = @"item_milk_strength_extra.png";
+            }
+            break;
+        default:
+            {
+                NSAssert(0, @"[MTowerItemMilk initWithType: position: uiid: seed:]");
+            }
+            break;
+        }
+
+        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
+
+        CGSize size = self.sprite.boundingBox.size;
 
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
 
-        self.boundCollision = CGRectMake(position.x - 16.0f, position.y, 32.0f, 32.0f);
+        self.boundCollision = CGRectMake(
+            position.x - 0.5f * size.width,
+            position.y,
+            size.width,
+            size.height);
     }
 
     return self;

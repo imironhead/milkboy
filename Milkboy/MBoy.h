@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
+#import "MConstant.h"
 
 
 //------------------------------------------------------------------------------
@@ -27,13 +28,15 @@
 @property (nonatomic, assign, readonly) uint32_t powerDecimal;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalDelta;
+@property (nonatomic, assign, readonly) MBoyState state;
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, assign) CGPoint velocity;
 @property (nonatomic, assign) CGPoint acceleration;
 @property (nonatomic, assign) uint32_t coinCount;
 @property (nonatomic, assign) uint32_t milkCount;
+@property (nonatomic, assign) BOOL pressed;
 @property (nonatomic, weak) MTowerStepBase* step;
 
--(void) updatePower:(BOOL)powerUp;
--(BOOL) drinkMilk:(uint32_t)count;
+-(void) updatePower;
+-(BOOL) drinkMilk:(MTowerObjectType)milk;
 @end

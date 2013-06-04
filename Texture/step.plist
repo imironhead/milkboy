@@ -4,18 +4,83 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>milk.png</key>
+            <key>item_milk_agile.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,1},{32,32}}</string>
+                <string>{{1,86},{16,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
+                <string>{{0,0},{16,32}}</string>
                 <key>sourceSize</key>
-                <string>{32,32}</string>
+                <string>{16,32}</string>
+            </dict>
+            <key>item_milk_dash.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,69},{16,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{16,32}}</string>
+                <key>sourceSize</key>
+                <string>{16,32}</string>
+            </dict>
+            <key>item_milk_double_jump.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,52},{16,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{16,32}}</string>
+                <key>sourceSize</key>
+                <string>{16,32}</string>
+            </dict>
+            <key>item_milk_glide.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,35},{16,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{16,32}}</string>
+                <key>sourceSize</key>
+                <string>{16,32}</string>
+            </dict>
+            <key>item_milk_strength.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,18},{16,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{16,32}}</string>
+                <key>sourceSize</key>
+                <string>{16,32}</string>
+            </dict>
+            <key>item_milk_strength_extra.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,1},{16,32}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{16,32}}</string>
+                <key>sourceSize</key>
+                <string>{16,32}</string>
             </dict>
             <key>step.png</key>
             <dict>
@@ -40,7 +105,7 @@
             <key>size</key>
             <string>{64,128}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:342504ab39112738a2ba8e7d30a53af7$</string>
+            <string>$TexturePacker:SmartUpdate:05c4de0f6abbd17b4c361be6877233bc$</string>
             <key>textureFileName</key>
             <string>step.pvr.ccz</string>
         </dict>
