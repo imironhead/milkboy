@@ -12,18 +12,18 @@
 //------------------------------------------------------------------------------
 typedef enum _MTowerObjectType
 {
-    MTowerObjectTypeStepSteady,
+    MTowerObjectTypeStepBrittle,
+    MTowerObjectTypeStepDrift,
     MTowerObjectTypeStepMoveLeft,
     MTowerObjectTypeStepMoveRight,
-    MTowerObjectTypeStepFlowLeft,
-    MTowerObjectTypeStepFlowRight,
-    MTowerObjectTypeStepRecycleHorizontal,
-    MTowerObjectTypeStepRecycleVertical,
-    MTowerObjectTypeStepSpring,
-    MTowerObjectTypeStepBrittle,
+    MTowerObjectTypeStepMovingWalkwayLeft,
+    MTowerObjectTypeStepMovingWalkwayRight,
+    MTowerObjectTypeStepPatrolHorizontal,
+    MTowerObjectTypeStepPatrolVertical,
     MTowerObjectTypeStepPulse,
-    MTowerObjectTypeStepExpansive,
-    MTowerObjectTypeStepRubber,
+    MTowerObjectTypeStepSpring,
+    MTowerObjectTypeStepStation,
+    MTowerObjectTypeStepSteady,
 
     MTowerObjectTypeItemMilkAgile,
     MTowerObjectTypeItemMilkDash,

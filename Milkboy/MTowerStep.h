@@ -13,6 +13,9 @@
 
 
 //------------------------------------------------------------------------------
+@class MBoyLocal;
+
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 @interface MTowerStepBase : NSObject
 @property (nonatomic, strong, readonly) CCSprite* sprite;
@@ -23,15 +26,50 @@
 @property (nonatomic, assign, readonly) MCollisionRange rangeVisiblity;
 @property (nonatomic, assign, readonly) MCollisionRange rangeCollision;
 
-+(id) stepWithCollisionBound:(CGRect)bound usid:(uint32_t)usid seed:(uint32_t)seed;
 +(id) stepWithType:(MTowerObjectType)type
-    collisionBound:(CGRect)bound
+          position:(CGPoint)position
               usid:(uint32_t)usid
               seed:(uint32_t)seed;
 
 -(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh;
+
+-(void) boyJump:(MBoyLocal*)boy;
+-(void) boyLand:(MBoyLocal*)boy;
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepBrittle : MTowerStepBase
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepDrift : MTowerStepBase
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepMove : MTowerStepBase
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepMovingWalkway : MTowerStepBase
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepPatrol : MTowerStepBase
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepPulse : MTowerStepBase
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepSpring : MTowerStepBase
+@end
+
+//------------------------------------------------------------------------------
+@interface MTowerStepStation : MTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
 @interface MTowerStepSteady : MTowerStepBase
 @end
+

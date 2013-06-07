@@ -4,6 +4,19 @@
     <dict>
         <key>frames</key>
         <dict>
+            <key>char_cat.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,116},{11,8}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{11,8}}</string>
+                <key>sourceSize</key>
+                <string>{11,8}</string>
+            </dict>
             <key>char_down.png</key>
             <dict>
                 <key>frame</key>
@@ -85,7 +98,7 @@
             <key>char_jump.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{93,1},{22,22}}</string>
+                <string>{{95,1},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -98,7 +111,7 @@
             <key>char_move_00.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{70,1},{22,22}}</string>
+                <string>{{72,1},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -111,7 +124,7 @@
             <key>char_move_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{47,1},{22,22}}</string>
+                <string>{{49,1},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -124,7 +137,7 @@
             <key>char_move_02.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{24,1},{22,22}}</string>
+                <string>{{26,1},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -202,7 +215,7 @@
             <key>char_power_back.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,116},{12,6}}</string>
+                <string>{{13,116},{12,6}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -215,7 +228,7 @@
             <key>char_power_mark.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,123},{10,4}}</string>
+                <string>{{13,123},{10,4}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -235,7 +248,7 @@
             <key>size</key>
             <string>{128,128}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:d04c850d8f7b45c418a7e1f5427b9d10$</string>
+            <string>$TexturePacker:SmartUpdate:a675f635fca1c6c8713e4c8382889e38$</string>
             <key>textureFileName</key>
             <string>char.pvr.ccz</string>
         </dict>

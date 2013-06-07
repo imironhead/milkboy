@@ -150,20 +150,29 @@
 
     MTowerStepBase* step = boy.step;
 
-    //--flow
     if (step)
     {
-//        if (step.type == JTowerObjectTypeStepFlowLeft)
-//        {
-//            vB.x = -2.0f;
-//        }
-//        else if (step.type == JTowerObjectTypeStepFlowRight)
-//        {
-//            vB.x = 2.0f;
-//        }
+        switch (step.type)
+        {
+        case MTowerObjectTypeStepMovingWalkwayLeft:
+            {
+                vB.x = -1.0f;
+            }
+            break;
+        case MTowerObjectTypeStepMovingWalkwayRight:
+            {
+                vB.x = 1.0f;
+            }
+            break;
+        case MTowerObjectTypeStepDrift:
+            {
+                vB.x = (vV.x > 0.0f) ? 1.0f : -1.0f;
+            }
+            break;
+        default:
+            break;
+        }
     }
-
-    //--apply buffer
 
     //--accelerate
     vV.x += aC.x;
@@ -213,17 +222,12 @@
             (boundBoyMinX > CGRectGetMaxX(boundStep)) ||
             (boundBoyMaxX < CGRectGetMinX(boundStep)))
         {
-//            if (boy.step.type == MTowerObjectTypeStepBrittle)
-//            {
-//                [(JTowerStepBrittle*)jumper.step dismiss];
-//            }
-
             boy.step = nil;
         }
-//        else if (step.type == MTowerObjectTypeStepRecycleVertical)
-//        {
-//            vO.y += boundStep.top - vP.y - boundJumper.bottom;
-//        }
+        else if (step.type == MTowerObjectTypeStepPatrolVertical)
+        {
+            vO.y += CGRectGetMaxY(boundStep) - vP.y - CGRectGetMinY(boundBoy);
+        }
     }
     else
     {
@@ -239,18 +243,9 @@
 
         if (step)
         {
-            //--post message to land the jumper on the step
+            boy.step = step;
 
-//            if (step.type == JTowerObjectTypeStepRubber)
-//            {
-//                vV.y = 4.0f;
-//            }
-//            else
-            {
-                boy.step = step;
-
-                vV.y = 0.0f;
-            }
+            vV.y = 0.0f;
 
             vO.x = floorf(vO.x);
         }
@@ -368,6 +363,8 @@
     }
 
     //--update visible stage
+    self.frameLocal += 1;
+
 
     for (stage in self.stagesVisible)
     {

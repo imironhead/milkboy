@@ -7,6 +7,7 @@
 //
 //------------------------------------------------------------------------------
 #import "MBoy.h"
+#import "MTowerStep.h"
 
 
 //------------------------------------------------------------------------------
@@ -289,15 +290,26 @@ typedef enum _MBoySpriteFrame
         {
             if (self.step)
             {
-                CGPoint v = self.velocity;
+                if (self.step.type == MTowerObjectTypeStepDrift)
+                {
+                }
+                else
+                {
+                    CGPoint v = self.velocity;
 
-                float s[] = {16.0f, 18.0f, 20.0f, 22.0f, 24.0f, 26.0f, 28.0f, 30.0f, 32.0f, 34.0f, 36.0f};
+                    float s[] = {16.0f, 18.0f, 20.0f, 22.0f, 24.0f, 26.0f, 28.0f, 30.0f, 32.0f, 34.0f, 36.0f};
 
-                v.y = (self.powerInteger > 9) ? 36.0f : s[self.powerInteger];
+                    v.y = (self.powerInteger > 9) ? 36.0f : s[self.powerInteger];
 
-                self.step = nil;
+                    if (self.step.type == MTowerObjectTypeStepSpring)
+                    {
+                        v.y += 10.0f;
+                    }
 
-                self.velocity = v;
+                    self.step = nil;
+
+                    self.velocity = v;
+                }
             }
             else if (self.state == MBoyStateDoubleJump)
             {
@@ -324,12 +336,19 @@ typedef enum _MBoySpriteFrame
 {
     if (self->_step != step)
     {
-        self->_step = step;
-
         if (step)
         {
+            [step boyLand:self];
+
             self.doubleJumped = FALSE;
         }
+
+        if (self->_step)
+        {
+            [self->_step boyJump:self];
+        }
+
+        self->_step = step;
     }
 }
 
@@ -340,17 +359,29 @@ typedef enum _MBoySpriteFrame
 
     if (self.pressed)
     {
-        if (self.step && (self.powerInteger < self.powerIntegerMax))
+        if (self.step)
         {
-            self.powerDecimal += self.powerDecimalDelta;
-
-            if (self.powerDecimal >= self.powerDecimalMax)
+            if (self.step.type == MTowerObjectTypeStepDrift)
             {
-                self.powerDecimal -= self.powerDecimalMax;
+                if (self.powerInteger != 0)
+                {
+                    self.powerInteger = 0;
 
-                self.powerInteger += 1;
+                    updateUI = TRUE;
+                }
+            }
+            else if (self.powerInteger < self.powerIntegerMax)
+            {
+                self.powerDecimal += self.powerDecimalDelta;
 
-                updateUI = TRUE;
+                if (self.powerDecimal >= self.powerDecimalMax)
+                {
+                    self.powerDecimal -= self.powerDecimalMax;
+
+                    self.powerInteger += 1;
+
+                    updateUI = TRUE;
+                }
             }
         }
     }

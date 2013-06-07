@@ -97,7 +97,6 @@
 //------------------------------------------------------------------------------
 -(void) buildSteps
 {
-    float stepWidth          = 75.0f;
     float stepHeight         = 16.0f;
     float stepInterval       = 30.0f;
     float stepColumnWidth    = 72.0f;
@@ -127,11 +126,15 @@
     MCollisionRange rangeFix = MCollisionRangeMake((float)(self.stageIndex * 600) - 600.0f, (float)(self.stageIndex * 600));
     MCollisionRange rangeVar = rangeFix;
 
-    CGRect bound;
+    rangeFix.lowerBound += stepHeight;
+
+    CGPoint position;
 
     uint32_t usidm = (MTowerObjectGroupStep << 31) | (self.stageIndex << 16);
     uint32_t usidi = 0;
     uint32_t usidc;
+
+    MTowerObjectType type;
 
     MTowerStepBase* step;
 
@@ -139,16 +142,29 @@
 
     while (rangeFix.lowerBound < rangeFix.upperBound)
     {
-        bound = CGRectMake(
-            stepColumnWidth * (float)randomStepColumn.randomInteger + (float)randomStepVariance.randomInteger,
-            rangeFix.lowerBound,
-            stepWidth,
-            stepHeight);
+        position = CGPointMake(
+            stepColumnWidth * (float)randomStepColumn.randomInteger + (float)randomStepVariance.randomInteger + 38.0f,
+            rangeFix.lowerBound);
 
         usidc = (usidm | usidi);
 
-        step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                             collisionBound:bound
+        switch (arc4random_uniform(20))
+        {
+        case 0:     type = MTowerObjectTypeStepBrittle;             break;
+        case 1:     type = MTowerObjectTypeStepDrift;               break;
+        case 2:     type = MTowerObjectTypeStepMoveLeft;            break;
+        case 3:     type = MTowerObjectTypeStepMoveRight;           break;
+        case 4:     type = MTowerObjectTypeStepMovingWalkwayLeft;   break;
+        case 5:     type = MTowerObjectTypeStepMovingWalkwayRight;  break;
+        case 6:     type = MTowerObjectTypeStepPatrolHorizontal;    break;
+        case 7:     type = MTowerObjectTypeStepPatrolVertical;      break;
+        case 8:     type = MTowerObjectTypeStepPulse;               break;
+        case 9:     type = MTowerObjectTypeStepSpring;              break;
+        default:    type = MTowerObjectTypeStepSteady;              break;
+        }
+
+        step = [MTowerStepBase stepWithType:type
+                                   position:position
                                        usid:usidc
                                        seed:self.seed];
 
@@ -227,16 +243,12 @@
 
     self.stepInterval = 600.0f;
 
-    CGRect bound = CGRectMake(0.0f, -16.0f, 320.0f, 16.0f);
-
     NSMutableArray* steps = (NSMutableArray*)self.steps;
 
-    MTowerStepBase* step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                                         collisionBound:bound
+    MTowerStepBase* step = [MTowerStepBase stepWithType:MTowerObjectTypeStepStation
+                                               position:CGPointMake(160.0f, 0.0f)
                                                    usid:(MTowerObjectGroupStep << 31)
                                                    seed:0];
-
-    step.sprite.scaleX = 10.0f;
 
     [steps addObject:step];
 }
