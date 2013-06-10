@@ -25,6 +25,8 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeStepStation,
     MTowerObjectTypeStepSteady,
 
+    MTowerObjectTypeItemBox,
+    MTowerObjectTypeItemCat,
     MTowerObjectTypeItemMilkAgile,
     MTowerObjectTypeItemMilkDash,
     MTowerObjectTypeItemMilkDoubleJump,

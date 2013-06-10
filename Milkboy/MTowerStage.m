@@ -220,6 +220,8 @@
         case 2:     type = MTowerObjectTypeItemMilkDoubleJump;      break;
         case 3:     type = MTowerObjectTypeItemMilkGlide;           break;
         case 4:     type = MTowerObjectTypeItemMilkStrengthExtra;   break;
+        case 5:     type = MTowerObjectTypeItemBox;                 break;
+        case 6:     type = MTowerObjectTypeItemCat;                 break;
         default:    type = MTowerObjectTypeItemMilkStrength;        break;
         }
 

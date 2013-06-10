@@ -35,10 +35,20 @@
               uiid:(uint32_t)uiid
               seed:(uint32_t)seed
 {
-    id step = nil;
+    id item = nil;
 
     switch (type)
     {
+    case MTowerObjectTypeItemBox:
+        {
+            item = [[MTowerItemBox alloc] initWithPosition:position uiid:uiid seed:seed];
+        }
+        break;
+    case MTowerObjectTypeItemCat:
+        {
+            item = [[MTowerItemCat alloc] initWithPosition:position uiid:uiid seed:seed];
+        }
+        break;
     case MTowerObjectTypeItemMilkAgile:
     case MTowerObjectTypeItemMilkDash:
     case MTowerObjectTypeItemMilkDoubleJump:
@@ -46,17 +56,17 @@
     case MTowerObjectTypeItemMilkStrength:
     case MTowerObjectTypeItemMilkStrengthExtra:
         {
-            step = [[MTowerItemMilk alloc] initWithType:type position:position uiid:uiid seed:seed];
+            item = [[MTowerItemMilk alloc] initWithType:type position:position uiid:uiid seed:seed];
         }
         break;
     default:
         {
-            NSAssert(0, @"[MTowerStepBase stepWithType: collisionBound: usid: seed:]");
+            NSAssert(0, @"[MTowerItemBase itemWithType: position: uiid: seed:]");
         }
         break;
     }
 
-    return step;
+    return item;
 }
 
 //------------------------------------------------------------------------------
@@ -82,6 +92,16 @@
           position:(CGPoint)position
               uiid:(uint32_t)uiid
               seed:(uint32_t)seed
+{
+    NSAssert(0, @"[MTowerItemBase initWithType: position: uiid: seed]");
+
+    return nil;
+}
+
+//------------------------------------------------------------------------------
+-(id) initWithPosition:(CGPoint)position
+                  uiid:(uint32_t)uiid
+                  seed:(uint32_t)seed
 {
     NSAssert(0, @"[MTowerItemBase initWithType: position: uiid: seed]");
 
@@ -150,6 +170,88 @@
     self.sprite.visible = FALSE;
 
     self.live = FALSE;
+}
+
+//------------------------------------------------------------------------------
+@end
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+@implementation MTowerItemBox
+//------------------------------------------------------------------------------
+-(id) initWithPosition:(CGPoint)position
+                  uiid:(uint32_t)uiid
+                  seed:(int32_t)seed
+{
+    self = [super initWithType:MTowerObjectTypeItemBox
+                          uiid:uiid
+                          seed:seed];
+
+    if (self)
+    {
+        NSString* frameName = @"item_box.png";
+
+        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
+
+        CGSize size = self.sprite.boundingBox.size;
+
+        self.sprite.position = position;
+
+        self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
+
+        self.boundCollision = CGRectMake(
+            position.x - 0.5f * size.width,
+            position.y,
+            size.width,
+            size.height);
+    }
+
+    return self;
+}
+
+//------------------------------------------------------------------------------
+-(void) collected
+{
+    self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"item_box_cat.png"];
+
+    self.live = FALSE;
+}
+
+//------------------------------------------------------------------------------
+@end
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+@implementation MTowerItemCat
+//------------------------------------------------------------------------------
+-(id) initWithPosition:(CGPoint)position
+                  uiid:(uint32_t)uiid
+                  seed:(int32_t)seed
+{
+    self = [super initWithType:MTowerObjectTypeItemCat
+                          uiid:uiid
+                          seed:seed];
+
+    if (self)
+    {
+        NSString* frameName = @"item_cat.png";
+
+        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
+
+        CGSize size = self.sprite.boundingBox.size;
+
+        self.sprite.position = position;
+
+        self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
+
+        self.boundCollision = CGRectMake(
+            position.x - 0.5f * size.width,
+            position.y,
+            size.width,
+            size.height);
+    }
+
+    return self;
 }
 
 //------------------------------------------------------------------------------

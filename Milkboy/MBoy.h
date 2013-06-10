@@ -12,6 +12,7 @@
 
 
 //------------------------------------------------------------------------------
+@class MTowerItemBase;
 @class MTowerStepBase;
 
 //------------------------------------------------------------------------------
@@ -28,7 +29,8 @@
 @property (nonatomic, assign, readonly) uint32_t powerDecimal;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalDelta;
-@property (nonatomic, assign, readonly) MBoyState state;
+@property (nonatomic, assign, readonly) uint32_t catState;
+@property (nonatomic, assign, readonly) MBoyState boyState;
 @property (nonatomic, assign) CGPoint position;
 @property (nonatomic, assign) CGPoint velocity;
 @property (nonatomic, assign) CGPoint acceleration;
@@ -38,5 +40,5 @@
 @property (nonatomic, weak) MTowerStepBase* step;
 
 -(void) updatePower;
--(BOOL) drinkMilk:(MTowerObjectType)milk;
+-(BOOL) collectItem:(MTowerItemBase*)item;
 @end

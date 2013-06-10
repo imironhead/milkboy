@@ -7,6 +7,7 @@
 //
 //------------------------------------------------------------------------------
 #import "MBoy.h"
+#import "MTowerItem.h"
 #import "MTowerStep.h"
 
 
@@ -34,8 +35,10 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, assign, readwrite) uint32_t powerDecimal;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalDelta;
-@property (nonatomic, assign, readwrite) MBoyState state;
+@property (nonatomic, assign, readwrite) uint32_t catState;
+@property (nonatomic, assign, readwrite) MBoyState boyState;
 @property (nonatomic, strong) CCSprite* spriteBoy;
+@property (nonatomic, strong) CCSprite* spriteCat;
 @property (nonatomic, strong) CCSprite* spriteHat;
 @property (nonatomic, strong) CCSprite* spritePowerBase;
 @property (nonatomic, strong) CCSprite* spritePowerMask;
@@ -75,6 +78,16 @@ typedef enum _MBoySpriteFrame
         self.spriteHat.position = ccp(160.0f, 240.0f);
 
         [self.sprite addChild:self.spriteHat z:1];
+
+        //--cat sprite
+        self.spriteCat = [CCSprite spriteWithSpriteFrameName:@"char_cat.png"];
+
+        self.spriteCat.scale = 2.0f;
+        self.spriteCat.visible = FALSE;
+        self.spriteCat.position = ccp(160.0f, 240.0f);
+        self.spriteCat.anchorPoint = ccp(0.5f, 0.0f);
+
+        [self.sprite addChild:self.spriteCat z:0];
 
         //--animation frames
         NSArray* frameNameBoy =
@@ -181,7 +194,14 @@ typedef enum _MBoySpriteFrame
 
         CGPoint p = position;
 
-        p.y += 32.0f;
+        p.y += 22.0f;
+
+        if (self.spriteCat.visible)
+        {
+            self.spriteCat.position = p;
+        }
+
+        p.y += 28.0f;
 
         self.spritePowerBase.position = p;
 
@@ -208,7 +228,7 @@ typedef enum _MBoySpriteFrame
 {
     CGPoint a = self->_acceleration;
 
-    if (self.state == MBoyStateGlide)
+    if (self.boyState == MBoyStateGlide)
     {
         a.y += 1.0f;
     }
@@ -219,11 +239,11 @@ typedef enum _MBoySpriteFrame
 //------------------------------------------------------------------------------
 -(void) setState:(MBoyState)state
 {
-    if (self->_state != state)
+    if (self->_boyState != state)
     {
         BOOL needUpdatePowerUI = FALSE;
 
-        if (self->_state == MBoyStateStrengthExtra)
+        if (self->_boyState == MBoyStateStrengthExtra)
         {
             needUpdatePowerUI = TRUE;
 
@@ -244,7 +264,7 @@ typedef enum _MBoySpriteFrame
                 [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_hat_power.png"];
         }
 
-        if (self->_state == MBoyStateAgile)
+        if (self->_boyState == MBoyStateAgile)
         {
             self.powerDecimalDelta -= 2;
         }
@@ -267,7 +287,7 @@ typedef enum _MBoySpriteFrame
                 [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_hat_fly.png"];
         }
 
-        self->_state = state;
+        self->_boyState = state;
 
         if (needUpdatePowerUI)
         {
@@ -311,7 +331,7 @@ typedef enum _MBoySpriteFrame
                     self.velocity = v;
                 }
             }
-            else if (self.state == MBoyStateDoubleJump)
+            else if (self.boyState == MBoyStateDoubleJump)
             {
                 if (!self.doubleJumped)
                 {
@@ -324,7 +344,7 @@ typedef enum _MBoySpriteFrame
                     self.velocity = v;
                 }
             }
-            else if (self.state == MBoyStateGlide)
+            else if (self.boyState == MBoyStateGlide)
             {
             }
         }
@@ -349,6 +369,17 @@ typedef enum _MBoySpriteFrame
         }
 
         self->_step = step;
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) setCatState:(uint32_t)catState
+{
+    if (self->_catState != catState)
+    {
+        self->_catState = catState;
+
+        self.spriteCat.visible = (catState != 0);
     }
 }
 
@@ -407,7 +438,7 @@ typedef enum _MBoySpriteFrame
 {
     CGPoint p = self->_position;
 
-    p.y += 32.0f;
+    p.y += 50.0f;
 
     self.spritePowerBase.scaleX = 4.0f * ((float)(self.powerIntegerMax + 2) / 12.0f);
 
@@ -419,10 +450,36 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(BOOL) drinkMilk:(MTowerObjectType)milk
+-(BOOL) collectItem:(MTowerItemBase*)item
 {
-    switch (milk)
+    BOOL collected = TRUE;
+
+    switch (item.type)
     {
+    case MTowerObjectTypeItemBox:
+        {
+            if (self.catState)
+            {
+                self.catState = 0;
+            }
+            else
+            {
+                collected = FALSE;
+            }
+        }
+        break;
+    case MTowerObjectTypeItemCat:
+        {
+            if (!self.catState)
+            {
+                self.catState = 1;
+            }
+            else
+            {
+                collected = FALSE;
+            }
+        }
+        break;
     case MTowerObjectTypeItemMilkAgile:
         {
             self.state = MBoyStateAgile;
@@ -470,12 +527,17 @@ typedef enum _MBoySpriteFrame
         break;
     default:
         {
-            NSAssert(0, @"[MBoyLocal drinkMilk:]");
+            NSAssert(0, @"[MBoyLocal collectItem:]");
         }
         break;
     }
 
-    return TRUE;
+    if (collected)
+    {
+        [item collected];
+    }
+
+    return collected;
 }
 
 //------------------------------------------------------------------------------

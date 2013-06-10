@@ -266,17 +266,7 @@
         {
             for (MTowerItemBase* item in items)
             {
-                if ((item.type == MTowerObjectTypeItemMilkAgile) ||
-                    (item.type == MTowerObjectTypeItemMilkDash) ||
-                    (item.type == MTowerObjectTypeItemMilkDoubleJump) ||
-                    (item.type == MTowerObjectTypeItemMilkGlide) ||
-                    (item.type == MTowerObjectTypeItemMilkStrength) ||
-                    (item.type == MTowerObjectTypeItemMilkStrengthExtra))
-                {
-                    [boy drinkMilk:item.type];
-                }
-
-                [item collected];
+                [boy collectItem:item];
             }
         }
     }
