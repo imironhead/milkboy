@@ -12,14 +12,13 @@
 #import "MTowerStage.h"
 #import "MTowerStep.h"
 #import "MWall.h"
+#import "MWater.h"
 
 
 //------------------------------------------------------------------------------
 @interface MLayerTower()
 @property (nonatomic, strong, readwrite) MBoyLocal* boyLocal;
-
-@property (nonatomic, assign, readwrite) float waterLevel;
-@property (nonatomic, assign, readwrite) float waterSpeed;
+@property (nonatomic, strong, readwrite) MWater* water;
 
 @property (nonatomic, strong) MWall* wall;
 @property (nonatomic, strong) CCSpriteBatchNode* batchNodeSteps;
@@ -61,6 +60,7 @@
         [frameCache addSpriteFramesWithFile:@"Texture/char.plist"];
         [frameCache addSpriteFramesWithFile:@"Texture/step.plist"];
         [frameCache addSpriteFramesWithFile:@"Texture/wall.plist"];
+        [frameCache addSpriteFramesWithFile:@"Texture/water.plist"];
 
         //--
         self.seedLarge = 1 + arc4random_uniform(65534);
@@ -113,7 +113,10 @@
             }
         }
 
-        self.waterLevel = 0.0f;
+        //--water
+        self.water = [MWater new];
+
+        [self addChild:self.water.sprites z:MTowerSpriteDepthWater];
     }
 
     return self;
@@ -378,17 +381,25 @@
 //------------------------------------------------------------------------------
 -(void) updateWaterLevel
 {
-    float y = self.boyLocal.position.y;
+    CGPoint p = self.boyLocal.position;
 
-    if (self.waterLevel < y - 240.0f)
+    self.water.cameraPosition = p;
+
+    [self.water jumpToFrame:self.frameLocal];
+
+    if (self.water.level < p.y)
     {
-        self.waterLevel = y - 240.0f;
-
         //--destroy stages
     }
-    else if (self.waterLevel > y + 22.0f)
+    else
     {
         //--game over
+
+//        //--scene
+//        CCScene *scene = [NSClassFromString(@"MSceneLocalGame") new];
+//
+//        //--go
+//        [[CCDirector sharedDirector] replaceScene:scene];
     }
 }
 

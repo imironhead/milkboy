@@ -13,13 +13,12 @@
 //------------------------------------------------------------------------------
 @class GKMatch;
 @class MBoyLocal;
+@class MWater;
 
 //------------------------------------------------------------------------------
 @interface MLayerTower : CCLayer
 @property (nonatomic, strong, readonly) MBoyLocal* boyLocal;
-
-@property (nonatomic, assign, readonly) float waterLevel;
-@property (nonatomic, assign, readonly) float waterSpeed;
+@property (nonatomic, strong, readonly) MWater* water;
 
 +(id) layerWithMatch:(GKMatch*)match;
 @end

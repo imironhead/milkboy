@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F40B0A17176729DA00CC1B50 /* MWater.m in Sources */ = {isa = PBXBuildFile; fileRef = F40B0A16176729D900CC1B50 /* MWater.m */; };
 		F489435C1743706300897354 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F489435B1743706300897354 /* UIKit.framework */; };
 		F489435E1743706400897354 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F489435D1743706300897354 /* Foundation.framework */; };
 		F48943601743706400897354 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F489435F1743706400897354 /* CoreGraphics.framework */; };
@@ -146,6 +147,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F40B0A15176729D900CC1B50 /* MWater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWater.h; sourceTree = "<group>"; };
+		F40B0A16176729D900CC1B50 /* MWater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWater.m; sourceTree = "<group>"; };
 		F48943581743706300897354 /* Milkboy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Milkboy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F489435B1743706300897354 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F489435D1743706300897354 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -529,6 +532,8 @@
 				F489450B1744B4CE00897354 /* MType.h */,
 				F4ABCE911753026200B9FDE9 /* MWall.h */,
 				F4ABCE921753026200B9FDE9 /* MWall.m */,
+				F40B0A15176729D900CC1B50 /* MWater.h */,
+				F40B0A16176729D900CC1B50 /* MWater.m */,
 			);
 			path = Milkboy;
 			sourceTree = "<group>";
@@ -1242,6 +1247,7 @@
 				F489454517461A0800897354 /* MSceneLocalGame.m in Sources */,
 				F4ABCE931753026200B9FDE9 /* MWall.m in Sources */,
 				F4ABCE96175656B600B9FDE9 /* MTowerItem.m in Sources */,
+				F40B0A17176729DA00CC1B50 /* MWater.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
