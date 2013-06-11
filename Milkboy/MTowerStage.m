@@ -222,6 +222,8 @@
         case 4:     type = MTowerObjectTypeItemMilkStrengthExtra;   break;
         case 5:     type = MTowerObjectTypeItemBox;                 break;
         case 6:     type = MTowerObjectTypeItemCat;                 break;
+        //--not good
+        //case 7:     type = MTowerObjectTypeItemBomb;                break;
         default:    type = MTowerObjectTypeItemMilkStrength;        break;
         }
 

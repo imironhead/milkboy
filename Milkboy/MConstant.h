@@ -25,6 +25,7 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeStepStation,
     MTowerObjectTypeStepSteady,
 
+    MTowerObjectTypeItemBomb,
     MTowerObjectTypeItemBox,
     MTowerObjectTypeItemCat,
     MTowerObjectTypeItemMilkAgile,
@@ -49,6 +50,7 @@ typedef enum _MTowerSpriteDepth
     MTowerSpriteDepthStep,
     MTowerSpriteDepthWall,
     MTowerSpriteDepthChar,
+    MTowerSpriteDepthWater,
     MTowerSpriteDepthEffect,
     MTowerSpriteDepthMenu,
 } MTowerSpriteDepth;

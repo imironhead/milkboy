@@ -39,6 +39,11 @@
 
     switch (type)
     {
+    case MTowerObjectTypeItemBomb:
+        {
+            item = [[MTowerItemBomb alloc] initWithPosition:position uiid:uiid seed:seed];
+        }
+        break;
     case MTowerObjectTypeItemBox:
         {
             item = [[MTowerItemBox alloc] initWithPosition:position uiid:uiid seed:seed];
@@ -170,6 +175,43 @@
     self.sprite.visible = FALSE;
 
     self.live = FALSE;
+}
+
+//------------------------------------------------------------------------------
+@end
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+@implementation MTowerItemBomb
+//------------------------------------------------------------------------------
+-(id) initWithPosition:(CGPoint)position
+                  uiid:(uint32_t)uiid
+                  seed:(int32_t)seed
+{
+    self = [super initWithType:MTowerObjectTypeItemBomb
+                          uiid:uiid
+                          seed:seed];
+
+    if (self)
+    {
+        NSString* frameName = @"item_bomb.png";
+
+        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
+
+        CGSize size = self.sprite.boundingBox.size;
+
+        self.sprite.position = position;
+
+        self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
+
+        self.boundCollision = CGRectMake(
+            position.x - 0.5f * size.width,
+            position.y,
+            size.width,
+            size.height);
+    }
+
+    return self;
 }
 
 //------------------------------------------------------------------------------

@@ -4,6 +4,19 @@
     <dict>
         <key>frames</key>
         <dict>
+            <key>item_bomb.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,186},{21,24}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{21,24}}</string>
+                <key>sourceSize</key>
+                <string>{21,24}</string>
+            </dict>
             <key>item_box.png</key>
             <dict>
                 <key>frame</key>
@@ -33,11 +46,11 @@
             <key>item_cat.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,186},{22,16}}</string>
+                <string>{{1,165},{22,16}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{22,16}}</string>
                 <key>sourceSize</key>
@@ -274,7 +287,7 @@
             <key>size</key>
             <string>{128,256}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:bbfb85017c18d3ef7d3efd10748d51ec$</string>
+            <string>$TexturePacker:SmartUpdate:85d7c1bac4ca75e9d9ecb1328fdbe913$</string>
             <key>textureFileName</key>
             <string>step.pvr.ccz</string>
         </dict>

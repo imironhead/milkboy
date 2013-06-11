@@ -456,6 +456,33 @@ typedef enum _MBoySpriteFrame
 
     switch (item.type)
     {
+    case MTowerObjectTypeItemBomb:
+        {
+            if (!self.step)
+            {
+                collected = FALSE;
+            }
+            else if (self.boyState != MBoyStateInvalid)
+            {
+                self.boyState = MBoyStateInvalid;
+            }
+            else if (self.powerIntegerMax > 3)
+            {
+                self.powerIntegerMax -= 1;
+
+                if (self.powerInteger > self.powerIntegerMax)
+                {
+                    self.powerInteger = self.powerIntegerMax;
+                }
+
+                [self updatePowerUI];
+            }
+            else
+            {
+                collected = TRUE;
+            }
+        }
+        break;
     case MTowerObjectTypeItemBox:
         {
             if (self.catState)
