@@ -29,6 +29,7 @@
 @property (nonatomic, assign, readonly) uint32_t powerDecimal;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalDelta;
+@property (nonatomic, assign, readonly) uint32_t score;
 @property (nonatomic, assign, readonly) uint32_t catState;
 @property (nonatomic, assign, readonly) MBoyState boyState;
 @property (nonatomic, assign) CGPoint position;

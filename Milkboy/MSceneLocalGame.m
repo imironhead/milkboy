@@ -70,9 +70,7 @@
 //------------------------------------------------------------------------------
 -(void) update:(ccTime)elapsed
 {
-    int32_t f = (int32_t)floorf(self.layerTower.boyLocal.position.y / 30.0f);
-
-    self.labelDistance.string = [NSString stringWithFormat:@"%d", f];
+    self.labelDistance.string = [NSString stringWithFormat:@"%d", self.layerTower.boyLocal.score];
 
     self.labelMilkCount.string = [NSString stringWithFormat:@"%d", self.layerTower.boyLocal.milkCount];
 }

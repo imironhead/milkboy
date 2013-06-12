@@ -66,4 +66,16 @@ typedef enum _MBoyState
 } MBoyState;
 
 //------------------------------------------------------------------------------
+typedef enum _MScore
+{
+    MScorePerJump           = 5,
+    MScorePerMeter          = 10,
+    MScorePerCat            = 30,
+    MScorePerCatBox         = 200,
+    MScorePerMilk           = 5,
+    MScorePerFlavoredMilk   = 20,
+    MScorePerFrameInFlood   = 10,
+} MScore;
+
+//------------------------------------------------------------------------------
 

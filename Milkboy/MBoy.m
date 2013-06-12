@@ -35,6 +35,7 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, assign, readwrite) uint32_t powerDecimal;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalDelta;
+@property (nonatomic, assign, readwrite) uint32_t score;
 @property (nonatomic, assign, readwrite) uint32_t catState;
 @property (nonatomic, assign, readwrite) MBoyState boyState;
 @property (nonatomic, strong) CCSprite* spriteBoy;
@@ -46,6 +47,7 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, strong) NSMutableArray* framesHat;
 @property (nonatomic, assign) NSUInteger indexFrameBoy;
 @property (nonatomic, assign) BOOL doubleJumped;
+@property (nonatomic, assign) float highest;
 @end
 
 //------------------------------------------------------------------------------
@@ -129,6 +131,8 @@ typedef enum _MBoySpriteFrame
 
         self.state = MBoyStateInvalid;
 
+        self.highest = 0.0f;
+
         //--power ui
         self.spritePowerBase = [CCSprite spriteWithSpriteFrameName:@"char_power_back.png"];
         self.spritePowerMask = [CCSprite spriteWithSpriteFrameName:@"char_power_mark.png"];
@@ -208,6 +212,14 @@ typedef enum _MBoySpriteFrame
         p = ccpAdd(p, v);
 
         self.spritePowerMask.position = p;
+
+        //
+        if (self.highest < position.y)
+        {
+            self.score += MScorePerMeter * (ceilf(position.y / 30.0f) - ceilf(self.highest / 30.0f));
+
+            self.highest = position.y;
+        }
     }
 }
 
@@ -329,6 +341,8 @@ typedef enum _MBoySpriteFrame
                     self.step = nil;
 
                     self.velocity = v;
+
+                    self.score += MScorePerJump;
                 }
             }
             else if (self.boyState == MBoyStateDoubleJump)
@@ -488,6 +502,8 @@ typedef enum _MBoySpriteFrame
             if (self.catState)
             {
                 self.catState = 0;
+
+                self.score += MScorePerCatBox;
             }
             else
             {
@@ -497,19 +513,23 @@ typedef enum _MBoySpriteFrame
         break;
     case MTowerObjectTypeItemCat:
         {
-            if (!self.catState)
+            if (self.catState)
             {
-                self.catState = 1;
+                collected = FALSE;
             }
             else
             {
-                collected = FALSE;
+                self.catState = 1;
+
+                self.score += MScorePerCat;
             }
         }
         break;
     case MTowerObjectTypeItemMilkAgile:
         {
             self.state = MBoyStateAgile;
+
+            self.score += MScorePerFlavoredMilk;
         }
         break;
     case MTowerObjectTypeItemMilkDash:
@@ -521,16 +541,22 @@ typedef enum _MBoySpriteFrame
             self.step = nil;
 
             self.velocity = v;
+
+            self.score += MScorePerFlavoredMilk;
         }
         break;
     case MTowerObjectTypeItemMilkDoubleJump:
         {
             self.state = MBoyStateDoubleJump;
+
+            self.score += MScorePerFlavoredMilk;
         }
         break;
     case MTowerObjectTypeItemMilkGlide:
         {
             self.state = MBoyStateGlide;
+
+            self.score += MScorePerFlavoredMilk;
         }
         break;
     case MTowerObjectTypeItemMilkStrength:
@@ -545,11 +571,15 @@ typedef enum _MBoySpriteFrame
 
                 [self updatePowerUI];
             }
+
+            self.score += MScorePerMilk;
         }
         break;
     case MTowerObjectTypeItemMilkStrengthExtra:
         {
             self.state = MBoyStateStrengthExtra;
+
+            self.score += MScorePerFlavoredMilk;
         }
         break;
     default:
