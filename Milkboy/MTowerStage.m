@@ -7,6 +7,7 @@
 //
 //------------------------------------------------------------------------------
 #import "MConstant.h"
+#import "MGame.h"
 #import "MTowerItem.h"
 #import "MTowerStage.h"
 #import "MTowerStep.h"
@@ -134,6 +135,8 @@
     uint32_t usidi = 0;
     uint32_t usidc;
 
+    int32_t weightTotal = [[MGame sharedGame] weightFunctionStep];
+
     MTowerObjectType type;
 
     MTowerStepBase* step;
@@ -148,20 +151,7 @@
 
         usidc = (usidm | usidi);
 
-        switch (arc4random_uniform(20))
-        {
-        case 0:     type = MTowerObjectTypeStepBrittle;             break;
-        case 1:     type = MTowerObjectTypeStepDrift;               break;
-        case 2:     type = MTowerObjectTypeStepMoveLeft;            break;
-        case 3:     type = MTowerObjectTypeStepMoveRight;           break;
-        case 4:     type = MTowerObjectTypeStepMovingWalkwayLeft;   break;
-        case 5:     type = MTowerObjectTypeStepMovingWalkwayRight;  break;
-        case 6:     type = MTowerObjectTypeStepPatrolHorizontal;    break;
-        case 7:     type = MTowerObjectTypeStepPatrolVertical;      break;
-        case 8:     type = MTowerObjectTypeStepPulse;               break;
-        case 9:     type = MTowerObjectTypeStepSpring;              break;
-        default:    type = MTowerObjectTypeStepSteady;              break;
-        }
+        type = [[MGame sharedGame] stepWithParameter:arc4random_uniform(weightTotal) inStage:self.stageIndex];
 
         step = [MTowerStepBase stepWithType:type
                                    position:position
@@ -193,6 +183,8 @@
     uint32_t uiidi = 0;
     uint32_t uiidc;
 
+    int32_t weightTotal = [[MGame sharedGame] weightFunctionItem];
+
     MTowerObjectType type;
 
     MTowerItemBase* item;
@@ -213,19 +205,7 @@
 
         uiidc = (uiidm | uiidi);
 
-        switch (arc4random_uniform(9))
-        {
-        case 0:     type = MTowerObjectTypeItemMilkAgile;           break;
-        case 1:     type = MTowerObjectTypeItemMilkDash;            break;
-        case 2:     type = MTowerObjectTypeItemMilkDoubleJump;      break;
-        case 3:     type = MTowerObjectTypeItemMilkGlide;           break;
-        case 4:     type = MTowerObjectTypeItemMilkStrengthExtra;   break;
-        case 5:     type = MTowerObjectTypeItemBox;                 break;
-        case 6:     type = MTowerObjectTypeItemCat;                 break;
-        //--not good
-        //case 7:     type = MTowerObjectTypeItemBomb;                break;
-        default:    type = MTowerObjectTypeItemMilkStrength;        break;
-        }
+        type = [[MGame sharedGame] itemWithParameter:arc4random_uniform(weightTotal) inStage:self.stageIndex];
 
         item = [MTowerItemBase itemWithType:type
                                    position:position

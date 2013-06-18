@@ -7,11 +7,22 @@
 //
 //------------------------------------------------------------------------------
 #import <Foundation/Foundation.h>
+#import "MConstant.h"
 #import "MType.h"
 
 
 //------------------------------------------------------------------------------
 @interface MGame : NSObject
+@property (nonatomic, strong, readonly) NSArray* functionItem;
+@property (nonatomic, strong, readonly) NSArray* functionStep;
+@property (nonatomic, assign, readonly) int32_t weightFunctionItem;
+@property (nonatomic, assign, readonly) int32_t weightFunctionStep;
+
++(id) sharedGame;
+
+-(MTowerObjectType) itemWithParameter:(int32_t)parameter inStage:(uint32_t)stage;
+-(MTowerObjectType) stepWithParameter:(int32_t)parameter inStage:(uint32_t)stage;
+
 //+(float) towerWidth;
 //+(float) towerLeftWallWidth;
 //+(float) towerRightWallWidth;

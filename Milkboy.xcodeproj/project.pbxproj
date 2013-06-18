@@ -149,6 +149,8 @@
 /* Begin PBXFileReference section */
 		F40B0A15176729D900CC1B50 /* MWater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWater.h; sourceTree = "<group>"; };
 		F40B0A16176729D900CC1B50 /* MWater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWater.m; sourceTree = "<group>"; };
+		F41F2F0B176F5DE000C8097C /* data_function_item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data_function_item.h; sourceTree = "<group>"; };
+		F41F2F0C176F5DE000C8097C /* data_function_step.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data_function_step.h; sourceTree = "<group>"; };
 		F48943581743706300897354 /* Milkboy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Milkboy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F489435B1743706300897354 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F489435D1743706300897354 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -514,6 +516,8 @@
 		F48943661743706400897354 /* Milkboy */ = {
 			isa = PBXGroup;
 			children = (
+				F41F2F0B176F5DE000C8097C /* data_function_item.h */,
+				F41F2F0C176F5DE000C8097C /* data_function_step.h */,
 				F48945121745CC5F00897354 /* MConstant.h */,
 				F489450C1744B92E00897354 /* MBoy.h */,
 				F489450D1744B92E00897354 /* MBoy.m */,

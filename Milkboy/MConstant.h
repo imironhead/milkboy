@@ -12,7 +12,8 @@
 //------------------------------------------------------------------------------
 typedef enum _MTowerObjectType
 {
-    MTowerObjectTypeStepBrittle,
+    MTowerObjectTypeStepBase = 0,
+    MTowerObjectTypeStepBrittle = MTowerObjectTypeStepBase,
     MTowerObjectTypeStepDrift,
     MTowerObjectTypeStepMoveLeft,
     MTowerObjectTypeStepMoveRight,
@@ -24,8 +25,10 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeStepSpring,
     MTowerObjectTypeStepStation,
     MTowerObjectTypeStepSteady,
+    MTowerObjectTypeStepMax,
 
-    MTowerObjectTypeItemBomb,
+    MTowerObjectTypeItemBase = 1000,
+    MTowerObjectTypeItemBomb = MTowerObjectTypeItemBase,
     MTowerObjectTypeItemBox,
     MTowerObjectTypeItemCat,
     MTowerObjectTypeItemMilkAgile,
@@ -34,6 +37,7 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeItemMilkGlide,
     MTowerObjectTypeItemMilkStrength,
     MTowerObjectTypeItemMilkStrengthExtra,
+    MTowerObjectTypeItemMax,
 } MTowerObjectType;
 
 //------------------------------------------------------------------------------
