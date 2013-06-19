@@ -14,6 +14,7 @@
 		F41F2F1917718F7400C8097C /* MLayerMenuOption.m in Sources */ = {isa = PBXBuildFile; fileRef = F41F2F1817718F7400C8097C /* MLayerMenuOption.m */; };
 		F41F2F1C17719ABC00C8097C /* MLayerMenuGift.m in Sources */ = {isa = PBXBuildFile; fileRef = F41F2F1B17719ABC00C8097C /* MLayerMenuGift.m */; };
 		F41F2F1F1771A72500C8097C /* MSceneMenuSinglePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F41F2F1E1771A72500C8097C /* MSceneMenuSinglePlayer.m */; };
+		F41F2F221771DE5B00C8097C /* MSceneMenuRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = F41F2F211771DE5B00C8097C /* MSceneMenuRecord.m */; };
 		F489435C1743706300897354 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F489435B1743706300897354 /* UIKit.framework */; };
 		F489435E1743706400897354 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F489435D1743706300897354 /* Foundation.framework */; };
 		F48943601743706400897354 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F489435F1743706400897354 /* CoreGraphics.framework */; };
@@ -169,6 +170,8 @@
 		F41F2F1B17719ABC00C8097C /* MLayerMenuGift.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerMenuGift.m; sourceTree = "<group>"; };
 		F41F2F1D1771A72500C8097C /* MSceneMenuSinglePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSceneMenuSinglePlayer.h; sourceTree = "<group>"; };
 		F41F2F1E1771A72500C8097C /* MSceneMenuSinglePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSceneMenuSinglePlayer.m; sourceTree = "<group>"; };
+		F41F2F201771DE5B00C8097C /* MSceneMenuRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSceneMenuRecord.h; sourceTree = "<group>"; };
+		F41F2F211771DE5B00C8097C /* MSceneMenuRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSceneMenuRecord.m; sourceTree = "<group>"; };
 		F48943581743706300897354 /* Milkboy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Milkboy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F489435B1743706300897354 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F489435D1743706300897354 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -563,6 +566,8 @@
 				F489454417461A0800897354 /* MSceneLocalGame.m */,
 				F41F2F111771506B00C8097C /* MSceneMenuMain.h */,
 				F41F2F121771506B00C8097C /* MSceneMenuMain.m */,
+				F41F2F201771DE5B00C8097C /* MSceneMenuRecord.h */,
+				F41F2F211771DE5B00C8097C /* MSceneMenuRecord.m */,
 				F41F2F1D1771A72500C8097C /* MSceneMenuSinglePlayer.h */,
 				F41F2F1E1771A72500C8097C /* MSceneMenuSinglePlayer.m */,
 				F4ABCE94175656B600B9FDE9 /* MTowerItem.h */,
@@ -1296,6 +1301,7 @@
 				F41F2F1917718F7400C8097C /* MLayerMenuOption.m in Sources */,
 				F41F2F1C17719ABC00C8097C /* MLayerMenuGift.m in Sources */,
 				F41F2F1F1771A72500C8097C /* MSceneMenuSinglePlayer.m in Sources */,
+				F41F2F221771DE5B00C8097C /* MSceneMenuRecord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

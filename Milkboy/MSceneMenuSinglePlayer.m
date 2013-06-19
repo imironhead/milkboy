@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 #import "MSceneLocalGame.h"
 #import "MSceneMenuMain.h"
+#import "MSceneMenuRecord.h"
 #import "MSceneMenuSinglePlayer.h"
 
 
@@ -76,12 +77,11 @@
 
         CCMenuItemLabel* btonRecord = [CCMenuItemLabel itemWithLabel:lablRecord
                                                                  block:^(id sender) {
+            CCScene* next = [MSceneMenuRecord new];
 
-//            CCScene* next = [NSClassFromString(@"MSceneLocalGame") new];
-//
-//            CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
-//
-//            [[CCDirector sharedDirector] replaceScene:transition];
+            CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
+
+            [[CCDirector sharedDirector] replaceScene:transition];
         }];
 
         btonRecord.position = ccp(0.0f, 0.0f);
