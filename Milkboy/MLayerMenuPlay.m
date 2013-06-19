@@ -7,6 +7,7 @@
 //
 //------------------------------------------------------------------------------
 #import "MLayerMenuPlay.h"
+#import "MSceneMenuSinglePlayer.h"
 
 
 //------------------------------------------------------------------------------
@@ -29,7 +30,7 @@
         CCMenuItemLabel* btonPlay = [CCMenuItemLabel itemWithLabel:lablPlay
                                                              block:^(id sender) {
 
-            CCScene* next = [NSClassFromString(@"MSceneLocalGame") new];
+            CCScene* next = [MSceneMenuSinglePlayer new];
 
             CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
 
