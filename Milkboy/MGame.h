@@ -13,6 +13,8 @@
 
 //------------------------------------------------------------------------------
 @interface MGame : NSObject
+@property (nonatomic, strong, readonly) NSString* appId;
+@property (nonatomic, strong, readonly) NSString* urlGiftApp;
 @property (nonatomic, strong, readonly) NSArray* functionItem;
 @property (nonatomic, strong, readonly) NSArray* functionStep;
 @property (nonatomic, assign, readonly) int32_t weightFunctionItem;

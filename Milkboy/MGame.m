@@ -56,6 +56,19 @@ static MGame* _sharedGame = nil;
 }
 
 //------------------------------------------------------------------------------
+-(NSString*) appId
+{
+    return @"454949846";
+}
+
+//------------------------------------------------------------------------------
+-(NSString*) urlGiftApp
+{
+    return [NSString stringWithFormat:@"itms-appss://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/giftSongsWizard?gift=1&salableAdamId=%@&productType=C&pricingParameter=STDQ&mt=8&ign-mscache=1",
+                                self.appId];
+}
+
+//------------------------------------------------------------------------------
 -(int32_t) weightFunctionItem
 {
     return [[(NSArray*)self.functionItem.lastObject lastObject] intValue];

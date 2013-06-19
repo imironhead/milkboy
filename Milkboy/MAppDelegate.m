@@ -88,7 +88,7 @@
     [sharedFileUtils setiPadRetinaDisplaySuffix:@"-xd"];        //--Default on iPad RetinaDisplay is "-ipadhd"
 
     //--scene
-    CCScene *scene = [NSClassFromString(@"MSceneLocalGame") new];
+    CCScene *scene = [NSClassFromString(@"MSceneMenuMain") new];
 
     //--go
     [self.director pushScene:scene];
