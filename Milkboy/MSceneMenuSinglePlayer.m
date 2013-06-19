@@ -10,6 +10,7 @@
 #import "MSceneMenuMain.h"
 #import "MSceneMenuRecord.h"
 #import "MSceneMenuSinglePlayer.h"
+#import "MSceneMenuTutorials.h"
 
 
 //------------------------------------------------------------------------------
@@ -56,12 +57,11 @@
 
         CCMenuItemLabel* btonTutorial = [CCMenuItemLabel itemWithLabel:lablTutorial
                                                                  block:^(id sender) {
+            CCScene* next = [MSceneMenuTutorials new];
 
-//            CCScene* next = [NSClassFromString(@"MSceneLocalGame") new];
-//
-//            CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
-//
-//            [[CCDirector sharedDirector] replaceScene:transition];
+            CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
+
+            [[CCDirector sharedDirector] replaceScene:transition];
         }];
 
         btonTutorial.position = ccp(0.0f, 50.0f);
