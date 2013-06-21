@@ -47,9 +47,7 @@
     if (self)
     {
         //
-        [self scheduleUpdateWithPriority:0];
-
-        [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:1 swallowsTouches:TRUE];
+        [self scheduleUpdate];
 
         //--
         CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
@@ -120,6 +118,22 @@
     }
 
     return self;
+}
+
+//------------------------------------------------------------------------------
+-(void) scheduleUpdateWithPriority:(NSInteger)priority
+{
+    [super scheduleUpdateWithPriority:priority];
+
+    [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:1 swallowsTouches:TRUE];
+}
+
+//------------------------------------------------------------------------------
+-(void) unscheduleUpdate
+{
+    [super unscheduleUpdate];
+
+    [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
 }
 
 //------------------------------------------------------------------------------
