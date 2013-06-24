@@ -19,6 +19,7 @@
 @property (nonatomic, strong) CCLabelAtlas* labelMilkCount;
 @property (nonatomic, strong) CCMenu* menu;
 @property (nonatomic, strong) CCLayer* layerMenuPause;
+@property (nonatomic, strong) CCLayer* layerMenuScore;
 @end
 
 //------------------------------------------------------------------------------
@@ -215,6 +216,86 @@
     CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
 
     [[CCDirector sharedDirector] replaceScene:transition];
+}
+
+//------------------------------------------------------------------------------
+-(void) doScore
+{
+    [self.layerTower unscheduleUpdate];
+
+    self.menu.enabled = FALSE;
+
+    //
+    self.layerMenuScore = [CCLayer new];
+
+    //--content
+    CCLabelTTF* lablScore = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"Score: %d", self.layerTower.boyLocal.score]
+                                             dimensions:CGSizeMake(160.0f, 30.0f)
+                                             hAlignment:kCCTextAlignmentCenter
+                                               fontName:@"Marker Felt"
+                                               fontSize:20.0f];
+
+    lablScore.position = ccp(160.0f, 360.0f);
+
+    [self.layerMenuScore addChild:lablScore];
+
+    //--menu & buttons
+    CCMenu* menuScore = [CCMenu new];
+
+    CCLabelTTF* lablShare = [CCLabelTTF labelWithString:@"share"
+                                             dimensions:CGSizeMake(160.0f, 20.0f)
+                                             hAlignment:kCCTextAlignmentCenter
+                                               fontName:@"Marker Felt"
+                                               fontSize:20.0f];
+
+    CCMenuItemLabel* btonShare = [CCMenuItemLabel itemWithLabel:lablShare target:self selector:@selector(doQuit:)];
+
+    btonShare.position = ccp(0.0f, -90.0f);
+
+    [menuScore addChild:btonShare];
+
+    CCLabelTTF* lablRestart = [CCLabelTTF labelWithString:@"restart"
+                                               dimensions:CGSizeMake(160.0f, 20.0f)
+                                               hAlignment:kCCTextAlignmentCenter
+                                                 fontName:@"Marker Felt"
+                                                 fontSize:20.0f];
+
+    CCMenuItemLabel* btonRestart = [CCMenuItemLabel itemWithLabel:lablRestart target:self selector:@selector(doRestart:)];
+
+    btonRestart.position = ccp(0.0f, -120.0f);
+
+    [menuScore addChild:btonRestart];
+
+    CCLabelTTF* lablQuit = [CCLabelTTF labelWithString:@"quit"
+                                             dimensions:CGSizeMake(160.0f, 20.0f)
+                                             hAlignment:kCCTextAlignmentCenter
+                                               fontName:@"Marker Felt"
+                                               fontSize:20.0f];
+
+    CCMenuItemLabel* btonQuit = [CCMenuItemLabel itemWithLabel:lablQuit target:self selector:@selector(doQuit:)];
+
+    btonQuit.position = ccp(0.0f, -150.0f);
+
+    [menuScore addChild:btonQuit];
+
+    [self.layerMenuScore addChild:menuScore];
+
+    [self addChild:self.layerMenuScore];
+
+    //--action
+    self.layerMenuScore.position = ccp(0.0f, 480.0f);
+
+    menuScore.enabled = FALSE;
+
+    CCMoveTo* actionMove = [CCMoveTo actionWithDuration:0.5f position:ccp(0.0f, 0.0f)];
+
+    CCCallBlock* actionShow = [CCCallBlock actionWithBlock:^{
+        menuScore.enabled = TRUE;
+    }];
+
+    CCSequence* actionSequence = [CCSequence actions:actionMove, actionShow, nil];
+
+    [self.layerMenuScore runAction:actionSequence];
 }
 
 //------------------------------------------------------------------------------

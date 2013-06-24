@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 #import "MBoy.h"
 #import "MLayerTower.h"
+#import "MSceneLocalGame.h"
 #import "MTowerItem.h"
 #import "MTowerStage.h"
 #import "MTowerStep.h"
@@ -408,12 +409,9 @@
     else
     {
         //--game over
+        MSceneLocalGame* scene = (MSceneLocalGame*)[[CCDirector sharedDirector] runningScene];
 
-//        //--scene
-//        CCScene *scene = [NSClassFromString(@"MSceneLocalGame") new];
-//
-//        //--go
-//        [[CCDirector sharedDirector] replaceScene:scene];
+        [scene doScore];
     }
 }
 

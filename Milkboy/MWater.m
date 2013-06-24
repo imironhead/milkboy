@@ -65,7 +65,7 @@
 //------------------------------------------------------------------------------
 -(void) jumpToFrame:(int32_t)frame
 {
-    self.level = frame;//(frame > 600) ? (frame - 600) : 0;
+    self.level = (frame > 600) ? (frame - 600) : 0;
 
     self.sprites.visible = ((float)(self.level + 256) >= self.cameraPosition.y);
 

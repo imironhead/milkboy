@@ -12,4 +12,5 @@
 
 //------------------------------------------------------------------------------
 @interface MSceneLocalGame : CCScene
+-(void) doScore;
 @end
