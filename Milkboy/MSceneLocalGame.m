@@ -31,8 +31,6 @@
 
     if (self)
     {
-        [self scheduleUpdateWithPriority:0];
-
         //
         self.layerTower = [MLayerTower layerWithMatch:nil];
 
@@ -87,6 +85,14 @@
     }
 
     return self;
+}
+
+//------------------------------------------------------------------------------
+-(void) onEnterTransitionDidFinish
+{
+    [self scheduleUpdate];
+
+    [self.layerTower scheduleUpdate];
 }
 
 //------------------------------------------------------------------------------

@@ -47,9 +47,6 @@
 
     if (self)
     {
-        //
-        [self scheduleUpdate];
-
         //--
         CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
 
@@ -116,6 +113,10 @@
         self.water = [MWater new];
 
         [self addChild:self.water.sprites z:MTowerSpriteDepthWater];
+
+
+        //--
+        [self update:0.0f];
     }
 
     return self;
