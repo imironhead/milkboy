@@ -616,6 +616,9 @@
 
         self.sprite.scaleX = 5.0f;
 
+        //--hide for basement, show if step basement is implemented and I need station
+        self.sprite.visible = FALSE;
+
         self.boundCollision = self.sprite.boundingBox;
     }
 

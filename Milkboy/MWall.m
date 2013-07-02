@@ -13,6 +13,8 @@
 @interface MWall ()
 @property (nonatomic, strong, readwrite) CCSpriteBatchNode* spritesBack;
 @property (nonatomic, strong, readwrite) CCSpriteBatchNode* spritesWall;
+@property (nonatomic, strong) NSMutableArray* framesBackground;
+@property (nonatomic, strong) NSMutableArray* framesBasement;
 @end
 
 //------------------------------------------------------------------------------
@@ -31,32 +33,87 @@
         [self.spritesBack.texture setAliasTexParameters];
         [self.spritesWall.texture setAliasTexParameters];
 
-        //
-        CCSprite* sprite;
+        //--frames
+        NSArray* namesBackground =
+        @[
+            @"back_background_00.png",
+            @"back_background_01.png",
+            @"back_background_02.png",
+            @"back_background_03.png",
+            @"back_background_04.png",
+            @"back_background_05.png",
+            @"back_background_06.png",
+            @"back_background_07.png",
+        ];
 
-        for (int i = 0; i < 20; ++i)
+        NSArray* namesBasement =
+        @[
+            @"back_basement_00.png",
+            @"back_basement_01.png",
+            @"back_basement_02.png",
+            @"back_basement_03.png",
+            @"back_basement_04.png",
+        ];
+
+        CCSpriteFrameCache* cache = [CCSpriteFrameCache sharedSpriteFrameCache];
+
+        self.framesBackground = [NSMutableArray arrayWithCapacity:namesBackground.count];
+
+        self.framesBasement   = [NSMutableArray arrayWithCapacity:namesBasement.count];
+
+        for (NSString* name in namesBackground)
         {
-            sprite = [CCSprite spriteWithSpriteFrameName:@"back.png"];
+            [self.framesBackground addObject:[cache spriteFrameByName:name]];
+        }
 
-            sprite.position = CGPointMake(
-                160.0f,
-                16.0f + 32.0f * (float)i);
-
-            [self.spritesBack addChild:sprite z:0];
+        for (NSString* name in namesBasement)
+        {
+            [self.framesBasement addObject:[cache spriteFrameByName:name]];
         }
 
         //
-        for (int i = 0; i < 20; ++i)
+        CCSprite* sprite;
+
+        float y = -256.0f;
+
+        for (int i = -8; i < 12; ++i, y += 32.0f)
         {
+            //--background
+            sprite = [CCSprite new];
+
+            sprite.position = CGPointMake(0.0f, y);
+
+            sprite.anchorPoint = ccp(0.0f, 0.0f);
+            sprite.scale = 2.0f;
+
+            if (i >= 0)
+            {
+                sprite.displayFrame = self.framesBackground[(i + i % 7) % 8];
+            }
+            else if (i == -1)
+            {
+                sprite.displayFrame = self.framesBasement[0];
+            }
+            else
+            {
+                sprite.displayFrame = self.framesBasement[1 + (-i - 1) % 4];
+            }
+
+            [self.spritesBack addChild:sprite z:0];
+
+            //--left wall
             sprite = [CCSprite spriteWithSpriteFrameName:@"wall_01.png"];
 
-            sprite.position = CGPointMake(-20.0f, 16.0f + 32.0f * (float)i);
+            sprite.position = CGPointMake(0.0f, y);
+            sprite.anchorPoint = ccp(1.0f, 0.0f);
 
             [self.spritesWall addChild:sprite z:0];
 
+            //--right wall
             sprite = [CCSprite spriteWithSpriteFrameName:@"wall_02.png"];
 
-            sprite.position = CGPointMake(330.0f, 16.0f + 32.0f * (float)i);
+            sprite.position = CGPointMake(310.0f, y);
+            sprite.anchorPoint = ccp(0.0f, 0.0f);
 
             sprite.flipX = TRUE;
 
@@ -77,19 +134,36 @@
         CCSprite* spriteT = [self.spritesBack.children lastObject];
         CCSprite* spriteB = [self.spritesBack.children objectAtIndex:0];
 
-        if (cameraPosition.y + 240.0f >= spriteT.position.y)
+        if ((cameraPosition.y + 240.0f >= spriteT.position.y) ||
+            (cameraPosition.y - 240.0f <= spriteB.position.y))
         {
-            float bottom = 16.0f + 32.0f * floorf((cameraPosition.y - 256.0f) / 32.0f);
+            int32_t k = 0;
+            int32_t q = floorf((cameraPosition.y - 256.0f) / 32.0f);
+
+            float bottom = 32.0f * (float)q;
             float b = bottom;
 
             for (CCSprite* sprite in self.spritesBack.children)
             {
-                sprite.position = CGPointMake(160.0f, b);
+                sprite.position = CGPointMake(0.0f, b);
+
+                if (q >= 0)
+                {
+                    sprite.displayFrame = self.framesBackground[(q + q % 7) % 8];
+                }
+                else if (q == -1)
+                {
+                    sprite.displayFrame = self.framesBasement[0];
+                }
+                else
+                {
+                    sprite.displayFrame = self.framesBasement[1 + (-q - 1) % 4];
+                }
 
                 b += 32.0f;
-            }
 
-            int32_t k = 0;
+                q += 1;
+            }
 
             b = bottom;
 
@@ -99,43 +173,11 @@
 
                 if (k & 1)
                 {
-                    sprite.position = CGPointMake(-20.0f, b);
+                    sprite.position = CGPointMake(0.0f, b);
                 }
                 else
                 {
-                    sprite.position = CGPointMake(330.0f, b);
-
-                    b += 32.0f;
-                }
-            }
-        }
-        else if (cameraPosition.y - 240.0f <= spriteB.position.y)
-        {
-            float bottom = 16.0f + 32.0f * floorf((cameraPosition.y - 256.0f) / 32.0f);
-            float b = bottom;
-
-            for (CCSprite* sprite in self.spritesBack.children)
-            {
-                sprite.position = CGPointMake(160.0f, b);
-
-                b += 32.0f;
-            }
-
-            int32_t k = 0;
-
-            b = bottom;
-
-            for (CCSprite* sprite in self.spritesWall.children)
-            {
-                k += 1;
-
-                if (k & 1)
-                {
-                    sprite.position = CGPointMake(-20.0f, b);
-                }
-                else
-                {
-                    sprite.position = CGPointMake(330.0f, b);
+                    sprite.position = CGPointMake(310.0f, b);
 
                     b += 32.0f;
                 }
