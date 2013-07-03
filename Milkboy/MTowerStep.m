@@ -232,6 +232,8 @@
     {
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_disposable_01.png"];
 
+        self.sprite.scale = 2.0f;
+
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
@@ -283,6 +285,8 @@
     {
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_bubble.png"];
 
+        self.sprite.scale = 2.0f;
+
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
@@ -326,6 +330,8 @@
         self.positionOrigin = position;
 
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
+
+        self.sprite.scale = 2.0f;
 
         self.sprite.position = position;
 
@@ -403,6 +409,8 @@
 
         self.sprite = [CCSprite spriteWithSpriteFrame:self.frames[0]];
 
+        self.sprite.scale = 2.0f;
+
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
@@ -459,6 +467,8 @@
         self.positionOrigin = position;
 
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
+
+        self.sprite.scale = 2.0f;
 
         self.sprite.position = position;
 
@@ -522,6 +532,8 @@
     {
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_pulse_on.png"];
 
+        self.sprite.scale = 2.0f;
+
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
@@ -581,6 +593,8 @@
     {
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_spring.png"];
 
+        self.sprite.scale = 2.0f;
+
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
@@ -614,7 +628,7 @@
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
 
-        self.sprite.scaleX = 5.0f;
+        self.sprite.scaleX = 10.0f;
 
         //--hide for basement, show if step basement is implemented and I need station
         self.sprite.visible = FALSE;
@@ -643,6 +657,8 @@
     if (self)
     {
         self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
+
+        self.sprite.scale = 2.0f;
 
         self.sprite.position = position;
 

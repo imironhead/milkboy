@@ -235,26 +235,35 @@
 
         self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
 
-        CGSize size = self.sprite.boundingBox.size;
+        self.sprite.scale = 2.0f;
 
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
 
-        self.boundCollision = CGRectMake(
-            position.x - 0.5f * size.width,
-            position.y,
-            size.width,
-            size.height);
+        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
+-(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+{
+    if (!self.live)
+    {
+        //--cat in box
+
+        NSString* name = [NSString stringWithFormat:@"item_box_cat_%02d.png", (frame / 20) % 5];
+
+        self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
+    }
+}
+
+//------------------------------------------------------------------------------
 -(void) collected
 {
-    self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"item_box_cat.png"];
+    self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"item_box_cat_00.png"];
 
     self.live = FALSE;
 }
@@ -276,24 +285,31 @@
 
     if (self)
     {
-        NSString* frameName = @"item_cat.png";
+        NSString* frameName = @"item_cat_00.png";
 
         self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
 
-        CGSize size = self.sprite.boundingBox.size;
+        self.sprite.scale = 2.0f;
 
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
 
-        self.boundCollision = CGRectMake(
-            position.x - 0.5f * size.width,
-            position.y,
-            size.width,
-            size.height);
+        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
+}
+
+//------------------------------------------------------------------------------
+-(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+{
+    if (self.live)
+    {
+        NSString* name = [NSString stringWithFormat:@"item_cat_%02d.png", (frame / 20) % 4];
+
+        self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -357,17 +373,13 @@
 
         self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
 
-        CGSize size = self.sprite.boundingBox.size;
+        self.sprite.scale = 2.0f;
 
         self.sprite.position = position;
 
         self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
 
-        self.boundCollision = CGRectMake(
-            position.x - 0.5f * size.width,
-            position.y,
-            size.width,
-            size.height);
+        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;

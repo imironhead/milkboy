@@ -71,6 +71,8 @@
         //--
         self.batchNodeSteps = [CCSpriteBatchNode batchNodeWithFile:@"Texture/step.pvr.ccz" capacity:32];
 
+        [self.batchNodeSteps.texture setAliasTexParameters];
+
         [self addChild:self.batchNodeSteps z:MTowerSpriteDepthStep];
 
         //--initial stage
