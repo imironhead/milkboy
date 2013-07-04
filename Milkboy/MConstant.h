@@ -82,4 +82,11 @@ typedef enum _MScore
 } MScore;
 
 //------------------------------------------------------------------------------
+typedef enum _MTowerType
+{
+    MTowerTypeSinglePlayer,
+    MTowerTypeBackgroundOfMainMenu,
+} MTowerType;
+
+//------------------------------------------------------------------------------
 

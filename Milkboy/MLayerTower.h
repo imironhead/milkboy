@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
+#import "MConstant.h"
 
 
 //------------------------------------------------------------------------------
@@ -19,6 +20,8 @@
 @interface MLayerTower : CCLayer
 @property (nonatomic, strong, readonly) MBoyLocal* boyLocal;
 @property (nonatomic, strong, readonly) MWater* water;
+@property (nonatomic, assign, readonly) MTowerType type;
 
 +(id) layerWithMatch:(GKMatch*)match;
++(id) layerForMainMenu;
 @end

@@ -49,6 +49,12 @@
 }
 
 //------------------------------------------------------------------------------
++(id) stageForMainMenu
+{
+    return [[self alloc] initForMainMenu];
+}
+
+//------------------------------------------------------------------------------
 -(id) initWithZeroIndex
 {
     self = [super init];
@@ -90,6 +96,74 @@
         //
         [self buildSteps];
         [self buildItems];
+    }
+
+    return self;
+}
+
+//------------------------------------------------------------------------------
+-(id) initForMainMenu
+{
+    self = [super init];
+
+    if (self)
+    {
+        //
+        self.stageIndex = 1;
+        self.frameIndex = 0;
+        self.seed = 0;
+        self.matchGame = FALSE;
+
+        self.rangeCollision = MCollisionRangeMake(0.0, 600.0f);
+
+        //
+        self.steps = [NSMutableArray new];
+        self.items = [NSMutableArray new];
+
+        //
+        NSMutableArray* steps = (NSMutableArray*)self.steps;
+
+        MTowerStepBase* step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
+                                                   position:ccp(40.0f, 200.0f)
+                                                       usid:0
+                                                       seed:0];
+
+        [steps addObject:step];
+
+        //
+        step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
+                                   position:ccp(260.0f, 280.0f)
+                                       usid:0
+                                       seed:0];
+
+        [steps addObject:step];
+
+        //
+        step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
+                                   position:ccp(160.0f, 40.0f)
+                                       usid:0
+                                       seed:0];
+
+        [steps addObject:step];
+
+        //
+        NSMutableArray* items = (NSMutableArray*)self.items;
+
+        MTowerItemBase* item;
+
+        item = [MTowerItemBase itemWithType:MTowerObjectTypeItemCat
+                                   position:ccp(270.0f, 280.0f)
+                                       uiid:0
+                                       seed:0];
+
+        [items addObject:item];
+
+        item = [MTowerItemBase itemWithType:MTowerObjectTypeItemMilkStrength
+                                   position:ccp(60.0f, 200.0f)
+                                       uiid:0
+                                       seed:0];
+
+        [items addObject:item];
     }
 
     return self;

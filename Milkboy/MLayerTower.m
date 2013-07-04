@@ -20,6 +20,7 @@
 @interface MLayerTower()
 @property (nonatomic, strong, readwrite) MBoyLocal* boyLocal;
 @property (nonatomic, strong, readwrite) MWater* water;
+@property (nonatomic, assign, readwrite) MTowerType type;
 
 @property (nonatomic, strong) MWall* wall;
 @property (nonatomic, strong) CCSpriteBatchNode* batchNodeSteps;
@@ -41,6 +42,12 @@
 }
 
 //------------------------------------------------------------------------------
++(id) layerForMainMenu
+{
+    return [[self alloc] initForMainMenu];
+}
+
+//------------------------------------------------------------------------------
 -(id) initWithMatch:(GKMatch*)match
 {
     self = [super init];
@@ -48,17 +55,7 @@
     if (self)
     {
         //--
-        CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
-
-        [frameCache removeUnusedSpriteFrames];
-
-        [frameCache addSpriteFramesWithFile:@"Texture/back.plist"];
-        [frameCache addSpriteFramesWithFile:@"Texture/char.plist"];
-        [frameCache addSpriteFramesWithFile:@"Texture/step.plist"];
-        [frameCache addSpriteFramesWithFile:@"Texture/wall.plist"];
-        [frameCache addSpriteFramesWithFile:@"Texture/water.plist"];
-
-        //--
+        self.type = MTowerTypeSinglePlayer;
         self.seedLarge = 1 + arc4random_uniform(65534);
         self.seedSmall = self.seedLarge;
 
@@ -70,8 +67,6 @@
 
         //--
         self.batchNodeSteps = [CCSpriteBatchNode batchNodeWithFile:@"Texture/step.pvr.ccz" capacity:32];
-
-        [self.batchNodeSteps.texture setAliasTexParameters];
 
         [self addChild:self.batchNodeSteps z:MTowerSpriteDepthStep];
 
@@ -112,10 +107,75 @@
         }
 
         //--water
-        self.water = [MWater new];
+//        self.water = [MWater new];
+//
+//        [self addChild:self.water.sprites z:MTowerSpriteDepthWater];
 
-        [self addChild:self.water.sprites z:MTowerSpriteDepthWater];
 
+        //--
+        [self update:0.0f];
+    }
+
+    return self;
+}
+
+//------------------------------------------------------------------------------
+-(id) initForMainMenu
+{
+    self = [super init];
+
+    if (self)
+    {
+        //--
+        self.type = MTowerTypeBackgroundOfMainMenu;
+        self.seedLarge = 1 + arc4random_uniform(65534);
+        self.seedSmall = self.seedLarge;
+
+        //--
+        self.wall = [MWall new];
+
+        [self addChild:self.wall.spritesBack z:MTowerSpriteDepthBack];
+        [self addChild:self.wall.spritesWall z:MTowerSpriteDepthWall];
+
+        //--
+        self.batchNodeSteps = [CCSpriteBatchNode batchNodeWithFile:@"Texture/step.pvr.ccz" capacity:32];
+
+        [self addChild:self.batchNodeSteps z:MTowerSpriteDepthStep];
+
+        //--initial stage
+        MTowerStage* stage = [MTowerStage stageWithIndex:0 seed:0 matchGame:FALSE];
+
+        self.stagesInTower = [NSMutableArray arrayWithObject:stage];
+        self.stagesVisible = [NSMutableArray arrayWithObject:stage];
+
+        stage = [MTowerStage stageForMainMenu];
+
+        [self.stagesInTower addObject:stage];
+        [self.stagesVisible addObject:stage];
+
+        //--
+        for (stage in self.stagesVisible)
+        {
+            for (MTowerStepBase* step in stage.steps)
+            {
+                [self.batchNodeSteps addChild:step.sprite z:0];
+            }
+
+            for (MTowerItemBase* item in stage.items)
+            {
+                [self.batchNodeSteps addChild:item.sprite z:1];
+            }
+        }
+
+        //--boy
+        self.boyLocal = [MBoyLocal new];
+
+        [self addChild:self.boyLocal.sprite z:MTowerSpriteDepthChar];
+
+        //
+        self.position = ccp(5.0f, 64.0f);
+
+        self.wall.cameraPosition = ccp(0.0f, 176.0f);
 
         //--
         [self update:0.0f];
@@ -129,7 +189,10 @@
 {
     [super scheduleUpdateWithPriority:priority];
 
-    [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:1 swallowsTouches:TRUE];
+    if (self.type == MTowerTypeSinglePlayer)
+    {
+        [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:1 swallowsTouches:TRUE];
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -137,16 +200,33 @@
 {
     [super unscheduleUpdate];
 
-    [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+    if (self.type == MTowerTypeSinglePlayer)
+    {
+        [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+    }
 }
 
 //------------------------------------------------------------------------------
 -(void) update:(ccTime)elapsed
 {
+    [self updateBoyForMainMenu];
+
     [self updateStage];
     [self updateLocalBoy];
     [self updateCamera];
-    [self updateWaterLevel];
+//    [self updateWaterLevel];
+}
+
+-(void) updateBoyForMainMenu
+{
+    if (self.type == MTowerTypeBackgroundOfMainMenu)
+    {
+        if ((0 == self.frameLocal % 60) ||
+            (0 == self.frameLocal % 90))
+        {
+            self.boyLocal.pressed = !self.boyLocal.pressed;
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -386,14 +466,17 @@
 //------------------------------------------------------------------------------
 -(void) updateCamera
 {
-    CGPoint p = self.boyLocal.position;
+    if (self.type == MTowerTypeSinglePlayer)
+    {
+        CGPoint p = self.boyLocal.position;
 
-    self.wall.cameraPosition = p;
+        self.wall.cameraPosition = p;
 
-    p.x = 5.0f;
-    p.y = 240.0f - p.y;
+        p.x = 5.0f;
+        p.y = 240.0f - p.y;
 
-    self.position = p;
+        self.position = p;
+    }
 }
 
 //------------------------------------------------------------------------------

@@ -30,9 +30,6 @@
         self.spritesBack = [CCSpriteBatchNode batchNodeWithFile:@"Texture/back.pvr.ccz" capacity:20];
         self.spritesWall = [CCSpriteBatchNode batchNodeWithFile:@"Texture/wall.pvr.ccz" capacity:40];
 
-        [self.spritesBack.texture setAliasTexParameters];
-        [self.spritesWall.texture setAliasTexParameters];
-
         //--frames
         NSArray* namesBackground =
         @[

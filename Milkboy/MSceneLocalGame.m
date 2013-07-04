@@ -31,6 +31,39 @@
 
     if (self)
     {
+        //--
+        CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+
+        [frameCache removeUnusedSpriteFrames];
+
+        NSArray* namesSpriteFrameFile =
+        @[
+            @"Texture/back.plist",
+            @"Texture/char.plist",
+            @"Texture/step.plist",
+            @"Texture/wall.plist",
+        ];
+
+        for (NSString* name in namesSpriteFrameFile)
+        {
+            [frameCache addSpriteFramesWithFile:name];
+        }
+
+        NSArray* namesTexture =
+        @[
+            @"Texture/back.pvr.ccz",
+            @"Texture/char.pvr.ccz",
+            @"Texture/step.pvr.ccz",
+            @"Texture/wall.pvr.ccz",
+        ];
+
+        CCTextureCache* textureCache = [CCTextureCache sharedTextureCache];
+
+        for (NSString* name in namesTexture)
+        {
+            [[textureCache addImage:name] setAliasTexParameters];
+        }
+
         //
         self.layerTower = [MLayerTower layerWithMatch:nil];
 

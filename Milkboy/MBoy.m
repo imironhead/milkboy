@@ -62,9 +62,6 @@ typedef enum _MBoySpriteFrame
         //--batch node
         self.sprite = [CCSpriteBatchNode batchNodeWithFile:@"Texture/char.pvr.ccz" capacity:4];
 
-        //--nearest sampling
-        [self.sprite.texture setAliasTexParameters];
-
         //--boy sprite
         self.spriteBoy = [CCSprite spriteWithSpriteFrameName:@"char_move_00.png"];
 

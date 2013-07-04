@@ -21,25 +21,55 @@
     {
         CCMenu* menu = [CCMenu new];
 
-        CCLabelTTF* lablGift = [CCLabelTTF labelWithString:@"gift"
-                                                dimensions:CGSizeMake(160.0f, 80.0f)
-                                                hAlignment:kCCTextAlignmentCenter
-                                                  fontName:@"Marker Felt"
-                                                  fontSize:40.0f];
+        //
+        CCMenuItemSprite* btonGiftBox =
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_box.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_box.png"]
+                                           target:self
+                                         selector:@selector(onGift:)];
 
-        CCMenuItemLabel* btonGift = [CCMenuItemLabel itemWithLabel:lablGift
-                                                             block:^(id sender) {
-            NSString* url = [[MGame sharedGame] urlGiftApp];
+        btonGiftBox.scale = 2.0f;
 
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-        }];
+        btonGiftBox.position = ccp(0.0f, 120.0f);
 
-        [menu addChild:btonGift];
+        [menu addChild:btonGiftBox];
 
+        //
+        CCMenuItemSprite* btonGiftText0 =
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_0.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_0.png"]
+                                           target:self
+                                         selector:@selector(onGift:)];
+
+        btonGiftText0.scale = 2.0f;
+
+        btonGiftText0.position = ccp(0.0f, 0.0f);
+
+        [menu addChild:btonGiftText0];
+
+        //
+        CCMenuItemSprite* btonGiftText1 =
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_1.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_1.png"]
+                                           target:self
+                                         selector:@selector(onGift:)];
+
+        btonGiftText1.scale = 2.0f;
+
+        btonGiftText1.position = ccp(0.0f, -60.0f);
+
+        [menu addChild:btonGiftText1];
+
+        //
         [self addChild:menu];
     }
 
     return self;
+}
+
+//------------------------------------------------------------------------------
+-(void) onGift:(id)sender
+{
 }
 
 //------------------------------------------------------------------------------

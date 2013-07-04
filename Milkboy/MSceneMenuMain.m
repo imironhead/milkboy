@@ -9,6 +9,7 @@
 #import "MLayerMenuGift.h"
 #import "MLayerMenuOption.h"
 #import "MLayerMenuPlay.h"
+#import "MLayerTower.h"
 #import "MSceneMenuMain.h"
 
 
@@ -20,6 +21,7 @@
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 @interface MSceneMenuMain ()
+@property (nonatomic, strong) MLayerTower* layerTower;
 @end
 
 //------------------------------------------------------------------------------
@@ -57,10 +59,56 @@
 
     if (self)
     {
+        //--
+        CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+
+        [frameCache removeUnusedSpriteFrames];
+
+        NSArray* namesSpriteFrameFile =
+        @[
+            @"Texture/menu_main.plist",
+            @"Texture/back.plist",
+            @"Texture/char.plist",
+            @"Texture/step.plist",
+            @"Texture/wall.plist",
+        ];
+
+        for (NSString* name in namesSpriteFrameFile)
+        {
+            [frameCache addSpriteFramesWithFile:name];
+        }
+
+        NSArray* namesTexture =
+        @[
+            @"Texture/menu_main.pvr.ccz",
+            @"Texture/back.pvr.ccz",
+            @"Texture/char.pvr.ccz",
+            @"Texture/step.pvr.ccz",
+            @"Texture/wall.pvr.ccz",
+        ];
+
+        CCTextureCache* textureCache = [CCTextureCache sharedTextureCache];
+
+        for (NSString* name in namesTexture)
+        {
+            [[textureCache addImage:name] setAliasTexParameters];
+        }
+
+        //
+        self.layerTower = [MLayerTower layerForMainMenu];
+
+        [self addChild:self.layerTower];
+
         [self addChild:[MLayerMenuMain new]];
     }
 
     return self;
+}
+
+//------------------------------------------------------------------------------
+-(void) onEnterTransitionDidFinish
+{
+    [self.layerTower scheduleUpdate];
 }
 
 //------------------------------------------------------------------------------

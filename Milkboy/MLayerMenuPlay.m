@@ -19,23 +19,18 @@
 
     if (self)
     {
+        //
+        CCMenuItemSprite* btonPlay =
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+                                           target:self
+                                         selector:@selector(onPlay:)];
+
+        btonPlay.scale = 2.0f;
+
         CCMenu* menu = [CCMenu new];
 
-        CCLabelTTF* lablPlay = [CCLabelTTF labelWithString:@"PLAY"
-                                                dimensions:CGSizeMake(160.0f, 80.0f)
-                                                hAlignment:kCCTextAlignmentCenter
-                                                  fontName:@"Marker Felt"
-                                                  fontSize:40.0f];
-
-        CCMenuItemLabel* btonPlay = [CCMenuItemLabel itemWithLabel:lablPlay
-                                                             block:^(id sender) {
-
-            CCScene* next = [MSceneMenuSinglePlayer new];
-
-            CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
-
-            [[CCDirector sharedDirector] replaceScene:transition];
-        }];
+        menu.position = ccp(160.0f, 240.0f);
 
         [menu addChild:btonPlay];
 
@@ -43,6 +38,16 @@
     }
 
     return self;
+}
+
+//------------------------------------------------------------------------------
+-(void) onPlay:(id)sender
+{
+    CCScene* next = [MSceneMenuSinglePlayer new];
+
+    CCTransitionCrossFade* transition = [CCTransitionCrossFade transitionWithDuration:0.5 scene:next];
+
+    [[CCDirector sharedDirector] replaceScene:transition];
 }
 
 //------------------------------------------------------------------------------
