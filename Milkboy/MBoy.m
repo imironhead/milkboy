@@ -27,7 +27,7 @@ typedef enum _MBoySpriteFrame
 } MBoySpriteFrame;
 
 //------------------------------------------------------------------------------
-@interface MBoyLocal()
+@interface MBoy()
 @property (nonatomic, strong, readwrite) CCSpriteBatchNode* sprite;
 @property (nonatomic, assign, readwrite) CGRect boundCollision;
 @property (nonatomic, assign, readwrite) uint32_t powerInteger;
@@ -51,7 +51,7 @@ typedef enum _MBoySpriteFrame
 @end
 
 //------------------------------------------------------------------------------
-@implementation MBoyLocal
+@implementation MBoy
 //------------------------------------------------------------------------------
 -(id) init
 {

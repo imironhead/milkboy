@@ -71,7 +71,7 @@
     //--Default texture format for PNG/BMP/TIFF/JPEG/GIF images
     //--It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
     //--You can change anytime.
-    [CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
+    [CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGB5A1];
 
     //--
     [CCTexture2D PVRImagesHavePremultipliedAlpha:TRUE];
@@ -87,8 +87,43 @@
     [sharedFileUtils setiPadSuffix:@"-hd"];                     //--Default on iPad is "ipad"
     [sharedFileUtils setiPadRetinaDisplaySuffix:@"-xd"];        //--Default on iPad RetinaDisplay is "-ipadhd"
 
+    //--load textures for tower, I need them everywhere
+    CCSpriteFrameCache* frameCache = [CCSpriteFrameCache sharedSpriteFrameCache];
+
+    NSArray* namesSpriteFrameFile =
+    @[
+        @"Texture/menu_main.plist",
+        @"Texture/menu_play.plist",
+        @"Texture/back.plist",
+        @"Texture/char.plist",
+        @"Texture/step.plist",
+        @"Texture/wall.plist",
+    ];
+
+    for (NSString* name in namesSpriteFrameFile)
+    {
+        [frameCache addSpriteFramesWithFile:name];
+    }
+
+    NSArray* namesTexture =
+    @[
+        @"Texture/menu_main.pvr.ccz",
+        @"Texture/menu_play.pvr.ccz",
+        @"Texture/back.pvr.ccz",
+        @"Texture/char.pvr.ccz",
+        @"Texture/step.pvr.ccz",
+        @"Texture/wall.pvr.ccz",
+    ];
+
+    CCTextureCache* textureCache = [CCTextureCache sharedTextureCache];
+
+    for (NSString* name in namesTexture)
+    {
+        [[textureCache addImage:name] setAliasTexParameters];
+    }
+
     //--scene
-    CCScene *scene = [NSClassFromString(@"MSceneMenuMain") new];
+    CCScene *scene = [NSClassFromString(@"MScene") new];
 
     //--go
     [self.director pushScene:scene];

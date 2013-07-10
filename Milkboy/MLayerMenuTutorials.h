@@ -1,8 +1,8 @@
 //
-//  MSceneMenuRecord.h
+//  MLayerTutorials.h
 //  Milkboy
 //
-//  Created by iRonhead on 6/19/13.
+//  Created by iRonhead on 7/9/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
@@ -11,5 +11,9 @@
 
 
 //------------------------------------------------------------------------------
-@interface MSceneMenuRecord : CCScene
+@interface MLayerTutorialBegin : CCLayer
+@end
+
+//------------------------------------------------------------------------------
+@interface MLayerTutorialEnd : CCLayer
 @end

@@ -16,7 +16,7 @@
 @class MTowerStepBase;
 
 //------------------------------------------------------------------------------
-@interface MBoyLocal : NSObject
+@interface MBoy : NSObject
 @property (nonatomic, strong, readonly) CCSpriteBatchNode* sprite;
 @property (nonatomic, assign, readonly) float defaultMoveSpeed;
 @property (nonatomic, assign, readonly) float defaultJumpSpeed;

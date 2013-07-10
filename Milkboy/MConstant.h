@@ -13,7 +13,8 @@
 typedef enum _MTowerObjectType
 {
     MTowerObjectTypeStepBase = 0,
-    MTowerObjectTypeStepBrittle = MTowerObjectTypeStepBase,
+    MTowerObjectTypeStepBasement = MTowerObjectTypeStepBase,
+    MTowerObjectTypeStepBrittle,
     MTowerObjectTypeStepDrift,
     MTowerObjectTypeStepMoveLeft,
     MTowerObjectTypeStepMoveRight,
@@ -56,6 +57,7 @@ typedef enum _MTowerSpriteDepth
     MTowerSpriteDepthChar,
     MTowerSpriteDepthWater,
     MTowerSpriteDepthEffect,
+    MTowerSpriteDepthDarken,
     MTowerSpriteDepthMenu,
 } MTowerSpriteDepth;
 
@@ -84,9 +86,31 @@ typedef enum _MScore
 //------------------------------------------------------------------------------
 typedef enum _MTowerType
 {
-    MTowerTypeSinglePlayer,
-    MTowerTypeBackgroundOfMainMenu,
+    MTowerTypeMenuMain,
+    MTowerTypeGameSinglePlayer,
 } MTowerType;
 
 //------------------------------------------------------------------------------
+enum
+{
+    MTagGift = 0x40000000,
 
+    MTagGotoLayerGameSinglePlayer,
+    MTagGotoLayerMenuGift,
+    MTagGotoLayerMenuMain,
+    MTagGotoLayerMenuOption,
+    MTagGotoLayerMenuRecord,
+    MTagGotoLayerMenuSinglePlayer,
+    MTagLayerDarken,
+    MTagLayerMenuGift,
+    MTagLayerMenuMain,
+    MTagLayerMenuOption,
+    MTagLayerMenuSinglePlayer,
+    MTagLayerTower,
+    MTagGotoLayerMenuTutorialBegin,
+    MTagShowLeaderboard,
+    MTagToggleMusic,
+    MTagToggleSound,
+};
+
+//------------------------------------------------------------------------------

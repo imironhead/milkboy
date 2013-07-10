@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
+#import "MConstant.h"
 #import "MLayerMenuOption.h"
 
 
@@ -18,6 +19,12 @@
 
     if (self)
     {
+        self.tag = MTagLayerMenuOption;
+
+        //--target
+        id target = [[CCDirector sharedDirector] runningScene];
+
+        //--batch node
         CCSpriteBatchNode* batchCredit = [CCSpriteBatchNode batchNodeWithFile:@"Texture/menu_main.pvr.ccz"];
 
         //--credit ironhead
@@ -36,33 +43,41 @@
 
         [batchCredit addChild:lablCocos2d];
 
-        //--
-        [self addChild:batchCredit];
-
-        //--option
-        CCMenu* menu = [CCMenu new];
-
+        //--toggle music
         CCMenuItemSprite* btonMusic =
             [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_option.png"]
                                    selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_option.png"]
-                                          target:self
-                                        selector:@selector(onToggleMusic:)];
+                                           target:target
+                                          selector:@selector(onEvent:)];
+
+        btonMusic.tag = MTagToggleMusic;
 
         btonMusic.scale = 2.0f;
 
         btonMusic.position = ccp(0.0f, -120.0f);
 
-        [menu addChild:btonMusic];
+        //
+        CCMenuItemSprite* btonHome =
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+                                           target:target
+                                         selector:@selector(onEvent:)];
 
+        btonHome.tag = MTagGotoLayerMenuMain;
+
+        btonHome.position = ccp(0.0f, -200.0f);
+
+        //--
+        CCMenu* menu = [CCMenu new];
+
+        [menu addChild:btonMusic];
+        [menu addChild:btonHome];
+
+        [self addChild:batchCredit];
         [self addChild:menu];
     }
 
     return self;
-}
-
-//------------------------------------------------------------------------------
--(void) onToggleMusic:(id)sender
-{
 }
 
 //------------------------------------------------------------------------------

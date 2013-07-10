@@ -22,7 +22,6 @@
 @property (nonatomic, assign, readwrite) uint32_t frameIndex;
 @property (nonatomic, assign, readwrite) uint32_t seed;
 @property (nonatomic, assign, readwrite) MCollisionRange rangeCollision;
-@property (nonatomic, assign) BOOL matchGame;
 @property (nonatomic, assign) float stepHeight;
 @property (nonatomic, assign) float stepInterval;
 @end
@@ -30,7 +29,20 @@
 //------------------------------------------------------------------------------
 @implementation MTowerStage
 //------------------------------------------------------------------------------
-+(id) stageWithIndex:(uint32_t)index seed:(uint32_t)seed matchGame:(BOOL)matchGame
++(id) basementStage
+{
+    return [[MTowerStage alloc] initWithBasement];
+}
+
+//------------------------------------------------------------------------------
++(id) menuMainStage
+{
+    return [[self alloc] initWithMenuMain];
+}
+
+
+//------------------------------------------------------------------------------
++(id) stageWithIndex:(uint32_t)index seed:(uint32_t)seed
 {
     //--check the top-most stage for match game here
 
@@ -38,24 +50,17 @@
 
     if (index == 0)
     {
-        stage = [[MTowerStage alloc] initWithZeroIndex];
     }
     else
     {
-        stage = [[MTowerStage alloc] initWithIndex:index seed:seed matchGame:matchGame];
+        stage = [[MTowerStage alloc] initWithIndex:index seed:seed];
     }
 
     return stage;
 }
 
 //------------------------------------------------------------------------------
-+(id) stageForMainMenu
-{
-    return [[self alloc] initForMainMenu];
-}
-
-//------------------------------------------------------------------------------
--(id) initWithZeroIndex
+-(id) initWithBasement
 {
     self = [super init];
 
@@ -64,45 +69,30 @@
         self.stageIndex = 0;
         self.frameIndex = 0;
         self.seed = 0;
-        self.matchGame = FALSE;
 
         self.steps = [NSMutableArray new];
         self.items = [NSMutableArray new];
 
         //--
-        [self buildBasement];
+        self.rangeCollision = MCollisionRangeMake(-600.0f, 0.0f);
+
+        self.stepInterval = 600.0f;
+
+        NSMutableArray* steps = (NSMutableArray*)self.steps;
+
+        MTowerStepBase* step = [MTowerStepBase stepWithType:MTowerObjectTypeStepBasement
+                                                   position:CGPointMake(160.0f, 0.0f)
+                                                       usid:(MTowerObjectGroupStep << 31)
+                                                       seed:0];
+
+        [steps addObject:step];
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(id) initWithIndex:(uint32_t)index seed:(uint32_t)seed matchGame:(BOOL)matchGame
-{
-    self = [super init];
-
-    if (self)
-    {
-        //
-        self.stageIndex = index;
-        self.frameIndex = 0;
-        self.seed = seed;
-        self.matchGame = matchGame;
-
-        //
-        self.steps = [NSMutableArray new];
-        self.items = [NSMutableArray new];
-
-        //
-        [self buildSteps];
-        [self buildItems];
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
--(id) initForMainMenu
+-(id) initWithMenuMain
 {
     self = [super init];
 
@@ -112,7 +102,6 @@
         self.stageIndex = 1;
         self.frameIndex = 0;
         self.seed = 0;
-        self.matchGame = FALSE;
 
         self.rangeCollision = MCollisionRangeMake(0.0, 600.0f);
 
@@ -170,6 +159,30 @@
 }
 
 //------------------------------------------------------------------------------
+-(id) initWithIndex:(uint32_t)index seed:(uint32_t)seed
+{
+    self = [super init];
+
+    if (self)
+    {
+        //
+        self.stageIndex = index;
+        self.frameIndex = 0;
+        self.seed = seed;
+
+        //
+        self.steps = [NSMutableArray new];
+        self.items = [NSMutableArray new];
+
+        //
+        [self buildSteps];
+        [self buildItems];
+    }
+
+    return self;
+}
+
+//------------------------------------------------------------------------------
 -(void) buildSteps
 {
     float stepHeight         = 16.0f;
@@ -190,12 +203,6 @@
         [UAverageRandomIntegerGeneratorMWC averageRandomIntegerGeneratorWithRange:URandomIntegerRangeMake(0, 3)
                                                                             seedA:self.stageIndex + 1
                                                                             seedB:self.seed];
-
-//    JTowerObjectTypeGenerator* randomStepDice =
-//        [JTowerObjectTypeGenerator generatorWithMatchGame:self.matchGame
-//                                                    group:JTowerObjectGroupStep
-//                                                    stage:self.stageIndex
-//                                                     seed:self.seed];
 
     //--
     MCollisionRange rangeFix = MCollisionRangeMake((float)(self.stageIndex * 600) - 600.0f, (float)(self.stageIndex * 600));

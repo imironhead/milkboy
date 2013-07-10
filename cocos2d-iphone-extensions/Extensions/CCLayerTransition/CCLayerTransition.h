@@ -1,20 +1,18 @@
 //
-//  MSceneMenuMain.h
+//  CCLayerTransition.h
 //  Milkboy
 //
-//  Created by iRonhead on 6/19/13.
+//  Created by iRonhead on 7/5/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
-#import "CCScrollLayer.h"
 
 
 //------------------------------------------------------------------------------
-@interface MLayerMenuMain : CCScrollLayer
-@end
-
-//------------------------------------------------------------------------------
-@interface MSceneMenuMain : CCScene
+@interface CCLayerTransitionCrossFade : CCLayer
++(id) layerWithPrevLayer:(CCLayer*)prevLayer
+               nextLayer:(CCLayer*)nextLayer
+                duration:(ccTime)duration;
 @end

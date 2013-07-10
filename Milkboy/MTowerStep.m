@@ -38,6 +38,11 @@
 
     switch (type)
     {
+    case MTowerObjectTypeStepBasement:
+        {
+            step = [[MTowerStepBasement alloc] initWithPosition:position usid:usid seed:seed];
+        }
+        break;
     case MTowerObjectTypeStepBrittle:
         {
             step = [[MTowerStepBrittle alloc] initWithPosition:position usid:usid seed:seed];
@@ -201,12 +206,45 @@
 {}
 
 //------------------------------------------------------------------------------
--(void) boyJump:(MBoyLocal*)boy
+-(void) boyJump:(MBoy*)boy
 {}
 
 //------------------------------------------------------------------------------
--(void) boyLand:(MBoyLocal*)boy
+-(void) boyLand:(MBoy*)boy
 {}
+
+//------------------------------------------------------------------------------
+@end
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+@implementation MTowerStepBasement
+//------------------------------------------------------------------------------
+-(id) initWithPosition:(CGPoint)position
+                  usid:(uint32_t)usid
+                  seed:(int32_t)seed
+{
+    self = [super initWithType:MTowerObjectTypeStepBasement
+                          usid:usid
+                          seed:seed];
+
+    if (self)
+    {
+        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
+
+        self.sprite.position = position;
+
+        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
+
+        self.sprite.scaleX = 10.0f;
+
+        self.sprite.visible = FALSE;
+
+        self.boundCollision = self.sprite.boundingBox;
+    }
+
+    return self;
+}
 
 //------------------------------------------------------------------------------
 @end
@@ -247,7 +285,7 @@
 }
 
 //------------------------------------------------------------------------------
--(void) boyJump:(MBoyLocal*)boy
+-(void) boyJump:(MBoy*)boy
 {
     self.counter += 1;
 
@@ -629,9 +667,6 @@
         self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
 
         self.sprite.scaleX = 10.0f;
-
-        //--hide for basement, show if step basement is implemented and I need station
-        self.sprite.visible = FALSE;
 
         self.boundCollision = self.sprite.boundingBox;
     }

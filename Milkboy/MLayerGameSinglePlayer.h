@@ -1,8 +1,8 @@
 //
-//  MWater.h
+//  MLayerGameSinglePlayer.h
 //  Milkboy
 //
-//  Created by iRonhead on 6/11/13.
+//  Created by iRonhead on 7/9/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
@@ -11,10 +11,5 @@
 
 
 //------------------------------------------------------------------------------
-@interface MWater : NSObject
-@property (nonatomic, strong, readonly) CCSpriteBatchNode* sprites;
-@property (nonatomic, assign, readonly) int32_t level;
-@property (nonatomic, assign) CGPoint cameraPosition;
-
--(void) jumpToFrame:(int32_t)frame;
+@interface MLayerGameSinglePlayer : CCLayer
 @end

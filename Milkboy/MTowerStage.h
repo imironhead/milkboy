@@ -23,8 +23,9 @@
 @property (nonatomic, assign, readonly) uint32_t seed;
 @property (nonatomic, assign, readonly) MCollisionRange rangeCollision;
 
-+(id) stageWithIndex:(uint32_t)index seed:(uint32_t)seed matchGame:(BOOL)matchGame;
-+(id) stageForMainMenu;
++(id) basementStage;
++(id) menuMainStage;
++(id) stageWithIndex:(uint32_t)index seed:(uint32_t)seed;
 
 -(NSArray*) collideItemWithPosition:(CGPoint)position
                            velocity:(CGPoint)velocity

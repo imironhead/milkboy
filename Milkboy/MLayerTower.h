@@ -1,8 +1,8 @@
 //
-//  MTower.h
+//  MLayerTower.h
 //  Milkboy
 //
-//  Created by iRonhead on 5/17/13.
+//  Created by iRonhead on 7/8/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
@@ -12,16 +12,6 @@
 
 
 //------------------------------------------------------------------------------
-@class GKMatch;
-@class MBoyLocal;
-@class MWater;
-
-//------------------------------------------------------------------------------
 @interface MLayerTower : CCLayer
-@property (nonatomic, strong, readonly) MBoyLocal* boyLocal;
-@property (nonatomic, strong, readonly) MWater* water;
-@property (nonatomic, assign, readonly) MTowerType type;
-
-+(id) layerWithMatch:(GKMatch*)match;
-+(id) layerForMainMenu;
+-(void) transformToType:(MTowerType)type duration:(ccTime)duration;
 @end

@@ -1,15 +1,14 @@
 //
-//  MLayerMenuPlay.h
+//  MLayerGameSinglePlayer.m
 //  Milkboy
 //
-//  Created by iRonhead on 6/19/13.
+//  Created by iRonhead on 7/9/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
-#import <Foundation/Foundation.h>
-#import "cocos2d.h"
+#import "MLayerGameSinglePlayer.h"
 
 
 //------------------------------------------------------------------------------
-@interface MLayerMenuPlay : CCLayer
+@implementation MLayerGameSinglePlayer
 @end

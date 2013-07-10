@@ -1,8 +1,8 @@
 //
-//  MSceneLocalGame.h
+//  MLayerMain.h
 //  Milkboy
 //
-//  Created by iRonhead on 5/17/13.
+//  Created by iRonhead on 7/5/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
@@ -11,6 +11,6 @@
 
 
 //------------------------------------------------------------------------------
-@interface MSceneLocalGame : CCScene
--(void) doScore;
+@interface MLayerMenuMain : CCLayer
+-(id) initWithTarget:(id)target;
 @end
