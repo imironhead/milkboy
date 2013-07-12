@@ -8,17 +8,21 @@
 //------------------------------------------------------------------------------
 #import "MBoy.h"
 #import "MLayerTower.h"
+#import "MLayerTowerBackground.h"
+#import "MLayerTowerWall.h"
 #import "MScene.h"
 #import "MTowerItem.h"
 #import "MTowerStage.h"
 #import "MTowerStep.h"
-#import "MWall.h"
 
 
 //------------------------------------------------------------------------------
 @interface MLayerTower ()
+@property (nonatomic, strong) CCLayerColor* layerDarken;
+@property (nonatomic, strong) CCLayer* layerCamera;
+@property (nonatomic, strong) MLayerTowerBackground* layerBackground;
+@property (nonatomic, strong) MLayerTowerWall* layerWall;
 @property (nonatomic, strong) MBoy* boy;
-@property (nonatomic, strong) MWall* wall;
 @property (nonatomic, strong) CCSpriteBatchNode* batchNodeSteps;
 @property (nonatomic, strong) NSMutableArray* stagesInTower;
 @property (nonatomic, strong) NSMutableArray* stagesVisible;
@@ -45,21 +49,41 @@
         self.seedSmall = self.seedLarge;
         self.frameIndex = 0;
 
+        //--layer darken
+        self.layerDarken = [CCLayerColor layerWithColor:ccc4(0x00, 0x00, 0x00, 0x80)];
+
+        self.layerDarken.tag = MTagLayerDarken;
+
+        [self addChild:self.layerDarken z:MTowerLayerZDarken];
+
+        //--layer camera
+        self.layerCamera = [CCLayer new];
+
+        self.layerCamera.tag = MTagLayerCamera;
+
+        self.layerCamera.position = ccp(5.0f, 64.0f);
+
+        [self addChild:self.layerCamera z:MTowerLayerZCamera];
+
+        //--brick
+        self.layerBackground = [MLayerTowerBackground new];
+
+        [self.layerCamera addChild:self.layerBackground z:MTowerLayerZBackground];
+
+        //--wall
+        self.layerWall = [MLayerTowerWall new];
+
+        [self.layerCamera addChild:self.layerWall z:MTowerLayerZWall];
+
         //--boy
         self.boy = [MBoy new];
 
-        [self addChild:self.boy.sprite z:MTowerSpriteDepthChar];
-
-        //--wall
-        self.wall = [MWall new];
-
-        [self addChild:self.wall.spritesBack z:MTowerSpriteDepthBack];
-        [self addChild:self.wall.spritesWall z:MTowerSpriteDepthWall];
+        [self.layerCamera addChild:self.boy.sprite z:MTowerLayerZChar];
 
         //--batch node for steps & items
         self.batchNodeSteps = [CCSpriteBatchNode batchNodeWithFile:@"Texture/step.pvr.ccz" capacity:32];
 
-        [self addChild:self.batchNodeSteps z:MTowerSpriteDepthStep];
+        [self.layerCamera addChild:self.batchNodeSteps z:MTowerLayerZStep];
 
         //--basement
         MTowerStage* stage = [MTowerStage basementStage];
@@ -87,20 +111,6 @@
             }
         }
 
-        //--darken layer
-        CCLayerColor* layerDarken = [CCLayerColor layerWithColor:ccc4(0x00, 0x00, 0x00, 0x80)];
-
-        layerDarken.tag = MTagLayerDarken;
-
-        layerDarken.position = ccp(-5.0f, -64.0f);
-
-        [self addChild:layerDarken z:MTowerSpriteDepthDarken];
-
-        //--update camera for main menu
-        self.position = ccp(5.0f, 64.0f);
-
-        self.wall.cameraPosition = ccp(0.0f, 176.0f);
-
         //--
         [self scheduleUpdate];
 
@@ -124,6 +134,9 @@
     [self updateStage];
     [self updateBoy];
     [self updateCamera];
+
+    [self.layerBackground update];
+    [self.layerWall update];
 }
 
 //------------------------------------------------------------------------------
@@ -370,12 +383,20 @@
     {
         CGPoint p = self.boy.position;
 
-        self.wall.cameraPosition = p;
+        if (p.y > 176.0f /*240.0f - 64.0f*/)
+        {
+            p.x = 5.0f;
+            p.y = 240.0f - p.y;
 
-        p.x = 5.0f;
-        p.y = 240.0f - p.y;
+            self.layerCamera.position = p;
+        }
+        else
+        {
+            p.x = 5.0f;
+            p.y = 64.0f;
 
-        self.position = p;
+            self.layerCamera.position = p;
+        }
     }
 }
 
@@ -411,9 +432,7 @@
 //------------------------------------------------------------------------------
 -(void) transformToType:(MTowerType)type duration:(ccTime)duration
 {
-    CCLayerColor* layerDarken = (CCLayerColor*)[self getChildByTag:MTagLayerDarken];
-
-    [layerDarken runAction:[CCFadeTo actionWithDuration:duration opacity:0x00]];
+    [self.layerDarken runAction:[CCFadeTo actionWithDuration:duration opacity:0x00]];
 
     //
     MTowerStage* stageBasement = self.stagesInTower[0];

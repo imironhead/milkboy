@@ -146,8 +146,9 @@
 		F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */ = {isa = PBXBuildFile; fileRef = F489452D1745ED1800897354 /* UTransform2dAffine.m */; };
 		F489453E1745ED1800897354 /* UVector2.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945311745ED1800897354 /* UVector2.m */; };
 		F489453F1745ED1800897354 /* UVector3.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945331745ED1800897354 /* UVector3.m */; };
-		F4ABCE931753026200B9FDE9 /* MWall.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE921753026200B9FDE9 /* MWall.m */; };
 		F4ABCE96175656B600B9FDE9 /* MTowerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE95175656B600B9FDE9 /* MTowerItem.m */; };
+		F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */; };
+		F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */; };
 		F4ED886B178ACADA00388861 /* MLayerTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886A178ACADA00388861 /* MLayerTower.m */; };
 		F4ED886E178B1E2A00388861 /* MLayerMenuTutorials.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886D178B1E2A00388861 /* MLayerMenuTutorials.m */; };
 		F4ED8871178C461B00388861 /* MLayerGameSinglePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED8870178C461B00388861 /* MLayerGameSinglePlayer.m */; };
@@ -449,10 +450,12 @@
 		F48945311745ED1800897354 /* UVector2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector2.m; path = UEngine/Math/UVector2.m; sourceTree = "<group>"; };
 		F48945321745ED1800897354 /* UVector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UVector3.h; path = UEngine/Math/UVector3.h; sourceTree = "<group>"; };
 		F48945331745ED1800897354 /* UVector3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector3.m; path = UEngine/Math/UVector3.m; sourceTree = "<group>"; };
-		F4ABCE911753026200B9FDE9 /* MWall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWall.h; sourceTree = "<group>"; };
-		F4ABCE921753026200B9FDE9 /* MWall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWall.m; sourceTree = "<group>"; };
 		F4ABCE94175656B600B9FDE9 /* MTowerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTowerItem.h; sourceTree = "<group>"; };
 		F4ABCE95175656B600B9FDE9 /* MTowerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTowerItem.m; sourceTree = "<group>"; };
+		F4BF69F5178F1975006DC604 /* MLayerTowerWall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerWall.h; sourceTree = "<group>"; };
+		F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerWall.m; sourceTree = "<group>"; };
+		F4BF69F8178FB65D006DC604 /* MLayerTowerBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerBackground.h; sourceTree = "<group>"; };
+		F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerBackground.m; sourceTree = "<group>"; };
 		F4ED8869178ACADA00388861 /* MLayerTower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTower.h; sourceTree = "<group>"; };
 		F4ED886A178ACADA00388861 /* MLayerTower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTower.m; sourceTree = "<group>"; };
 		F4ED886C178B1E2900388861 /* MLayerMenuTutorials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerMenuTutorials.h; sourceTree = "<group>"; };
@@ -570,6 +573,10 @@
 				F4ED886D178B1E2A00388861 /* MLayerMenuTutorials.m */,
 				F4ED8869178ACADA00388861 /* MLayerTower.h */,
 				F4ED886A178ACADA00388861 /* MLayerTower.m */,
+				F4BF69F8178FB65D006DC604 /* MLayerTowerBackground.h */,
+				F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */,
+				F4BF69F5178F1975006DC604 /* MLayerTowerWall.h */,
+				F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */,
 				F45CB89D1786AEA8005FFB98 /* MScene.h */,
 				F45CB89E1786AEA8005FFB98 /* MScene.m */,
 				F4ABCE94175656B600B9FDE9 /* MTowerItem.h */,
@@ -579,8 +586,6 @@
 				F489450F1745CB4500897354 /* MTowerStep.h */,
 				F48945101745CB4500897354 /* MTowerStep.m */,
 				F489450B1744B4CE00897354 /* MType.h */,
-				F4ABCE911753026200B9FDE9 /* MWall.h */,
-				F4ABCE921753026200B9FDE9 /* MWall.m */,
 			);
 			path = Milkboy;
 			sourceTree = "<group>";
@@ -1290,7 +1295,6 @@
 				F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */,
 				F489453E1745ED1800897354 /* UVector2.m in Sources */,
 				F489453F1745ED1800897354 /* UVector3.m in Sources */,
-				F4ABCE931753026200B9FDE9 /* MWall.m in Sources */,
 				F4ABCE96175656B600B9FDE9 /* MTowerItem.m in Sources */,
 				F41F2F1017714F9000C8097C /* CCScrollLayer.m in Sources */,
 				F41F2F1917718F7400C8097C /* MLayerMenuOption.m in Sources */,
@@ -1302,6 +1306,8 @@
 				F4ED886B178ACADA00388861 /* MLayerTower.m in Sources */,
 				F4ED886E178B1E2A00388861 /* MLayerMenuTutorials.m in Sources */,
 				F4ED8871178C461B00388861 /* MLayerGameSinglePlayer.m in Sources */,
+				F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */,
+				F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

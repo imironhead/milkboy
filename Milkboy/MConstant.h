@@ -49,17 +49,16 @@ typedef enum _MTowerObjectGroup
 } MTowerObjectGroup;
 
 //------------------------------------------------------------------------------
-typedef enum _MTowerSpriteDepth
+enum
 {
-    MTowerSpriteDepthBack,
-    MTowerSpriteDepthStep,
-    MTowerSpriteDepthWall,
-    MTowerSpriteDepthChar,
-    MTowerSpriteDepthWater,
-    MTowerSpriteDepthEffect,
-    MTowerSpriteDepthDarken,
-    MTowerSpriteDepthMenu,
-} MTowerSpriteDepth;
+    MTowerLayerZCamera = 0,
+    MTowerLayerZBackground,
+    MTowerLayerZStep,
+    MTowerLayerZWall,
+    MTowerLayerZChar,
+    MTowerLayerZEffect,
+    MTowerLayerZDarken,
+};
 
 //------------------------------------------------------------------------------
 typedef enum _MBoyState
@@ -101,6 +100,7 @@ enum
     MTagGotoLayerMenuOption,
     MTagGotoLayerMenuRecord,
     MTagGotoLayerMenuSinglePlayer,
+    MTagLayerCamera,
     MTagLayerDarken,
     MTagLayerMenuGift,
     MTagLayerMenuMain,
