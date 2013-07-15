@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
-#import "MTowerItem.h"
+#import "MSpriteTowerItem.h"
 
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerItemBase()
+@interface MSpriteTowerItemBase()
 {
     struct
     {
@@ -19,16 +19,15 @@
         uint32_t    seed: 15;
         int32_t     type: 16;
         uint32_t    uiid: 32;
-    } stepInfo;
+    } itemInfo;
 }
 
-@property (nonatomic, strong, readwrite) CCSprite* sprite;
-@property (nonatomic, assign, readwrite) CGRect boundCollision;
 @property (nonatomic, assign, readwrite) BOOL live;
+@property (nonatomic, assign, readwrite) NSRange range;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MTowerItemBase
+@implementation MSpriteTowerItemBase
 //------------------------------------------------------------------------------
 +(id) itemWithType:(MTowerObjectType)type
           position:(CGPoint)position
@@ -39,19 +38,14 @@
 
     switch (type)
     {
-    case MTowerObjectTypeItemBomb:
-        {
-            item = [[MTowerItemBomb alloc] initWithPosition:position uiid:uiid seed:seed];
-        }
-        break;
     case MTowerObjectTypeItemBox:
         {
-            item = [[MTowerItemBox alloc] initWithPosition:position uiid:uiid seed:seed];
+            item = [[MSpriteTowerItemBox alloc] initWithPosition:position uiid:uiid seed:seed];
         }
         break;
     case MTowerObjectTypeItemCat:
         {
-            item = [[MTowerItemCat alloc] initWithPosition:position uiid:uiid seed:seed];
+            item = [[MSpriteTowerItemCat alloc] initWithPosition:position uiid:uiid seed:seed];
         }
         break;
     case MTowerObjectTypeItemMilkAgile:
@@ -61,7 +55,7 @@
     case MTowerObjectTypeItemMilkStrength:
     case MTowerObjectTypeItemMilkStrengthExtra:
         {
-            item = [[MTowerItemMilk alloc] initWithType:type position:position uiid:uiid seed:seed];
+            item = [[MSpriteTowerItemMilk alloc] initWithType:type position:position uiid:uiid seed:seed];
         }
         break;
     default:
@@ -78,15 +72,30 @@
 -(id) initWithType:(MTowerObjectType)type
               uiid:(uint32_t)uiid
               seed:(uint32_t)seed
+   spriteFrameName:(NSString*)spriteFrameName
+          position:(CGPoint)position
 {
-    self = [super init];
+    self = [super initWithSpriteFrameName:spriteFrameName];
 
     if (self)
     {
-        self->stepInfo.live = 1;
-        self->stepInfo.seed = seed;
-        self->stepInfo.type = type;
-        self->stepInfo.uiid = uiid;
+        //--
+        self.scale = 2.0f;
+
+        self.anchorPoint = ccp(0.5f, 0.0f);
+
+        self.position = position;
+
+        //--
+        self->itemInfo.live = 1;
+        self->itemInfo.seed = seed;
+        self->itemInfo.type = type;
+        self->itemInfo.uiid = uiid;
+
+        //--
+        CGRect rect = self.boundingBox;
+
+        self.range = NSMakeRange((NSUInteger)rect.origin.y, (NSUInteger)rect.size.height);
     }
 
     return self;
@@ -116,65 +125,49 @@
 //------------------------------------------------------------------------------
 -(MTowerObjectType) type
 {
-    return self->stepInfo.type;
+    return self->itemInfo.type;
 }
 
 //------------------------------------------------------------------------------
 -(void) setType:(MTowerObjectType)type
 {
-    self->stepInfo.type = type;
+    self->itemInfo.type = type;
 }
 
 //------------------------------------------------------------------------------
 -(uint32_t) uiid
 {
-    return self->stepInfo.uiid;
+    return self->itemInfo.uiid;
 }
 
 //------------------------------------------------------------------------------
 -(uint32_t) seed
 {
-    return self->stepInfo.seed;
+    return self->itemInfo.seed;
 }
 
 //------------------------------------------------------------------------------
 -(BOOL) live
 {
-    return (self->stepInfo.live != 0);
+    return (self->itemInfo.live != 0);
 }
 
 //------------------------------------------------------------------------------
 -(void) setLive:(BOOL)live
 {
-    self->stepInfo.live = live;
+    self->itemInfo.live = live;
 }
 
 //------------------------------------------------------------------------------
--(MCollisionRange) rangeVisiblity
-{
-    return MCollisionRangeMake(
-        CGRectGetMinY(self->_boundCollision),
-        CGRectGetMaxY(self->_boundCollision));
-}
-
-//------------------------------------------------------------------------------
--(MCollisionRange) rangeCollision
-{
-    return MCollisionRangeMake(
-        CGRectGetMinY(self->_boundCollision),
-        CGRectGetMaxY(self->_boundCollision));
-}
-
-//------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {}
 
 //------------------------------------------------------------------------------
 -(void) collected
 {
-    self.sprite.visible = FALSE;
+    self.visible = FALSE;
 
-    self.live = FALSE;
+    self->itemInfo.live = FALSE;
 }
 
 //------------------------------------------------------------------------------
@@ -182,44 +175,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerItemBomb
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  uiid:(uint32_t)uiid
-                  seed:(int32_t)seed
-{
-    self = [super initWithType:MTowerObjectTypeItemBomb
-                          uiid:uiid
-                          seed:seed];
-
-    if (self)
-    {
-        NSString* frameName = @"item_bomb.png";
-
-        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
-
-        CGSize size = self.sprite.boundingBox.size;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
-
-        self.boundCollision = CGRectMake(
-            position.x - 0.5f * size.width,
-            position.y,
-            size.width,
-            size.height);
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@implementation MTowerItemBox
+@implementation MSpriteTowerItemBox
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   uiid:(uint32_t)uiid
@@ -227,28 +183,19 @@
 {
     self = [super initWithType:MTowerObjectTypeItemBox
                           uiid:uiid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"item_box.png"
+                      position:position];
 
     if (self)
     {
-        NSString* frameName = @"item_box.png";
-
-        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {
     if (!self.live)
     {
@@ -256,14 +203,14 @@
 
         NSString* name = [NSString stringWithFormat:@"item_box_cat_%02d.png", (frame / 20) % 5];
 
-        self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
+        self.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
     }
 }
 
 //------------------------------------------------------------------------------
 -(void) collected
 {
-    self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"item_box_cat_00.png"];
+    self.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"item_box_cat_00.png"];
 
     self.live = FALSE;
 }
@@ -273,7 +220,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerItemCat
+@implementation MSpriteTowerItemCat
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   uiid:(uint32_t)uiid
@@ -281,34 +228,25 @@
 {
     self = [super initWithType:MTowerObjectTypeItemCat
                           uiid:uiid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"item_cat_00.png"
+                      position:position];
 
     if (self)
     {
-        NSString* frameName = @"item_cat_00.png";
-
-        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {
     if (self.live)
     {
         NSString* name = [NSString stringWithFormat:@"item_cat_%02d.png", (frame / 20) % 4];
 
-        self.sprite.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
+        self.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
     }
 }
 
@@ -317,69 +255,62 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerItemMilk
+@implementation MSpriteTowerItemMilk
 //------------------------------------------------------------------------------
 -(id) initWithType:(MTowerObjectType)type
           position:(CGPoint)position
               uiid:(uint32_t)uiid
               seed:(int32_t)seed
 {
+    NSString* frameName = @"item_milk_strength.png";
+
+    switch (type)
+    {
+    case MTowerObjectTypeItemMilkAgile:
+        {
+            frameName = @"item_milk_agile.png";
+        }
+        break;
+    case MTowerObjectTypeItemMilkDash:
+        {
+            frameName = @"item_milk_dash.png";
+        }
+        break;
+    case MTowerObjectTypeItemMilkDoubleJump:
+        {
+            frameName = @"item_milk_double_jump.png";
+        }
+        break;
+    case MTowerObjectTypeItemMilkGlide:
+        {
+            frameName = @"item_milk_glide.png";
+        }
+        break;
+    case MTowerObjectTypeItemMilkStrength:
+        {
+            frameName = @"item_milk_strength.png";
+        }
+        break;
+    case MTowerObjectTypeItemMilkStrengthExtra:
+        {
+            frameName = @"item_milk_strength_extra.png";
+        }
+        break;
+    default:
+        {
+            NSAssert(0, @"[MTowerItemMilk initWithType: position: uiid: seed:]");
+        }
+        break;
+    }
+
     self = [super initWithType:type
                           uiid:uiid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:frameName
+                      position:position];
 
     if (self)
     {
-        NSString* frameName = @"item_milk_strength.png";
-
-        switch (type)
-        {
-        case MTowerObjectTypeItemMilkAgile:
-            {
-                frameName = @"item_milk_agile.png";
-            }
-            break;
-        case MTowerObjectTypeItemMilkDash:
-            {
-                frameName = @"item_milk_dash.png";
-            }
-            break;
-        case MTowerObjectTypeItemMilkDoubleJump:
-            {
-                frameName = @"item_milk_double_jump.png";
-            }
-            break;
-        case MTowerObjectTypeItemMilkGlide:
-            {
-                frameName = @"item_milk_glide.png";
-            }
-            break;
-        case MTowerObjectTypeItemMilkStrength:
-            {
-                frameName = @"item_milk_strength.png";
-            }
-            break;
-        case MTowerObjectTypeItemMilkStrengthExtra:
-            {
-                frameName = @"item_milk_strength_extra.png";
-            }
-            break;
-        default:
-            {
-                NSAssert(0, @"[MTowerItemMilk initWithType: position: uiid: seed:]");
-            }
-            break;
-        }
-
-        self.sprite = [CCSprite spriteWithSpriteFrameName:frameName];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 0.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;

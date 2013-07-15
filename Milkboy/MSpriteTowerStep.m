@@ -1,16 +1,16 @@
 //
-//  MTowerStep.m
+//  MSpriteTowerStep.m
 //  Milkboy
 //
 //  Created by iRonhead on 5/17/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
-#import "MTowerStep.h"
+#import "MSpriteTowerStep.h"
 
 
 //------------------------------------------------------------------------------
-@interface MTowerStepBase()
+@interface MSpriteTowerStepBase()
 {
     struct
     {
@@ -21,13 +21,12 @@
     } stepInfo;
 }
 
-@property (nonatomic, strong, readwrite) CCSprite* sprite;
-@property (nonatomic, assign, readwrite) CGRect boundCollision;
 @property (nonatomic, assign, readwrite) BOOL live;
+@property (nonatomic, assign, readwrite) NSRange range;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MTowerStepBase
+@implementation MSpriteTowerStepBase
 //------------------------------------------------------------------------------
 +(id) stepWithType:(MTowerObjectType)type
           position:(CGPoint)position
@@ -40,23 +39,23 @@
     {
     case MTowerObjectTypeStepBasement:
         {
-            step = [[MTowerStepBasement alloc] initWithPosition:position usid:usid seed:seed];
+            step = [[MSpriteTowerStepBasement alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     case MTowerObjectTypeStepBrittle:
         {
-            step = [[MTowerStepBrittle alloc] initWithPosition:position usid:usid seed:seed];
+            step = [[MSpriteTowerStepBrittle alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     case MTowerObjectTypeStepDrift:
         {
-            step = [[MTowerStepDrift alloc] initWithPosition:position usid:usid seed:seed];
+            step = [[MSpriteTowerStepDrift alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     case MTowerObjectTypeStepMoveLeft:
     case MTowerObjectTypeStepMoveRight:
         {
-            step = [[MTowerStepMove alloc] initWithType:type
+            step = [[MSpriteTowerStepMove alloc] initWithType:type
                                                position:position
                                                    usid:usid
                                                    seed:seed];
@@ -65,7 +64,7 @@
     case MTowerObjectTypeStepMovingWalkwayLeft:
     case MTowerObjectTypeStepMovingWalkwayRight:
         {
-            step = [[MTowerStepMovingWalkway alloc] initWithType:type
+            step = [[MSpriteTowerStepMovingWalkway alloc] initWithType:type
                                                         position:position
                                                             usid:usid
                                                             seed:seed];
@@ -74,7 +73,7 @@
     case MTowerObjectTypeStepPatrolHorizontal:
     case MTowerObjectTypeStepPatrolVertical:
         {
-            step = [[MTowerStepPatrol alloc] initWithType:type
+            step = [[MSpriteTowerStepPatrol alloc] initWithType:type
                                                  position:position
                                                      usid:usid
                                                      seed:seed];
@@ -82,27 +81,27 @@
         break;
     case MTowerObjectTypeStepPulse:
         {
-            step = [[MTowerStepPulse alloc] initWithPosition:position usid:usid seed:seed];
+            step = [[MSpriteTowerStepPulse alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     case MTowerObjectTypeStepSpring:
         {
-            step = [[MTowerStepSpring alloc] initWithPosition:position usid:usid seed:seed];
+            step = [[MSpriteTowerStepSpring alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     case MTowerObjectTypeStepStation:
         {
-            step = [[MTowerStepStation alloc] initWithPosition:position usid:usid seed:seed];
+            step = [[MSpriteTowerStepStation alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     case MTowerObjectTypeStepSteady:
         {
-            step = [[MTowerStepSteady alloc] initWithPosition:position usid:usid seed:seed];
+            step = [[MSpriteTowerStepSteady alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     default:
         {
-            NSAssert(0, @"[MTowerStepBase stepWithType: position: usid: seed:]");
+            NSAssert(0, @"[MSpriteTowerStepBase stepWithType: position: usid: seed:]");
         }
         break;
     }
@@ -114,11 +113,26 @@
 -(id) initWithType:(MTowerObjectType)type
               usid:(uint32_t)usid
               seed:(uint32_t)seed
+   spriteFrameName:(NSString*)spriteFramename
+          position:(CGPoint)position
 {
-    self = [super init];
+    self = [super initWithSpriteFrameName:spriteFramename];
 
     if (self)
     {
+        //
+        self.position = position;
+
+        self.anchorPoint = CGPointMake(0.5f, 1.0f);
+
+        self.scale = 2.0f;
+
+        //--
+        CGRect rect = self.boundingBox;
+
+        self.range = NSMakeRange((NSUInteger)rect.origin.y, (NSUInteger)rect.size.height);
+
+        //
         self->stepInfo.live = 1;
         self->stepInfo.seed = seed;
         self->stepInfo.type = type;
@@ -134,7 +148,7 @@
               usid:(uint32_t)usid
               seed:(int32_t)seed
 {
-    NSAssert(0, @"[MTowerStepBase initWithType: position: usid: seed]");
+    NSAssert(0, @"[MSpriteTowerStepBase initWithType: position: usid: seed]");
 
     return nil;
 }
@@ -144,7 +158,7 @@
                   usid:(uint32_t)usid
                   seed:(uint32_t)seed
 {
-    NSAssert(0, @"[MTowerStepBase initWithPosition: usid: seed]");
+    NSAssert(0, @"[MSpriteTowerStepBase initWithPosition: usid: seed]");
 
     return nil;
 }
@@ -186,31 +200,15 @@
 }
 
 //------------------------------------------------------------------------------
--(MCollisionRange) rangeVisiblity
-{
-    return MCollisionRangeMake(
-        CGRectGetMinY(self->_boundCollision),
-        CGRectGetMaxY(self->_boundCollision));
-}
-
-//------------------------------------------------------------------------------
--(MCollisionRange) rangeCollision
-{
-    return MCollisionRangeMake(
-        CGRectGetMinY(self->_boundCollision),
-        CGRectGetMaxY(self->_boundCollision));
-}
-
-//------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {}
 
 //------------------------------------------------------------------------------
--(void) boyJump:(MBoy*)boy
+-(void) boyJump:(MLayerTowerBoy*)boy
 {}
 
 //------------------------------------------------------------------------------
--(void) boyLand:(MBoy*)boy
+-(void) boyLand:(MLayerTowerBoy*)boy
 {}
 
 //------------------------------------------------------------------------------
@@ -218,7 +216,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerStepBasement
+@implementation MSpriteTowerStepBasement
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   usid:(uint32_t)usid
@@ -226,21 +224,15 @@
 {
     self = [super initWithType:MTowerObjectTypeStepBasement
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_steady.png"
+                      position:position];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
+        self.scale = 10.0f;
 
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.sprite.scaleX = 10.0f;
-
-        self.sprite.visible = FALSE;
-
-        self.boundCollision = self.sprite.boundingBox;
+        self.visible = FALSE;
     }
 
     return self;
@@ -251,12 +243,12 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerStepBrittle()
+@interface MSpriteTowerStepBrittle()
 @property (nonatomic, assign) int32_t counter;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MTowerStepBrittle
+@implementation MSpriteTowerStepBrittle
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   usid:(uint32_t)usid
@@ -264,20 +256,12 @@
 {
     self = [super initWithType:MTowerObjectTypeStepSteady
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_disposable_01.png"
+                      position:position];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_disposable_01.png"];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
-
         self.counter = 0;
     }
 
@@ -285,7 +269,7 @@
 }
 
 //------------------------------------------------------------------------------
--(void) boyJump:(MBoy*)boy
+-(void) boyJump:(MLayerTowerBoy*)boy
 {
     self.counter += 1;
 
@@ -293,13 +277,13 @@
     {
         self.live = FALSE;
 
-        self.sprite.visible = FALSE;
+        self.visible = FALSE;
     }
     else
     {
         NSString* name = [NSString stringWithFormat:@"step_disposable_%02d.png", self.counter + 1];
 
-        self.sprite.displayFrame =
+        self.displayFrame =
             [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
     }
 }
@@ -309,7 +293,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerStepDrift
+@implementation MSpriteTowerStepDrift
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   usid:(uint32_t)usid
@@ -317,19 +301,12 @@
 {
     self = [super initWithType:MTowerObjectTypeStepDrift
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_bubble.png"
+                      position:position];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_bubble.png"];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
@@ -340,13 +317,13 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerStepMove()
+@interface MSpriteTowerStepMove()
 @property (nonatomic, assign) BOOL moveRight;
 @property (nonatomic, assign) CGPoint positionOrigin;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MTowerStepMove
+@implementation MSpriteTowerStepMove
 //------------------------------------------------------------------------------
 -(id) initWithType:(MTowerObjectType)type
           position:(CGPoint)position
@@ -355,36 +332,28 @@
 {
     NSAssert(
         (type == MTowerObjectTypeStepMoveLeft) || (type == MTowerObjectTypeStepMoveRight),
-        @"[MTowerStepMove initWithType: collisionBound: usid: seed:]");
+        @"[MSpriteTowerStepMove initWithType: collisionBound: usid: seed:]");
 
     self = [super initWithType:type
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_steady.png"
+                      position:position];
 
     if (self)
     {
         self.moveRight = (type == MTowerObjectTypeStepMoveRight);
 
         self.positionOrigin = position;
-
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {
-    int32_t w = self.sprite.boundingBox.size.width;
+    int32_t w = self.boundingBox.size.width;
 
     CGPoint p = self.positionOrigin;
 
@@ -401,9 +370,7 @@
 
     p.x = (dx % (310 + w)) - (w / 2);
 
-    self.sprite.position = p;
-
-    self.boundCollision = self.sprite.boundingBox;
+    self.position = p;
 }
 
 //------------------------------------------------------------------------------
@@ -411,13 +378,12 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerStepMovingWalkway()
+@interface MSpriteTowerStepMovingWalkway()
 @property (nonatomic, strong) NSArray* frames;
-@property (nonatomic, assign) BOOL moveRight;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MTowerStepMovingWalkway
+@implementation MSpriteTowerStepMovingWalkway
 //------------------------------------------------------------------------------
 -(id) initWithType:(MTowerObjectType)type
           position:(CGPoint)position
@@ -426,11 +392,13 @@
 {
     NSAssert(
         (type == MTowerObjectTypeStepMovingWalkwayLeft) || (type == MTowerObjectTypeStepMovingWalkwayRight),
-        @"[MTowerStepMove initWithType: collisionBound: usid: seed:]");
+        @"[MSpriteTowerStepMove initWithType: collisionBound: usid: seed:]");
 
     self = [super initWithType:type
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_scroll_01.png"
+                      position:position];
 
     if (self)
     {
@@ -442,34 +410,22 @@
             [cache spriteFrameByName:@"step_scroll_02.png"],
             [cache spriteFrameByName:@"step_scroll_03.png"],
         ];
-
-        self.moveRight = (type == MTowerObjectTypeStepMovingWalkwayRight);
-
-        self.sprite = [CCSprite spriteWithSpriteFrame:self.frames[0]];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {
     uint32_t k = frame % self.frames.count;
 
-    if (!self.moveRight)
+    if (self.type != MTowerObjectTypeStepMovingWalkwayRight)
     {
         k = self.frames.count - k - 1;
     }
 
-    self.sprite.displayFrame = self.frames[k];
+    self.displayFrame = self.frames[k];
 }
 
 //------------------------------------------------------------------------------
@@ -477,13 +433,12 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerStepPatrol()
-@property (nonatomic, assign) BOOL moveHorizontal;
+@interface MSpriteTowerStepPatrol()
 @property (nonatomic, assign) CGPoint positionOrigin;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MTowerStepPatrol
+@implementation MSpriteTowerStepPatrol
 //------------------------------------------------------------------------------
 -(id) initWithType:(MTowerObjectType)type
           position:(CGPoint)position
@@ -492,38 +447,37 @@
 {
     NSAssert(
         (type == MTowerObjectTypeStepPatrolHorizontal) || (type == MTowerObjectTypeStepPatrolVertical),
-        @"[MTowerStepPatrol initWithType: collisionBound: usid: seed:]");
+        @"[MSpriteTowerStepPatrol initWithType: collisionBound: usid: seed:]");
 
     self = [super initWithType:type
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_steady.png"
+                      position:position];
 
     if (self)
     {
-        self.moveHorizontal = (type == MTowerObjectTypeStepPatrolHorizontal);
-
         self.positionOrigin = position;
 
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
+        if (type == MTowerObjectTypeStepPatrolVertical)
+        {
+            CGRect rect = self.boundingBox;
 
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
+            self.range = NSMakeRange(
+                position.y - 40.0f - rect.size.height,
+                80.0f + rect.size.height);
+        }
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {
     CGPoint p = self.positionOrigin;
 
-    if (self.moveHorizontal)
+    if (self.type == MTowerObjectTypeStepPatrolHorizontal)
     {
         int32_t dx = (60 + 2 * frame) % 240;
 
@@ -546,9 +500,7 @@
         p.y += (float)(dy - 40);
     }
 
-    self.sprite.position = p;
-
-    self.boundCollision = self.sprite.boundingBox;
+    self.position = p;
 }
 
 //------------------------------------------------------------------------------
@@ -556,7 +508,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerStepPulse
+@implementation MSpriteTowerStepPulse
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   usid:(uint32_t)usid
@@ -564,26 +516,27 @@
 {
     self = [super initWithType:MTowerObjectTypeStepPulse
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_pulse_off.png"
+                      position:position];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_pulse_on.png"];
+        CCSprite* spriteOff = [CCSprite spriteWithSpriteFrameName:@"step_pulse_on.png"];
 
-        self.sprite.scale = 2.0f;
+        spriteOff.tag = 0xcdcdcdcd;
 
-        self.sprite.position = position;
+        spriteOff.position = ccp(0.0f, 0.0f);
+        spriteOff.anchorPoint = ccp(0.0f, 0.0f);
 
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
+        [self addChild:spriteOff z:-1];
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {
     frame = (frame + (self.usid & 0xff)) % 75;
 
@@ -591,11 +544,11 @@
 
     if (frame < 60)
     {
-        self.sprite.opacity = 0xff - frame * 4;
+        [(CCSprite*)[self getChildByTag:0xcdcdcdcd] setOpacity:0xff - frame * 4];
     }
     else
     {
-        self.sprite.opacity = 0xff;
+        [(CCSprite*)[self getChildByTag:0xcdcdcdcd] setOpacity:0xff];
     }
 }
 
@@ -606,9 +559,7 @@
     {
         [super setLive:live];
 
-        CCSpriteFrameCache* cache = [CCSpriteFrameCache sharedSpriteFrameCache];
-
-        self.sprite.displayFrame = [cache spriteFrameByName:live ? @"step_pulse_on.png" : @"step_pulse_off.png"];
+        [[self getChildByTag:0xcdcdcdcd] setVisible:live];
     }
 }
 
@@ -617,7 +568,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerStepSpring
+@implementation MSpriteTowerStepSpring
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   usid:(uint32_t)usid
@@ -625,19 +576,12 @@
 {
     self = [super initWithType:MTowerObjectTypeStepSpring
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_spring.png"
+                      position:position];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_spring.png"];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;
@@ -648,7 +592,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerStepStation
+@implementation MSpriteTowerStepStation
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   usid:(uint32_t)usid
@@ -656,19 +600,13 @@
 {
     self = [super initWithType:MTowerObjectTypeStepStation
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_steady.png"
+                      position:position];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.sprite.scaleX = 10.0f;
-
-        self.boundCollision = self.sprite.boundingBox;
+        self.scaleX = 10.0f;
     }
 
     return self;
@@ -679,7 +617,7 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@implementation MTowerStepSteady
+@implementation MSpriteTowerStepSteady
 //------------------------------------------------------------------------------
 -(id) initWithPosition:(CGPoint)position
                   usid:(uint32_t)usid
@@ -687,19 +625,12 @@
 {
     self = [super initWithType:MTowerObjectTypeStepSteady
                           usid:usid
-                          seed:seed];
+                          seed:seed
+               spriteFrameName:@"step_steady.png"
+                      position:position];
 
     if (self)
     {
-        self.sprite = [CCSprite spriteWithSpriteFrameName:@"step_steady.png"];
-
-        self.sprite.scale = 2.0f;
-
-        self.sprite.position = position;
-
-        self.sprite.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.boundCollision = self.sprite.boundingBox;
     }
 
     return self;

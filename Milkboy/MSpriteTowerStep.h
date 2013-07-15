@@ -1,5 +1,5 @@
 //
-//  MTowerStep.h
+//  MSpriteTowerStep.h
 //  Milkboy
 //
 //  Created by iRonhead on 5/17/13.
@@ -9,71 +9,66 @@
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
 #import "MConstant.h"
-#import "MType.h"
 
 
 //------------------------------------------------------------------------------
-@class MBoy;
+@class MLayerTowerBoy;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerStepBase : NSObject
-@property (nonatomic, strong, readonly) CCSprite* sprite;
+@interface MSpriteTowerStepBase : CCSprite
 @property (nonatomic, assign, readonly) MTowerObjectType type;
 @property (nonatomic, assign, readonly) uint32_t usid;
 @property (nonatomic, assign, readonly) BOOL live;
-@property (nonatomic, assign, readonly) CGRect boundCollision;
-@property (nonatomic, assign, readonly) MCollisionRange rangeVisiblity;
-@property (nonatomic, assign, readonly) MCollisionRange rangeCollision;
+@property (nonatomic, assign, readonly) NSRange range;
 
 +(id) stepWithType:(MTowerObjectType)type
           position:(CGPoint)position
               usid:(uint32_t)usid
               seed:(uint32_t)seed;
 
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh;
-
--(void) boyJump:(MBoy*)boy;
--(void) boyLand:(MBoy*)boy;
+-(void) updateToFrame:(int32_t)frame;
+-(void) boyJump:(MLayerTowerBoy*)boy;
+-(void) boyLand:(MLayerTowerBoy*)boy;
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepBasement : MTowerStepBase
+@interface MSpriteTowerStepBasement : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepBrittle : MTowerStepBase
+@interface MSpriteTowerStepBrittle : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepDrift : MTowerStepBase
+@interface MSpriteTowerStepDrift : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepMove : MTowerStepBase
+@interface MSpriteTowerStepMove : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepMovingWalkway : MTowerStepBase
+@interface MSpriteTowerStepMovingWalkway : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepPatrol : MTowerStepBase
+@interface MSpriteTowerStepPatrol : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepPulse : MTowerStepBase
+@interface MSpriteTowerStepPulse : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepSpring : MTowerStepBase
+@interface MSpriteTowerStepSpring : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepStation : MTowerStepBase
+@interface MSpriteTowerStepStation : MSpriteTowerStepBase
 @end
 
 //------------------------------------------------------------------------------
-@interface MTowerStepSteady : MTowerStepBase
+@interface MSpriteTowerStepSteady : MSpriteTowerStepBase
 @end
 

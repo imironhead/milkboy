@@ -6,14 +6,15 @@
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
-#import "MBoy.h"
+#import "MLayerTowerBoy.h"
 #import "MLayerTower.h"
 #import "MLayerTowerBackground.h"
+#import "MLayerTowerStages.h"
 #import "MLayerTowerWall.h"
 #import "MScene.h"
-#import "MTowerItem.h"
-#import "MTowerStage.h"
-#import "MTowerStep.h"
+#import "MSpriteTowerItem.h"
+#import "MSpriteTowerStage.h"
+#import "MSpriteTowerStep.h"
 
 
 //------------------------------------------------------------------------------
@@ -21,11 +22,9 @@
 @property (nonatomic, strong) CCLayerColor* layerDarken;
 @property (nonatomic, strong) CCLayer* layerCamera;
 @property (nonatomic, strong) MLayerTowerBackground* layerBackground;
+@property (nonatomic, strong) MLayerTowerBoy* layerBoy;
+@property (nonatomic, strong) MLayerTowerStages* layerStages;
 @property (nonatomic, strong) MLayerTowerWall* layerWall;
-@property (nonatomic, strong) MBoy* boy;
-@property (nonatomic, strong) CCSpriteBatchNode* batchNodeSteps;
-@property (nonatomic, strong) NSMutableArray* stagesInTower;
-@property (nonatomic, strong) NSMutableArray* stagesVisible;
 
 @property (nonatomic, assign) MTowerType type;
 @property (nonatomic, assign) uint32_t seedLarge;
@@ -70,46 +69,20 @@
 
         [self.layerCamera addChild:self.layerBackground z:MTowerLayerZBackground];
 
+        //--stages
+        self.layerStages = [MLayerTowerStages new];
+
+        [self.layerCamera addChild:self.layerStages z:MTowerLayerZStep];
+
         //--wall
         self.layerWall = [MLayerTowerWall new];
 
         [self.layerCamera addChild:self.layerWall z:MTowerLayerZWall];
 
         //--boy
-        self.boy = [MBoy new];
+        self.layerBoy = [MLayerTowerBoy new];
 
-        [self.layerCamera addChild:self.boy.sprite z:MTowerLayerZChar];
-
-        //--batch node for steps & items
-        self.batchNodeSteps = [CCSpriteBatchNode batchNodeWithFile:@"Texture/step.pvr.ccz" capacity:32];
-
-        [self.layerCamera addChild:self.batchNodeSteps z:MTowerLayerZStep];
-
-        //--basement
-        MTowerStage* stage = [MTowerStage basementStage];
-
-        self.stagesInTower = [NSMutableArray arrayWithObject:stage];
-        self.stagesVisible = [NSMutableArray arrayWithObject:stage];
-
-        //--first stage for main menu
-        stage = [MTowerStage menuMainStage];
-
-        [self.stagesInTower addObject:stage];
-        [self.stagesVisible addObject:stage];
-
-        //--add sprites of steps & items
-        for (stage in self.stagesVisible)
-        {
-            for (MTowerStepBase* step in stage.steps)
-            {
-                [self.batchNodeSteps addChild:step.sprite z:0];
-            }
-
-            for (MTowerItemBase* item in stage.items)
-            {
-                [self.batchNodeSteps addChild:item.sprite z:1];
-            }
-        }
+        [self.layerCamera addChild:self.layerBoy z:MTowerLayerZChar];
 
         //--
         [self scheduleUpdate];
@@ -129,9 +102,9 @@
 //------------------------------------------------------------------------------
 -(void) update:(ccTime)elapsed
 {
-//    [self updateBoyForMainMenu];
+    self.frameIndex += 1;
 
-    [self updateStage];
+    [self.layerStages updateToFrame:self.frameIndex];
     [self updateBoy];
     [self updateCamera];
 
@@ -142,15 +115,15 @@
 //------------------------------------------------------------------------------
 -(void) updateBoy
 {
-    MBoy* boy = self.boy;
+    MLayerTowerBoy* boy = self.layerBoy;
 
     //--power
     [boy updatePower];
 
     //--adjust the velocity base on state
     CGPoint vO;
-    CGPoint vB = CGPointMake(0.0f, 0.0f);
-    CGPoint vP = boy.position;
+    CGPoint vB = ccp(0.0f, 0.0f);
+    CGPoint vP = boy.feetPosition;
     CGPoint vV = boy.velocity;
     CGPoint aC = boy.acceleration;
 
@@ -159,7 +132,7 @@
     float boundBoyMinX = vP.x + CGRectGetMinX(boundBoy);
     float boundBoyMaxX = vP.x + CGRectGetMaxX(boundBoy);
 
-    MTowerStepBase* step = boy.step;
+    MSpriteTowerStepBase* step = boy.step;
 
     if (step)
     {
@@ -223,11 +196,10 @@
     }
 
     //--
-
     if (step)
     {
         //--collide the step
-        CGRect boundStep = step.boundCollision;
+        CGRect boundStep = step.boundingBox;
 
         if ((!step.live) ||
             (boundBoyMinX > CGRectGetMaxX(boundStep)) ||
@@ -242,9 +214,12 @@
     }
     else
     {
-        for (MTowerStage* stage in self.stagesVisible)
+        for (MSpriteTowerStage* stage in self.layerStages.stagesVisible)
         {
-            step = [stage collideStepWithPosition:vP velocity:&vO bound:boundBoy];
+            step = [stage collideStepWithPosition:vP
+                                         velocity:&vO
+                                            bound:boundBoy
+                                       frameIndex:self.frameIndex];
 
             if (step)
             {
@@ -263,19 +238,19 @@
     }
 
     //--update before collide item (may dash)
-    boy.position = ccpAdd(vP, vO);
+    boy.feetPosition = ccpAdd(vP, vO);
     boy.velocity = vV;
 
     //--collide item
     NSArray* items;
 
-    for (MTowerStage* stage in self.stagesVisible)
+    for (MSpriteTowerStage* stage in self.layerStages.stagesVisible)
     {
         items = [stage collideItemWithPosition:vP velocity:vO bound:boundBoy];
 
         if (items && [items count])
         {
-            for (MTowerItemBase* item in items)
+            for (MSpriteTowerItemBase* item in items)
             {
                 [boy collectItem:item];
             }
@@ -284,104 +259,11 @@
 }
 
 //------------------------------------------------------------------------------
--(void) updateStage
-{
-    if (self.type != MTowerTypeGameSinglePlayer)
-    {
-        return;
-    }
-
-    CGPoint p = self.boy.position;
-
-    //--check upper bound only
-
-    MTowerStage* stage = [self.stagesInTower lastObject];
-
-    if (p.y + 512.0f > stage.rangeCollision.lowerBound)
-    {
-        stage = [MTowerStage stageWithIndex:stage.stageIndex + 1
-                                       seed:self.seedLarge];
-
-        [self.stagesInTower addObject:stage];
-    }
-
-    //--check lower bound only
-
-    //--check visibility
-    MTowerStage* stageU = [self.stagesVisible lastObject];
-    MTowerStage* stageB = [self.stagesVisible objectAtIndex:0];
-
-    if ((stageU.rangeCollision.lowerBound < p.y) ||
-        (stageB.rangeCollision.upperBound > p.y))
-    {
-        MVisibilityRange range;
-
-        MTowerStage* stage;
-
-        for (stage in self.stagesInTower)
-        {
-            range = stage.rangeCollision;
-
-            if ((range.lowerBound > p.y) || (range.upperBound < p.y))
-            {
-                continue;
-            }
-
-            break;
-        }
-
-        uint32_t idxL = (stage.stageIndex > 0) ? (stage.stageIndex - 1) : 0;
-        uint32_t idxU = idxL + 2;
-
-        MTowerItemBase* item;
-        MTowerStepBase* step;
-
-        //--remove sprites
-        [self.batchNodeSteps removeAllChildrenWithCleanup:NO];
-
-        [self.stagesVisible removeAllObjects];
-
-        for (stage in self.stagesInTower)
-        {
-            if (idxL > stage.stageIndex)
-            {
-                continue;
-            }
-
-            if (idxU < stage.stageIndex)
-            {
-                break;
-            }
-
-            for (step in stage.steps)
-            {
-                [self.batchNodeSteps addChild:step.sprite z:0];
-            }
-
-            for (item in stage.items)
-            {
-                [self.batchNodeSteps addChild:item.sprite z:1];
-            }
-
-            [self.stagesVisible addObject:stage];
-        }
-    }
-
-    //--update visible stage
-    self.frameIndex += 1;
-
-    for (stage in self.stagesVisible)
-    {
-        [stage jumpToFrame:self.frameIndex refresh:TRUE];
-    }
-}
-
-//------------------------------------------------------------------------------
 -(void) updateCamera
 {
     if (self.type == MTowerTypeGameSinglePlayer)
     {
-        CGPoint p = self.boy.position;
+        CGPoint p = self.layerBoy.feetPosition;
 
         if (p.y > 176.0f /*240.0f - 64.0f*/)
         {
@@ -405,7 +287,7 @@
 {
     if (self.type == MTowerTypeGameSinglePlayer)
     {
-        self.boy.pressed = TRUE;
+        self.layerBoy.pressed = TRUE;
     }
 
     return TRUE;
@@ -416,7 +298,7 @@
 {
     if (self.type == MTowerTypeGameSinglePlayer)
     {
-        self.boy.pressed = FALSE;
+        self.layerBoy.pressed = FALSE;
     }
 }
 
@@ -425,7 +307,7 @@
 {
     if (self.type == MTowerTypeGameSinglePlayer)
     {
-        self.boy.pressed = FALSE;
+        self.layerBoy.pressed = FALSE;
     }
 }
 
@@ -434,72 +316,9 @@
 {
     [self.layerDarken runAction:[CCFadeTo actionWithDuration:duration opacity:0x00]];
 
-    //
-    MTowerStage* stageBasement = self.stagesInTower[0];
-    MTowerStage* stage1stFloor = (self.stagesInTower.count > 1) ? self.stagesInTower[1] : nil;
+    [self.layerStages transformToType:type duration:duration];
 
-    [self.stagesInTower removeAllObjects];
-    [self.stagesVisible removeAllObjects];
-
-    [self.stagesInTower addObject:stageBasement];
-    [self.stagesVisible addObject:stageBasement];
-
-    [self.batchNodeSteps removeAllChildrenWithCleanup:NO];
-
-    for (MTowerStepBase* step in stageBasement.steps)
-    {
-        [self.batchNodeSteps addChild:step.sprite z:0];
-    }
-
-    //--new stage
-    MTowerStage* stageNew = [MTowerStage stageWithIndex:1 seed:0];
-
-    [self.stagesInTower addObject:stageNew];
-    [self.stagesVisible addObject:stageNew];
-
-    for (MTowerStepBase* step in stageNew.steps)
-    {
-        [self.batchNodeSteps addChild:step.sprite z:0];
-    }
-
-    for (MTowerItemBase* item in stageNew.items)
-    {
-        [self.batchNodeSteps addChild:item.sprite z:1];
-    }
-
-    //--move all items and steps from 1st stage
-    for (MTowerStepBase* step in stage1stFloor.steps)
-    {
-        CGPoint pos = step.sprite.position;
-
-        pos.y = 480.0f;
-
-        [step.sprite runAction:[CCMoveTo actionWithDuration:duration position:pos]];
-
-        [self.batchNodeSteps addChild:step.sprite z:0];
-    }
-
-    for (MTowerItemBase* item in stage1stFloor.items)
-    {
-        [self.batchNodeSteps addChild:item.sprite z:1];
-    }
-
-    CCDelayTime* actionDelay = [CCDelayTime actionWithDuration:duration];
-
-    CCCallBlock* actionFinal = [CCCallBlock actionWithBlock:^{
-        for (MTowerStepBase* step in stage1stFloor.steps)
-        {
-            [step.sprite stopAllActions];
-
-            [self.batchNodeSteps removeChild:step.sprite cleanup:YES];
-        }
-
-        self.type = type;
-    }];
-
-    CCSequence* actionSequence = [CCSequence actions:actionDelay, actionFinal, nil];
-
-    [self runAction:actionSequence];
+self.type = type;
 }
 
 //------------------------------------------------------------------------------

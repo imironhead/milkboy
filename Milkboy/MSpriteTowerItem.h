@@ -1,5 +1,5 @@
 //
-//  MTowerItem.h
+//  MSpriteTowerItem.h
 //  Milkboy
 //
 //  Created by iRonhead on 5/29/13.
@@ -9,46 +9,37 @@
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
 #import "MConstant.h"
-#import "MType.h"
 
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerItemBase : NSObject
-@property (nonatomic, strong, readonly) CCSprite* sprite;
+@interface MSpriteTowerItemBase : CCSprite
 @property (nonatomic, assign, readonly) MTowerObjectType type;
 @property (nonatomic, assign, readonly) uint32_t uiid;
 @property (nonatomic, assign, readonly) BOOL live;
-@property (nonatomic, assign, readonly) CGRect boundCollision;
-@property (nonatomic, assign, readonly) MCollisionRange rangeVisiblity;
-@property (nonatomic, assign, readonly) MCollisionRange rangeCollision;
+@property (nonatomic, assign, readonly) NSRange range;
 
 +(id) itemWithType:(MTowerObjectType)type
           position:(CGPoint)position
               uiid:(uint32_t)uiid
               seed:(uint32_t)seed;
 
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh;
+-(void) updateToFrame:(int32_t)frame;
 -(void) collected;
 @end
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerItemBomb : MTowerItemBase
+@interface MSpriteTowerItemBox : MSpriteTowerItemBase
 @end
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerItemBox : MTowerItemBase
+@interface MSpriteTowerItemCat : MSpriteTowerItemBase
 @end
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MTowerItemCat : MTowerItemBase
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MTowerItemMilk : MTowerItemBase
+@interface MSpriteTowerItemMilk : MSpriteTowerItemBase
 @end
 

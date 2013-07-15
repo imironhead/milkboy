@@ -1,14 +1,14 @@
 //
-//  MBoy.m
+//  MLayerTowerBoy.m
 //  Milkboy
 //
 //  Created by iRonhead on 5/16/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
-#import "MBoy.h"
-#import "MTowerItem.h"
-#import "MTowerStep.h"
+#import "MLayerTowerBoy.h"
+#import "MSpriteTowerItem.h"
+#import "MSpriteTowerStep.h"
 
 
 //------------------------------------------------------------------------------
@@ -27,8 +27,7 @@ typedef enum _MBoySpriteFrame
 } MBoySpriteFrame;
 
 //------------------------------------------------------------------------------
-@interface MBoy()
-@property (nonatomic, strong, readwrite) CCSpriteBatchNode* sprite;
+@interface MLayerTowerBoy()
 @property (nonatomic, assign, readwrite) CGRect boundCollision;
 @property (nonatomic, assign, readwrite) uint32_t powerInteger;
 @property (nonatomic, assign, readwrite) uint32_t powerIntegerMax;
@@ -38,6 +37,7 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, assign, readwrite) uint32_t score;
 @property (nonatomic, assign, readwrite) uint32_t catState;
 @property (nonatomic, assign, readwrite) MBoyState boyState;
+@property (nonatomic, strong) CCSpriteBatchNode* sprite;
 @property (nonatomic, strong) CCSprite* spriteBoy;
 @property (nonatomic, strong) CCSprite* spriteCat;
 @property (nonatomic, strong) CCSprite* spriteHat;
@@ -51,7 +51,7 @@ typedef enum _MBoySpriteFrame
 @end
 
 //------------------------------------------------------------------------------
-@implementation MBoy
+@implementation MLayerTowerBoy
 //------------------------------------------------------------------------------
 -(id) init
 {
@@ -61,6 +61,8 @@ typedef enum _MBoySpriteFrame
     {
         //--batch node
         self.sprite = [CCSpriteBatchNode batchNodeWithFile:@"Texture/char.pvr.ccz" capacity:4];
+
+        [self addChild:self.sprite];
 
         //--boy sprite
         self.spriteBoy = [CCSprite spriteWithSpriteFrameName:@"char_move_00.png"];
@@ -116,7 +118,7 @@ typedef enum _MBoySpriteFrame
         //--initial state
         self.boundCollision = CGRectMake(-11.0f, -22.0f, 22.0f, 44.0f);
 
-        self.position = CGPointMake(25.0f, 23.0f);
+        self.feetPosition = CGPointMake(25.0f, 23.0f);
         self.velocity = CGPointMake(3.0f, 0.0f);
         self.acceleration = CGPointMake(0.0f, -2.0f);
 
@@ -147,11 +149,11 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) setPosition:(CGPoint)position
+-(void) setFeetPosition:(CGPoint)position
 {
-    if (!CGPointEqualToPoint(self->_position, position))
+    if (!CGPointEqualToPoint(self->_feetPosition, position))
     {
-        self->_position = position;
+        self->_feetPosition = position;
 
         self.spriteBoy.position = position;
         self.spriteHat.position = self.spriteBoy.position;
@@ -363,7 +365,7 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) setStep:(MTowerStepBase*)step
+-(void) setStep:(MSpriteTowerStepBase*)step
 {
     if (self->_step != step)
     {
@@ -447,7 +449,7 @@ typedef enum _MBoySpriteFrame
 //------------------------------------------------------------------------------
 -(void) updatePowerUI
 {
-    CGPoint p = self->_position;
+    CGPoint p = self->_feetPosition;
 
     p.y += 50.0f;
 
@@ -461,7 +463,7 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(BOOL) collectItem:(MTowerItemBase*)item
+-(BOOL) collectItem:(MSpriteTowerItemBase*)item
 {
     BOOL collected = TRUE;
 

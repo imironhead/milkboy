@@ -8,30 +8,29 @@
 //------------------------------------------------------------------------------
 #import "MConstant.h"
 #import "MGame.h"
-#import "MTowerItem.h"
-#import "MTowerStage.h"
-#import "MTowerStep.h"
+#import "MSpriteTowerItem.h"
+#import "MSpriteTowerStage.h"
+#import "MSpriteTowerStep.h"
 #import "UMath.h"
 
 
 //------------------------------------------------------------------------------
-@interface MTowerStage()
+@interface MSpriteTowerStage()
 @property (nonatomic, strong, readwrite) NSArray* steps;
 @property (nonatomic, strong, readwrite) NSArray* items;
 @property (nonatomic, assign, readwrite) uint32_t stageIndex;
 @property (nonatomic, assign, readwrite) uint32_t frameIndex;
 @property (nonatomic, assign, readwrite) uint32_t seed;
-@property (nonatomic, assign, readwrite) MCollisionRange rangeCollision;
-@property (nonatomic, assign) float stepHeight;
-@property (nonatomic, assign) float stepInterval;
+@property (nonatomic, assign, readwrite) NSRange objectRange;
+@property (nonatomic, assign, readwrite) NSRange markupRange;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MTowerStage
+@implementation MSpriteTowerStage
 //------------------------------------------------------------------------------
 +(id) basementStage
 {
-    return [[MTowerStage alloc] initWithBasement];
+    return [[MSpriteTowerStage alloc] initWithBasement];
 }
 
 //------------------------------------------------------------------------------
@@ -42,7 +41,9 @@
 
 
 //------------------------------------------------------------------------------
-+(id) stageWithIndex:(uint32_t)index seed:(uint32_t)seed
++(id) stageWithIndex:(uint32_t)index
+          baseHeight:(NSUInteger)baseHeight
+                seed:(uint32_t)seed
 {
     //--check the top-most stage for match game here
 
@@ -50,10 +51,11 @@
 
     if (index == 0)
     {
+        stage = [[MSpriteTowerStage alloc] initWithBasement];;
     }
     else
     {
-        stage = [[MTowerStage alloc] initWithIndex:index seed:seed];
+        stage = [[MSpriteTowerStage alloc] initWithIndex:index baseHeight:baseHeight seed:seed];
     }
 
     return stage;
@@ -62,7 +64,8 @@
 //------------------------------------------------------------------------------
 -(id) initWithBasement
 {
-    self = [super init];
+    self = [super initWithTexture:[[CCTextureCache sharedTextureCache] textureForKey:@"Texture/step.pvr.ccz"]
+                             rect:CGRectZero];
 
     if (self)
     {
@@ -74,18 +77,16 @@
         self.items = [NSMutableArray new];
 
         //--
-        self.rangeCollision = MCollisionRangeMake(-600.0f, 0.0f);
+        self.objectRange = NSMakeRange(0, 0);
+        self.markupRange = NSMakeRange(0, 0);
 
-        self.stepInterval = 600.0f;
+        //--
+        MSpriteTowerStepBase* step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepBasement
+                                                               position:CGPointMake(160.0f, 0.0f)
+                                                                   usid:(MTowerObjectGroupStep << 31)
+                                                                   seed:0];
 
-        NSMutableArray* steps = (NSMutableArray*)self.steps;
-
-        MTowerStepBase* step = [MTowerStepBase stepWithType:MTowerObjectTypeStepBasement
-                                                   position:CGPointMake(160.0f, 0.0f)
-                                                       usid:(MTowerObjectGroupStep << 31)
-                                                       seed:0];
-
-        [steps addObject:step];
+        [(NSMutableArray*)self.steps addObject:step];
     }
 
     return self;
@@ -94,7 +95,8 @@
 //------------------------------------------------------------------------------
 -(id) initWithMenuMain
 {
-    self = [super init];
+    self = [super initWithTexture:[[CCTextureCache sharedTextureCache] textureForKey:@"Texture/step.pvr.ccz"]
+                             rect:CGRectZero];
 
     if (self)
     {
@@ -103,7 +105,9 @@
         self.frameIndex = 0;
         self.seed = 0;
 
-        self.rangeCollision = MCollisionRangeMake(0.0, 600.0f);
+        //--
+        self.objectRange = NSMakeRange(0, 0);
+        self.markupRange = NSMakeRange(0, 0);
 
         //
         self.steps = [NSMutableArray new];
@@ -112,56 +116,69 @@
         //
         NSMutableArray* steps = (NSMutableArray*)self.steps;
 
-        MTowerStepBase* step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                                                   position:ccp(40.0f, 200.0f)
-                                                       usid:0
-                                                       seed:0];
+        MSpriteTowerStepBase* step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepSteady
+                                                               position:ccp(40.0f, 200.0f)
+                                                                   usid:0
+                                                                   seed:0];
 
         [steps addObject:step];
+
+        [self addChild:step];
 
         //
-        step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                                   position:ccp(260.0f, 280.0f)
-                                       usid:0
-                                       seed:0];
+        step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepSteady
+                                         position:ccp(260.0f, 280.0f)
+                                             usid:0
+                                             seed:0];
 
         [steps addObject:step];
+
+        [self addChild:step];
 
         //
-        step = [MTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                                   position:ccp(160.0f, 40.0f)
-                                       usid:0
-                                       seed:0];
+        step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepSteady
+                                         position:ccp(160.0f, 40.0f)
+                                             usid:0
+                                             seed:0];
 
         [steps addObject:step];
+
+        [self addChild:step];
 
         //
         NSMutableArray* items = (NSMutableArray*)self.items;
 
-        MTowerItemBase* item;
+        MSpriteTowerItemBase* item;
 
-        item = [MTowerItemBase itemWithType:MTowerObjectTypeItemCat
+        item = [MSpriteTowerItemBase itemWithType:MTowerObjectTypeItemCat
                                    position:ccp(270.0f, 280.0f)
                                        uiid:0
                                        seed:0];
 
         [items addObject:item];
 
-        item = [MTowerItemBase itemWithType:MTowerObjectTypeItemMilkStrength
+        [self addChild:item];
+
+        item = [MSpriteTowerItemBase itemWithType:MTowerObjectTypeItemMilkStrength
                                    position:ccp(60.0f, 200.0f)
                                        uiid:0
                                        seed:0];
 
         [items addObject:item];
+
+        [self addChild:item];
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(id) initWithIndex:(uint32_t)index seed:(uint32_t)seed
+-(id) initWithIndex:(uint32_t)index
+         baseHeight:(NSUInteger)baseHeight
+               seed:(uint32_t)seed
 {
-    self = [super init];
+    self = [super initWithTexture:[[CCTextureCache sharedTextureCache] textureForKey:@"Texture/step.pvr.ccz"]
+                             rect:CGRectZero];
 
     if (self)
     {
@@ -175,23 +192,18 @@
         self.items = [NSMutableArray new];
 
         //
-        [self buildSteps];
-        [self buildItems];
+        [self buildStepsAndItemsWithBaseHeight:baseHeight];
     }
 
     return self;
 }
 
 //------------------------------------------------------------------------------
--(void) buildSteps
+-(void) buildStepsAndItemsWithBaseHeight:(NSUInteger)baseHeight
 {
-    float stepHeight         = 16.0f;
     float stepInterval       = 30.0f;
     float stepColumnWidth    = 72.0f;
     float stepColumnVariance = 16.0f;
-
-    self.stepHeight = stepHeight;
-    self.stepInterval = stepInterval;
 
     //--random generator
     URandomIntegerGeneratorMWC* randomStepVariance =
@@ -205,10 +217,9 @@
                                                                             seedB:self.seed];
 
     //--
-    MCollisionRange rangeFix = MCollisionRangeMake((float)(self.stageIndex * 600) - 600.0f, (float)(self.stageIndex * 600));
-    MCollisionRange rangeVar = rangeFix;
-
-    rangeFix.lowerBound += stepHeight;
+    int32_t reference  = baseHeight + stepInterval;
+    int32_t lowerBound = reference;
+    int32_t upperBound = reference;
 
     CGPoint position;
 
@@ -216,106 +227,78 @@
     uint32_t usidi = 0;
     uint32_t usidc;
 
-    int32_t weightTotal = [[MGame sharedGame] weightFunctionStep];
-
-    MTowerObjectType type;
-
-    MTowerStepBase* step;
-
-    NSMutableArray* steps = (NSMutableArray*)self.steps;
-
-    while (rangeFix.lowerBound < rangeFix.upperBound)
-    {
-        position = CGPointMake(
-            stepColumnWidth * (float)randomStepColumn.randomInteger + (float)randomStepVariance.randomInteger + 38.0f,
-            rangeFix.lowerBound);
-
-        usidc = (usidm | usidi);
-
-        type = [[MGame sharedGame] stepWithParameter:arc4random_uniform(weightTotal) inStage:self.stageIndex];
-
-        step = [MTowerStepBase stepWithType:type
-                                   position:position
-                                       usid:usidc
-                                       seed:self.seed];
-
-        [steps addObject:step];
-
-        rangeVar.lowerBound = MIN(rangeVar.lowerBound, step.rangeCollision.lowerBound);
-        rangeVar.upperBound = MAX(rangeVar.upperBound, step.rangeCollision.upperBound);
-
-        usidi += 1;
-
-        rangeFix.lowerBound += stepInterval;
-    }
-
-    self.rangeCollision = rangeVar;
-}
-
-//------------------------------------------------------------------------------
--(void) buildItems
-{
-    //--
-    MCollisionRange rangeFix = MCollisionRangeMake((float)(self.stageIndex * 600) - 600.0f, (float)(self.stageIndex * 600));
-
-    CGPoint position;
-
     uint32_t uiidm = (MTowerObjectGroupItem << 31) | (self.stageIndex << 16);
     uint32_t uiidi = 0;
     uint32_t uiidc;
 
-    int32_t weightTotal = [[MGame sharedGame] weightFunctionItem];
+    int32_t stepWeightTotal = [[MGame sharedGame] weightFunctionStep];
+    int32_t itemWeightTotal = [[MGame sharedGame] weightFunctionItem];
 
     MTowerObjectType type;
 
-    MTowerItemBase* item;
-
-    NSMutableArray* items = (NSMutableArray*)self.items;
-
-    while (rangeFix.lowerBound < rangeFix.upperBound)
-    {
-        rangeFix.lowerBound += 30.0f;
-
-        if (arc4random_uniform(10) > 1)
-        {
-            continue;
-        }
-
-        position.y = rangeFix.lowerBound;
-        position.x = 16.0f + (float)arc4random_uniform(278);
-
-        uiidc = (uiidm | uiidi);
-
-        type = [[MGame sharedGame] itemWithParameter:arc4random_uniform(weightTotal) inStage:self.stageIndex];
-
-        item = [MTowerItemBase itemWithType:type
-                                   position:position
-                                       uiid:uiidc
-                                       seed:self.seed];
-
-        [items addObject:item];
-
-        uiidi += 1;
-    }
-}
-
-//------------------------------------------------------------------------------
--(void) buildBasement
-{
-    self.rangeCollision = MCollisionRangeMake(
-        (float)(self.stageIndex * 600) - 600.0f,
-        (float)(self.stageIndex * 600));
-
-    self.stepInterval = 600.0f;
+    MSpriteTowerStepBase* step;
+    MSpriteTowerItemBase* item;
 
     NSMutableArray* steps = (NSMutableArray*)self.steps;
+    NSMutableArray* items = (NSMutableArray*)self.items;
 
-    MTowerStepBase* step = [MTowerStepBase stepWithType:MTowerObjectTypeStepStation
-                                               position:CGPointMake(160.0f, 0.0f)
-                                                   usid:(MTowerObjectGroupStep << 31)
-                                                   seed:0];
+    for (int32_t i = 0; i < 20; ++i, reference += stepInterval)
+    {
+        position = CGPointMake(
+            stepColumnWidth * (float)randomStepColumn.randomInteger + (float)randomStepVariance.randomInteger + 38.0f,
+            reference);
 
-    [steps addObject:step];
+        usidc = (usidm | usidi);
+
+        type = [[MGame sharedGame] stepWithParameter:arc4random_uniform(stepWeightTotal) inStage:self.stageIndex];
+
+        step = [MSpriteTowerStepBase stepWithType:type
+                                         position:position
+                                             usid:usidc
+                                             seed:self.seed];
+
+        [steps addObject:step];
+
+        [self addChild:step];
+
+        lowerBound = MIN(lowerBound, step.range.location);
+        upperBound = MAX(upperBound, NSMaxRange(step.range));
+
+        usidi += 1;
+
+        if ((type == MTowerObjectTypeStepDrift) ||
+            (type == MTowerObjectTypeStepMovingWalkwayLeft) ||
+            (type == MTowerObjectTypeStepMovingWalkwayRight) ||
+            (type == MTowerObjectTypeStepPulse) ||
+            (type == MTowerObjectTypeStepSpring) ||
+            (type == MTowerObjectTypeStepSteady))
+
+        {
+            if (arc4random_uniform(10) <= 1)
+            {
+                uiidc = (uiidm | uiidi);
+
+                type = [[MGame sharedGame] itemWithParameter:arc4random_uniform(itemWeightTotal) inStage:self.stageIndex];
+
+                item = [MSpriteTowerItemBase itemWithType:type
+                                           position:position
+                                               uiid:uiidc
+                                               seed:self.seed];
+
+                [items addObject:item];
+
+                [self addChild:item];
+
+                lowerBound = MIN(lowerBound, item.range.location);
+                upperBound = MAX(upperBound, NSMaxRange(item.range));
+
+                uiidi += 1;
+            }
+        }
+    }
+
+    self.markupRange = NSMakeRange(baseHeight, reference - stepInterval - baseHeight);
+    self.objectRange = NSMakeRange(lowerBound, upperBound - lowerBound);
 }
 
 //------------------------------------------------------------------------------
@@ -323,7 +306,10 @@
                            velocity:(CGPoint)velocity
                               bound:(CGRect)bound
 {
-    MCollisionRange r = self.rangeCollision;
+    NSRange r = self.objectRange;
+
+    float lowerBound = r.location;
+    float upperBound = NSMaxRange(r);
 
     CGPoint positionNew = ccpAdd(positionOld, velocity);
 
@@ -332,12 +318,12 @@
     float boundBoyMinY = CGRectGetMinY(bound);
     float boundBoyMaxY = CGRectGetMaxY(bound);
 
-    if ((positionOld.y + boundBoyMaxY < r.lowerBound) ||
-        (positionOld.y + boundBoyMinY > r.upperBound))
+    if ((positionOld.y + boundBoyMaxY < lowerBound) ||
+        (positionOld.y + boundBoyMinY > upperBound))
     {
     }
-    else if ((positionNew.y + boundBoyMaxY < r.lowerBound) ||
-             (positionNew.y + boundBoyMinY > r.upperBound))
+    else if ((positionNew.y + boundBoyMaxY < lowerBound) ||
+             (positionNew.y + boundBoyMinY > upperBound))
     {
     }
     else
@@ -381,14 +367,14 @@
             pLower = positionNew;
         }
 
-        for (MTowerItemBase* item in self.items)
+        for (MSpriteTowerItemBase* item in self.items)
         {
             if (!item.live)
             {
                 continue;
             }
 
-            boundItem = item.boundCollision;
+            boundItem = item.boundingBox;
 
             boundYMax = CGRectGetMaxY(boundItem) - boundBoyMinY;
             boundYMin = CGRectGetMinY(boundItem) - boundBoyMaxY;
@@ -482,12 +468,13 @@
 }
 
 //------------------------------------------------------------------------------
--(MTowerStepBase*) collideStepWithPosition:(CGPoint)positionOld
-                                  velocity:(CGPoint*)velocity
-                                     bound:(CGRect)bound
+-(MSpriteTowerStepBase*) collideStepWithPosition:(CGPoint)positionOld
+                                        velocity:(CGPoint*)velocity
+                                           bound:(CGRect)bound
+                                      frameIndex:(int32_t)frameIndex
 {
     //--collide with upper edge of bounding rect of steps
-    MTowerStepBase* step = nil;
+    MSpriteTowerStepBase* step = nil;
 
     if (velocity->y >= 0.0f)
     {
@@ -500,18 +487,21 @@
         //--collide stage
         CGPoint positionNew = ccpAdd(positionOld, *velocity);
 
-        MCollisionRange range = self.rangeCollision;
+        NSRange r = self.objectRange;
+
+        float lowerBound = r.location;
+        float upperBound = NSMaxRange(r);
 
         float boundBoyMinY = CGRectGetMinY(bound);
         float boundBoyMaxY = CGRectGetMaxY(bound);
 
-        if ((range.lowerBound > positionOld.y + boundBoyMaxY) && (range.lowerBound > positionNew.y + boundBoyMaxY))
+        if ((lowerBound > positionOld.y + boundBoyMaxY) && (lowerBound > positionNew.y + boundBoyMaxY))
         {
             //--rect is under the stage
 
             step = nil;
         }
-        else if ((range.upperBound < positionOld.y + boundBoyMinY) && (range.upperBound < positionNew.y + boundBoyMinY))
+        else if ((upperBound < positionOld.y + boundBoyMinY) && (upperBound < positionNew.y + boundBoyMinY))
         {
             //--rect is on the top of stage
 
@@ -520,8 +510,6 @@
         else
         {
             //--collide
-            float dx;
-
             CGRect boundStep;
 
             float boundBoyMinX = CGRectGetMinX(bound);
@@ -530,36 +518,51 @@
             float boundStepMinX;
             float boundStepMaxX;
             float boundStepMaxY;
+            float boundStepMinY;
 
-            for (MTowerStepBase* stepT in self.steps)
+            for (MSpriteTowerStepBase* stepT in self.steps)
             {
                 if (!stepT.live)
                 {
                     continue;
                 }
 
-                boundStep = stepT.boundCollision;
+                boundStep = stepT.boundingBox;
 
                 boundStepMinX = CGRectGetMinX(boundStep) - boundBoyMaxX;
                 boundStepMaxX = CGRectGetMaxX(boundStep) - boundBoyMinX;
-                boundStepMaxY = CGRectGetMaxY(boundStep) - boundBoyMinY;
 
-                if ((positionOld.y <= boundStepMaxY) || (positionNew.y > boundStepMaxY))
+                if ((positionNew.x < boundStepMinX) || (positionNew.x > boundStepMaxX))
                 {
                     continue;
                 }
 
-                dx =
-                    positionOld.x +
-                    (positionNew.x - positionOld.x) *
-                    (boundStepMaxY - positionOld.y) / (positionNew.y - positionOld.y);
 
-                if ((dx >= boundStepMinX) && (dx <= boundStepMaxX))
+                boundStepMaxY = CGRectGetMaxY(boundStep) - boundBoyMinY;
+
+                if (stepT.type == MTowerObjectTypeStepPatrolVertical)
                 {
-                    step = stepT;
+                    [stepT updateToFrame:frameIndex - 1];
 
-                    positionNew.x = dx;
-                    positionNew.y = boundStepMaxY;
+                    boundStepMinY = CGRectGetMaxY(stepT.boundingBox) - boundBoyMinY;
+
+                    [stepT updateToFrame:frameIndex];
+
+                    if ((positionOld.y >= boundStepMinY) && (positionNew.y <= boundStepMaxY))
+                    {
+                        step = stepT;
+
+                        positionNew.y = boundStepMaxY;
+                    }
+                }
+                else
+                {
+                    if ((positionOld.y >= boundStepMaxY) && (positionNew.y <= boundStepMaxY))
+                    {
+                        step = stepT;
+
+                        positionNew.y = boundStepMaxY;
+                    }
                 }
             }
 
@@ -574,20 +577,20 @@
 }
 
 //------------------------------------------------------------------------------
--(void) jumpToFrame:(int32_t)frame refresh:(BOOL)refresh
+-(void) updateToFrame:(int32_t)frame
 {
     if (self.frameIndex != frame)
     {
         self.frameIndex = frame;
 
-        for (MTowerStepBase* step in self.steps)
+        for (MSpriteTowerStepBase* step in self.steps)
         {
-            [step jumpToFrame:frame refresh:refresh];
+            [step updateToFrame:frame];
         }
 
-        for (MTowerItemBase* item in self.items)
+        for (MSpriteTowerItemBase* item in self.items)
         {
-            [item jumpToFrame:frame refresh:refresh];
+            [item updateToFrame:frame];
         }
     }
 }

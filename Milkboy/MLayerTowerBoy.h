@@ -1,5 +1,5 @@
 //
-//  MBoy.h
+//  MLayerTowerBoy.h
 //  Milkboy
 //
 //  Created by iRonhead on 5/16/13.
@@ -12,17 +12,11 @@
 
 
 //------------------------------------------------------------------------------
-@class MTowerItemBase;
-@class MTowerStepBase;
+@class MSpriteTowerItemBase;
+@class MSpriteTowerStepBase;
 
 //------------------------------------------------------------------------------
-@interface MBoy : NSObject
-@property (nonatomic, strong, readonly) CCSpriteBatchNode* sprite;
-@property (nonatomic, assign, readonly) float defaultMoveSpeed;
-@property (nonatomic, assign, readonly) float defaultJumpSpeed;
-@property (nonatomic, assign, readonly) float defaultGravity;
-@property (nonatomic, assign, readonly) float defaultPowerMax;
-@property (nonatomic, assign, readonly) float defaultPowerAdd;
+@interface MLayerTowerBoy : CCLayer
 @property (nonatomic, assign, readonly) CGRect boundCollision;
 @property (nonatomic, assign, readonly) uint32_t powerInteger;
 @property (nonatomic, assign, readonly) uint32_t powerIntegerMax;
@@ -32,14 +26,13 @@
 @property (nonatomic, assign, readonly) uint32_t score;
 @property (nonatomic, assign, readonly) uint32_t catState;
 @property (nonatomic, assign, readonly) MBoyState boyState;
-@property (nonatomic, assign) CGPoint position;
+@property (nonatomic, assign) CGPoint feetPosition;
 @property (nonatomic, assign) CGPoint velocity;
 @property (nonatomic, assign) CGPoint acceleration;
-@property (nonatomic, assign) uint32_t coinCount;
 @property (nonatomic, assign) uint32_t milkCount;
 @property (nonatomic, assign) BOOL pressed;
-@property (nonatomic, weak) MTowerStepBase* step;
+@property (nonatomic, weak) MSpriteTowerStepBase* step;
 
 -(void) updatePower;
--(BOOL) collectItem:(MTowerItemBase*)item;
+-(BOOL) collectItem:(MSpriteTowerItemBase*)item;
 @end

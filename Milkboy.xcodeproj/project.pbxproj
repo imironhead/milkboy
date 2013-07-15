@@ -132,9 +132,9 @@
 		F48944FC1743970000897354 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = F48944F81743970000897354 /* fps_images.png */; };
 		F48945071743C8C800897354 /* Texture in Resources */ = {isa = PBXBuildFile; fileRef = F48945061743C8C700897354 /* Texture */; };
 		F489450A1744B41200897354 /* MGame.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945091744B41200897354 /* MGame.m */; };
-		F489450E1744B92E00897354 /* MBoy.m in Sources */ = {isa = PBXBuildFile; fileRef = F489450D1744B92E00897354 /* MBoy.m */; };
-		F48945111745CB4600897354 /* MTowerStep.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945101745CB4500897354 /* MTowerStep.m */; };
-		F48945151745DD1D00897354 /* MTowerStage.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945141745DD1D00897354 /* MTowerStage.m */; };
+		F489450E1744B92E00897354 /* MLayerTowerBoy.m in Sources */ = {isa = PBXBuildFile; fileRef = F489450D1744B92E00897354 /* MLayerTowerBoy.m */; };
+		F48945111745CB4600897354 /* MSpriteTowerStep.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945101745CB4500897354 /* MSpriteTowerStep.m */; };
+		F48945151745DD1D00897354 /* MSpriteTowerStage.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945141745DD1D00897354 /* MSpriteTowerStage.m */; };
 		F48945341745ED1800897354 /* UIntersection2d.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451A1745ED1800897354 /* UIntersection2d.m */; };
 		F48945351745ED1800897354 /* ULine.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451C1745ED1800897354 /* ULine.m */; };
 		F48945361745ED1800897354 /* UMath.m in Sources */ = {isa = PBXBuildFile; fileRef = F489451E1745ED1800897354 /* UMath.m */; };
@@ -146,9 +146,10 @@
 		F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */ = {isa = PBXBuildFile; fileRef = F489452D1745ED1800897354 /* UTransform2dAffine.m */; };
 		F489453E1745ED1800897354 /* UVector2.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945311745ED1800897354 /* UVector2.m */; };
 		F489453F1745ED1800897354 /* UVector3.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945331745ED1800897354 /* UVector3.m */; };
-		F4ABCE96175656B600B9FDE9 /* MTowerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE95175656B600B9FDE9 /* MTowerItem.m */; };
+		F4ABCE96175656B600B9FDE9 /* MSpriteTowerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE95175656B600B9FDE9 /* MSpriteTowerItem.m */; };
 		F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */; };
 		F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */; };
+		F4BF69FD179042EB006DC604 /* MLayerTowerStages.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69FC179042EA006DC604 /* MLayerTowerStages.m */; };
 		F4ED886B178ACADA00388861 /* MLayerTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886A178ACADA00388861 /* MLayerTower.m */; };
 		F4ED886E178B1E2A00388861 /* MLayerMenuTutorials.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886D178B1E2A00388861 /* MLayerMenuTutorials.m */; };
 		F4ED8871178C461B00388861 /* MLayerGameSinglePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED8870178C461B00388861 /* MLayerGameSinglePlayer.m */; };
@@ -417,14 +418,13 @@
 		F48945061743C8C700897354 /* Texture */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Texture; sourceTree = "<group>"; };
 		F48945081744B41200897354 /* MGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGame.h; sourceTree = "<group>"; };
 		F48945091744B41200897354 /* MGame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGame.m; sourceTree = "<group>"; };
-		F489450B1744B4CE00897354 /* MType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MType.h; sourceTree = "<group>"; };
-		F489450C1744B92E00897354 /* MBoy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBoy.h; sourceTree = "<group>"; };
-		F489450D1744B92E00897354 /* MBoy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBoy.m; sourceTree = "<group>"; };
-		F489450F1745CB4500897354 /* MTowerStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTowerStep.h; sourceTree = "<group>"; };
-		F48945101745CB4500897354 /* MTowerStep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTowerStep.m; sourceTree = "<group>"; };
+		F489450C1744B92E00897354 /* MLayerTowerBoy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerBoy.h; sourceTree = "<group>"; };
+		F489450D1744B92E00897354 /* MLayerTowerBoy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerBoy.m; sourceTree = "<group>"; };
+		F489450F1745CB4500897354 /* MSpriteTowerStep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSpriteTowerStep.h; sourceTree = "<group>"; };
+		F48945101745CB4500897354 /* MSpriteTowerStep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSpriteTowerStep.m; sourceTree = "<group>"; };
 		F48945121745CC5F00897354 /* MConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MConstant.h; sourceTree = "<group>"; };
-		F48945131745DD1D00897354 /* MTowerStage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTowerStage.h; sourceTree = "<group>"; };
-		F48945141745DD1D00897354 /* MTowerStage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTowerStage.m; sourceTree = "<group>"; };
+		F48945131745DD1D00897354 /* MSpriteTowerStage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSpriteTowerStage.h; sourceTree = "<group>"; };
+		F48945141745DD1D00897354 /* MSpriteTowerStage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSpriteTowerStage.m; sourceTree = "<group>"; };
 		F48945191745ED1800897354 /* UIntersection2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIntersection2d.h; path = UEngine/Math/UIntersection2d.h; sourceTree = "<group>"; };
 		F489451A1745ED1800897354 /* UIntersection2d.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIntersection2d.m; path = UEngine/Math/UIntersection2d.m; sourceTree = "<group>"; };
 		F489451B1745ED1800897354 /* ULine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ULine.h; path = UEngine/Math/ULine.h; sourceTree = "<group>"; };
@@ -450,12 +450,14 @@
 		F48945311745ED1800897354 /* UVector2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector2.m; path = UEngine/Math/UVector2.m; sourceTree = "<group>"; };
 		F48945321745ED1800897354 /* UVector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UVector3.h; path = UEngine/Math/UVector3.h; sourceTree = "<group>"; };
 		F48945331745ED1800897354 /* UVector3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UVector3.m; path = UEngine/Math/UVector3.m; sourceTree = "<group>"; };
-		F4ABCE94175656B600B9FDE9 /* MTowerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTowerItem.h; sourceTree = "<group>"; };
-		F4ABCE95175656B600B9FDE9 /* MTowerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTowerItem.m; sourceTree = "<group>"; };
+		F4ABCE94175656B600B9FDE9 /* MSpriteTowerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSpriteTowerItem.h; sourceTree = "<group>"; };
+		F4ABCE95175656B600B9FDE9 /* MSpriteTowerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSpriteTowerItem.m; sourceTree = "<group>"; };
 		F4BF69F5178F1975006DC604 /* MLayerTowerWall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerWall.h; sourceTree = "<group>"; };
 		F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerWall.m; sourceTree = "<group>"; };
 		F4BF69F8178FB65D006DC604 /* MLayerTowerBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerBackground.h; sourceTree = "<group>"; };
 		F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerBackground.m; sourceTree = "<group>"; };
+		F4BF69FB179042EA006DC604 /* MLayerTowerStages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerStages.h; sourceTree = "<group>"; };
+		F4BF69FC179042EA006DC604 /* MLayerTowerStages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerStages.m; sourceTree = "<group>"; };
 		F4ED8869178ACADA00388861 /* MLayerTower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTower.h; sourceTree = "<group>"; };
 		F4ED886A178ACADA00388861 /* MLayerTower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTower.m; sourceTree = "<group>"; };
 		F4ED886C178B1E2900388861 /* MLayerMenuTutorials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerMenuTutorials.h; sourceTree = "<group>"; };
@@ -555,8 +557,6 @@
 				F41F2F0B176F5DE000C8097C /* data_function_item.h */,
 				F41F2F0C176F5DE000C8097C /* data_function_step.h */,
 				F48945121745CC5F00897354 /* MConstant.h */,
-				F489450C1744B92E00897354 /* MBoy.h */,
-				F489450D1744B92E00897354 /* MBoy.m */,
 				F48945081744B41200897354 /* MGame.h */,
 				F48945091744B41200897354 /* MGame.m */,
 				F4ED886F178C461A00388861 /* MLayerGameSinglePlayer.h */,
@@ -575,17 +575,20 @@
 				F4ED886A178ACADA00388861 /* MLayerTower.m */,
 				F4BF69F8178FB65D006DC604 /* MLayerTowerBackground.h */,
 				F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */,
+				F489450C1744B92E00897354 /* MLayerTowerBoy.h */,
+				F489450D1744B92E00897354 /* MLayerTowerBoy.m */,
+				F4BF69FB179042EA006DC604 /* MLayerTowerStages.h */,
+				F4BF69FC179042EA006DC604 /* MLayerTowerStages.m */,
 				F4BF69F5178F1975006DC604 /* MLayerTowerWall.h */,
 				F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */,
 				F45CB89D1786AEA8005FFB98 /* MScene.h */,
 				F45CB89E1786AEA8005FFB98 /* MScene.m */,
-				F4ABCE94175656B600B9FDE9 /* MTowerItem.h */,
-				F4ABCE95175656B600B9FDE9 /* MTowerItem.m */,
-				F48945131745DD1D00897354 /* MTowerStage.h */,
-				F48945141745DD1D00897354 /* MTowerStage.m */,
-				F489450F1745CB4500897354 /* MTowerStep.h */,
-				F48945101745CB4500897354 /* MTowerStep.m */,
-				F489450B1744B4CE00897354 /* MType.h */,
+				F4ABCE94175656B600B9FDE9 /* MSpriteTowerItem.h */,
+				F4ABCE95175656B600B9FDE9 /* MSpriteTowerItem.m */,
+				F48945131745DD1D00897354 /* MSpriteTowerStage.h */,
+				F48945141745DD1D00897354 /* MSpriteTowerStage.m */,
+				F489450F1745CB4500897354 /* MSpriteTowerStep.h */,
+				F48945101745CB4500897354 /* MSpriteTowerStep.m */,
 			);
 			path = Milkboy;
 			sourceTree = "<group>";
@@ -1281,9 +1284,9 @@
 				F48944F11743867900897354 /* mat4stack.c in Sources */,
 				F48944F21743867900897354 /* matrix.c in Sources */,
 				F489450A1744B41200897354 /* MGame.m in Sources */,
-				F489450E1744B92E00897354 /* MBoy.m in Sources */,
-				F48945111745CB4600897354 /* MTowerStep.m in Sources */,
-				F48945151745DD1D00897354 /* MTowerStage.m in Sources */,
+				F489450E1744B92E00897354 /* MLayerTowerBoy.m in Sources */,
+				F48945111745CB4600897354 /* MSpriteTowerStep.m in Sources */,
+				F48945151745DD1D00897354 /* MSpriteTowerStage.m in Sources */,
 				F48945341745ED1800897354 /* UIntersection2d.m in Sources */,
 				F48945351745ED1800897354 /* ULine.m in Sources */,
 				F48945361745ED1800897354 /* UMath.m in Sources */,
@@ -1295,7 +1298,7 @@
 				F489453C1745ED1800897354 /* UTransform2dAffine.m in Sources */,
 				F489453E1745ED1800897354 /* UVector2.m in Sources */,
 				F489453F1745ED1800897354 /* UVector3.m in Sources */,
-				F4ABCE96175656B600B9FDE9 /* MTowerItem.m in Sources */,
+				F4ABCE96175656B600B9FDE9 /* MSpriteTowerItem.m in Sources */,
 				F41F2F1017714F9000C8097C /* CCScrollLayer.m in Sources */,
 				F41F2F1917718F7400C8097C /* MLayerMenuOption.m in Sources */,
 				F41F2F1C17719ABC00C8097C /* MLayerMenuGift.m in Sources */,
@@ -1308,6 +1311,7 @@
 				F4ED8871178C461B00388861 /* MLayerGameSinglePlayer.m in Sources */,
 				F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */,
 				F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */,
+				F4BF69FD179042EB006DC604 /* MLayerTowerStages.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
