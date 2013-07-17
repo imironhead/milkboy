@@ -117,7 +117,7 @@
         {
             MLayerTower* layerTower = (MLayerTower*)[self getChildByTag:MTagLayerTower];
 
-            [layerTower transformToType:MTowerTypeGameSinglePlayer duration:0.5f];
+            [layerTower setType:MTowerTypeGameSinglePlayer duration:0.5f];
 
             //--transition
             CCLayer* layerPrev = self.currentLayer;

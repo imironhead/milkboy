@@ -9,11 +9,10 @@
 #import "MLayerTowerBoy.h"
 #import "MLayerTower.h"
 #import "MLayerTowerBackground.h"
-#import "MLayerTowerStages.h"
+#import "MLayerTowerObjects.h"
 #import "MLayerTowerWall.h"
 #import "MScene.h"
 #import "MSpriteTowerItem.h"
-#import "MSpriteTowerStage.h"
 #import "MSpriteTowerStep.h"
 
 
@@ -23,7 +22,7 @@
 @property (nonatomic, strong) CCLayer* layerCamera;
 @property (nonatomic, strong) MLayerTowerBackground* layerBackground;
 @property (nonatomic, strong) MLayerTowerBoy* layerBoy;
-@property (nonatomic, strong) MLayerTowerStages* layerStages;
+@property (nonatomic, strong) MLayerTowerObjects* layerObjects;
 @property (nonatomic, strong) MLayerTowerWall* layerWall;
 
 @property (nonatomic, assign) MTowerType type;
@@ -69,10 +68,10 @@
 
         [self.layerCamera addChild:self.layerBackground z:MTowerLayerZBackground];
 
-        //--stages
-        self.layerStages = [MLayerTowerStages new];
+        //--objects
+        self.layerObjects = [MLayerTowerObjects new];
 
-        [self.layerCamera addChild:self.layerStages z:MTowerLayerZStep];
+        [self.layerCamera addChild:self.layerObjects z:MTowerLayerZStep];
 
         //--wall
         self.layerWall = [MLayerTowerWall new];
@@ -104,7 +103,7 @@
 {
     self.frameIndex += 1;
 
-    [self.layerStages updateToFrame:self.frameIndex];
+    [self.layerObjects updateToFrame:self.frameIndex];
     [self updateBoy];
     [self updateCamera];
 
@@ -214,18 +213,10 @@
     }
     else
     {
-        for (MSpriteTowerStage* stage in self.layerStages.stagesVisible)
-        {
-            step = [stage collideStepWithPosition:vP
-                                         velocity:&vO
-                                            bound:boundBoy
-                                       frameIndex:self.frameIndex];
-
-            if (step)
-            {
-                break;
-            }
-        }
+        step = [self.layerObjects collideStepWithPosition:vP
+                                                 velocity:&vO
+                                                    bound:boundBoy
+                                               frameIndex:self.frameIndex];
 
         if (step)
         {
@@ -242,18 +233,13 @@
     boy.velocity = vV;
 
     //--collide item
-    NSArray* items;
+    NSArray* items = [self.layerObjects collideItemWithPosition:vP velocity:vO bound:boundBoy];
 
-    for (MSpriteTowerStage* stage in self.layerStages.stagesVisible)
+    if (items && [items count])
     {
-        items = [stage collideItemWithPosition:vP velocity:vO bound:boundBoy];
-
-        if (items && [items count])
+        for (MSpriteTowerItemBase* item in items)
         {
-            for (MSpriteTowerItemBase* item in items)
-            {
-                [boy collectItem:item];
-            }
+            [boy collectItem:item];
         }
     }
 }
@@ -312,13 +298,13 @@
 }
 
 //------------------------------------------------------------------------------
--(void) transformToType:(MTowerType)type duration:(ccTime)duration
+-(void) setType:(MTowerType)type duration:(ccTime)duration
 {
-    [self.layerDarken runAction:[CCFadeTo actionWithDuration:duration opacity:0x00]];
+    [self.layerDarken runAction:[CCFadeTo actionWithDuration:0.5f opacity:0x00]];
 
-    [self.layerStages transformToType:type duration:duration];
+    [self.layerObjects transformToType:type];
 
-self.type = type;
+    self.type = type;
 }
 
 //------------------------------------------------------------------------------
