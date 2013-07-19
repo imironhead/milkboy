@@ -13,6 +13,7 @@
 
 //------------------------------------------------------------------------------
 @interface MLayerTowerObjects ()
+@property (nonatomic, assign, readwrite) float deadLine;
 @property (nonatomic, strong) NSMutableArray* itemCollection;
 @property (nonatomic, strong) NSMutableArray* stepCollection;
 @property (nonatomic, strong) CCSpriteBatchNode* sprites;
@@ -31,6 +32,7 @@
 
     if (self)
     {
+        self.deadLine = 0.0f;
         self.upperBound = 0.0f;
         self.type = MTowerTypeMenuMain;
         self.canClimb = TRUE;
@@ -327,43 +329,50 @@
 //------------------------------------------------------------------------------
 -(void) updateToFrame:(int32_t)frame
 {
-    float deadLine = -self.parent.position.y;
-
     //--parent position
     if (self.type == MTowerTypeGameSinglePlayer)
     {
-        //--remove objects those under deadline
-        float y;
+        //--update dead line
+        float deadLineT = -self.parent.position.y;
 
-        NSMutableArray* dead = [NSMutableArray array];
-
-        for (CCSprite* sprite in self.stepCollection)
+        if (self.deadLine < deadLineT)
         {
-            y = sprite.position.y;
+            self.deadLine = deadLineT;
 
-            if ((y < deadLine) && (y > 0.0f))
+            //--remove objects those under deadline
+            float y;
+
+            NSMutableArray* dead = [NSMutableArray array];
+
+            for (CCSprite* sprite in self.stepCollection)
             {
-                [dead addObject:sprite];
+                y = sprite.position.y;
 
-                [self.sprites removeChild:sprite cleanup:YES];
+                if ((y < deadLineT) && (y > 0.0f))
+                {
+                    //--remove objects that under the deadline, except the basement
+                    [dead addObject:sprite];
+
+                    [self.sprites removeChild:sprite cleanup:YES];
+                }
             }
-        }
 
-        [self.stepCollection removeObjectsInArray:dead];
+            [self.stepCollection removeObjectsInArray:dead];
 
-        [dead removeAllObjects];
+            [dead removeAllObjects];
 
-        for (CCSprite* sprite in self.itemCollection)
-        {
-            if (sprite.position.y < deadLine)
+            for (CCSprite* sprite in self.itemCollection)
             {
-                [dead addObject:sprite];
+                if (sprite.position.y < deadLineT)
+                {
+                    [dead addObject:sprite];
 
-                [self.sprites removeChild:sprite cleanup:YES];
+                    [self.sprites removeChild:sprite cleanup:YES];
+                }
             }
-        }
 
-        [self.itemCollection removeObjectsInArray:dead];
+            [self.itemCollection removeObjectsInArray:dead];
+        }
 
         //--add object to rise upper bound
         [self raiseUpperBoundOfGameTower];
@@ -384,6 +393,8 @@
 //------------------------------------------------------------------------------
 -(void) transformToType:(MTowerType)type
 {
+    self.deadLine = 0.0f;
+
     //--move all visible steps & items up
     CGPoint pt;
 
@@ -400,9 +411,9 @@
     }
 
     //--
-    CCDelayTime* actionDelay1 = [CCDelayTime actionWithDuration:0.5f];
+    CCDelayTime* actionDelay = [CCDelayTime actionWithDuration:0.5f];
 
-    CCCallBlock* actionBlock1 = [CCCallBlock actionWithBlock:
+    CCCallBlock* actionBlock = [CCCallBlock actionWithBlock:
     ^{
         [self buildTowerWithType:type];
 
@@ -421,17 +432,7 @@
         }
     }];
 
-    CCDelayTime* actionDelay2 = [CCDelayTime actionWithDuration:0.5f];
-
-    CCCallBlock* actionBlock2 = [CCCallBlock actionWithBlock:
-    ^{
-        self.type = type;
-    }];
-
-    CCSequence* actionSequence =
-        [CCSequence actions:actionDelay1, actionBlock1, actionDelay2, actionBlock2, nil];
-
-    [self runAction:actionSequence];
+    [self runAction:[CCSequence actions:actionDelay, actionBlock, nil]];
 }
 
 //------------------------------------------------------------------------------
@@ -446,6 +447,8 @@
         [self buildGameTower];
         break;
     }
+
+    self.type = type;
 }
 
 //------------------------------------------------------------------------------

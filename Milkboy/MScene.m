@@ -20,6 +20,7 @@
 //------------------------------------------------------------------------------
 @interface MScene ()
 @property (nonatomic, strong) CCLayer* currentLayer;
+@property (nonatomic, strong) MLayerTower* layerTower;
 @end
 
 //------------------------------------------------------------------------------
@@ -32,7 +33,9 @@
     if (self)
     {
         //--tower layer
-        [self addChild:[MLayerTower new]];
+        self.layerTower = [MLayerTower new];
+
+        [self addChild:self.layerTower];
 
         //--layer menu main
         self.currentLayer = [[MLayerMenuMain alloc] initWithTarget:self];
@@ -89,6 +92,8 @@
         break;
     case MTagGotoLayerMenuSinglePlayer:
         {
+            [self.layerTower setType:MTowerTypeMenuMain duration:0.5f];
+
             CCLayer* layerPrev = self.currentLayer;
             CCLayer* layerNext = [MLayerMenuSinglePlayer new];
 
@@ -115,9 +120,7 @@
         break;
     case MTagGotoLayerGameSinglePlayer:
         {
-            MLayerTower* layerTower = (MLayerTower*)[self getChildByTag:MTagLayerTower];
-
-            [layerTower setType:MTowerTypeGameSinglePlayer duration:0.5f];
+            [self.layerTower setType:MTowerTypeGameSinglePlayer duration:0.5f];
 
             //--transition
             CCLayer* layerPrev = self.currentLayer;

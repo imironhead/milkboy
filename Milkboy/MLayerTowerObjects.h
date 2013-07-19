@@ -17,6 +17,7 @@
 @interface MLayerTowerObjects : CCLayer
 @property (nonatomic, strong, readonly) NSArray* steps;
 @property (nonatomic, strong, readonly) NSArray* items;
+@property (nonatomic, assign, readonly) float deadLine;
 @property (nonatomic, assign) BOOL canClimb;
 @property (nonatomic, assign) float padding;
 

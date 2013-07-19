@@ -109,6 +109,21 @@
 
     [self.layerBackground update];
     [self.layerWall update];
+
+    //--check failed game
+    if (self.layerBoy.step && (self.layerBoy.step.type == MTowerObjectTypeStepBasement))
+    {
+        if (self.layerObjects.deadLine > 0.0f)
+        {
+            MScene* target = (MScene*)[[CCDirector sharedDirector] runningScene];
+
+            CCNode* nodeFake = [CCNode new];
+
+            nodeFake.tag = MTagGotoLayerMenuSinglePlayer;
+
+            [target onEvent:nodeFake];
+        }
+    }
 }
 
 //------------------------------------------------------------------------------

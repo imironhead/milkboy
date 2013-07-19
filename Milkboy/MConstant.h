@@ -102,6 +102,7 @@ enum
     MTagGotoLayerMenuSinglePlayer,
     MTagLayerCamera,
     MTagLayerDarken,
+    MTagLayerGameSinglePlayer,
     MTagLayerMenuGift,
     MTagLayerMenuMain,
     MTagLayerMenuOption,
