@@ -30,8 +30,8 @@
 
         //--
         CCMenuItemSprite* btonPlay =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 
@@ -43,8 +43,8 @@
 
         //--
         CCMenuItemSprite* btonOption =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 
@@ -56,8 +56,8 @@
 
         //--
         CCMenuItemSprite* btonGift =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 

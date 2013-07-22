@@ -25,10 +25,10 @@
         id target = [[CCDirector sharedDirector] runningScene];
 
         //--batch node
-        CCSpriteBatchNode* batchCredit = [CCSpriteBatchNode batchNodeWithFile:@"Texture/menu_main.pvr.ccz"];
+        CCSpriteBatchNode* batchCredit = [CCSpriteBatchNode batchNodeWithFile:@"Texture/menu.pvr.ccz"];
 
         //--credit ironhead
-        CCSprite* lablIronhead = [CCSprite spriteWithSpriteFrameName:@"menu_main_credit_ironhead.png"];
+        CCSprite* lablIronhead = [CCSprite spriteWithSpriteFrameName:@"menu_credit_ironhead.png"];
 
         lablIronhead.position = ccp(160.0f, 410.0f);
 
@@ -37,7 +37,7 @@
         [batchCredit addChild:lablIronhead];
 
         //--credit cocos2d
-        CCSprite* lablCocos2d = [CCSprite spriteWithSpriteFrameName:@"menu_main_credit_cocos2d.png"];
+        CCSprite* lablCocos2d = [CCSprite spriteWithSpriteFrameName:@"menu_credit_cocos2d.png"];
 
         lablCocos2d.position = ccp(160.0f, 360.0f);
 
@@ -45,8 +45,8 @@
 
         //--toggle music
         CCMenuItemSprite* btonMusic =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_option.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_option.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_option.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_option.png"]
                                            target:target
                                           selector:@selector(onEvent:)];
 
@@ -58,8 +58,8 @@
 
         //
         CCMenuItemSprite* btonHome =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 

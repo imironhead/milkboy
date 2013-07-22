@@ -25,8 +25,8 @@
 
         //--tmp button
         CCMenuItemSprite* buttonHome =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_play_main_menu.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_play_main_menu.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_menu.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_menu.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 

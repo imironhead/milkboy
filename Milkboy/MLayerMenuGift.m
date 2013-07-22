@@ -26,29 +26,29 @@
 
         //
         CCMenuItemSprite* btonGiftBox =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_box.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_box.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_gift_box.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_gift_box.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 
         //
         CCMenuItemSprite* btonGiftText0 =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_0.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_0.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_gift_text_0.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_gift_text_0.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 
         //
         CCMenuItemSprite* btonGiftText1 =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_1.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_gift_text_1.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_gift_text_1.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_gift_text_1.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 
         //--
         CCMenuItemSprite* btonHome =
-            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
-                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_main_single_player.png"]
+            [CCMenuItemImage itemWithNormalSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
+                                   selectedSprite:[CCSprite spriteWithSpriteFrameName:@"menu_single_player.png"]
                                            target:target
                                          selector:@selector(onEvent:)];
 

@@ -92,8 +92,7 @@
 
     NSArray* namesSpriteFrameFile =
     @[
-        @"Texture/menu_main.plist",
-        @"Texture/menu_play.plist",
+        @"Texture/menu.plist",
         @"Texture/back.plist",
         @"Texture/char.plist",
         @"Texture/step.plist",
@@ -107,8 +106,7 @@
 
     NSArray* namesTexture =
     @[
-        @"Texture/menu_main.pvr.ccz",
-        @"Texture/menu_play.pvr.ccz",
+        @"Texture/menu.pvr.ccz",
         @"Texture/back.pvr.ccz",
         @"Texture/char.pvr.ccz",
         @"Texture/step.pvr.ccz",
