@@ -115,3 +115,11 @@ enum
 };
 
 //------------------------------------------------------------------------------
+typedef enum _MTowerPaddingState
+{
+    MTowerPaddingStateNone,
+    MTowerPaddingStatePadded,
+    MTowerPaddingStateRemoved,
+} MTowerPaddingState;
+
+//------------------------------------------------------------------------------

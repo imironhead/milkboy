@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
+#import "MConstant.h"
 #import "MLayerTowerBoy.h"
 #import "MLayerTower.h"
 #import "MLayerTowerBackground.h"
@@ -29,6 +30,7 @@
 @property (nonatomic, assign) uint32_t seedLarge;
 @property (nonatomic, assign) uint32_t seedSmall;
 @property (nonatomic, assign) int32_t frameIndex;
+@property (nonatomic, assign) MTowerPaddingState paddingState;
 @end
 
 //------------------------------------------------------------------------------
@@ -46,6 +48,7 @@
         self.seedLarge = 1 + arc4random_uniform(65534);
         self.seedSmall = self.seedLarge;
         self.frameIndex = 0;
+        self.paddingState = MTowerPaddingStateNone;
 
         //--layer darken
         self.layerDarken = [CCLayerColor layerWithColor:ccc4(0x00, 0x00, 0x00, 0x80)];
@@ -105,6 +108,7 @@
 
     [self.layerObjects updateToFrame:self.frameIndex];
     [self updateBoy];
+    [self updatePadding];
     [self updateCamera];
 
     [self.layerBackground update];
@@ -260,6 +264,46 @@
 }
 
 //------------------------------------------------------------------------------
+-(void) updatePadding
+{
+    switch (self.paddingState)
+    {
+    case MTowerPaddingStateNone:
+        if (self.layerObjects.deadLine > 0.0f)
+        {
+            self.paddingState = MTowerPaddingStatePadded;
+
+            CGPoint pt = self.layerBoy.feetPosition;
+
+            pt.y += 1000.0f;
+
+            self.layerBoy.feetPosition = pt;
+
+            self.layerObjects.padding = 1000.0f;
+        }
+        break;
+    case MTowerPaddingStatePadded:
+        if (self.layerBoy.feetPosition.y < self.layerObjects.deadLine)
+        {
+            self.paddingState = MTowerPaddingStateRemoved;
+
+            float base = self.layerObjects.deadLine;
+
+            CGPoint pt = self.layerBoy.feetPosition;
+
+            pt.y += 600.0f - base;
+
+            self.layerBoy.feetPosition = pt;
+
+            self.layerObjects.padding = 1000.0f + 600.0f - base;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+//------------------------------------------------------------------------------
 -(void) updateCamera
 {
     if (self.type == MTowerTypeGameSinglePlayer)
@@ -320,6 +364,8 @@
     [self.layerObjects transformToType:type];
 
     self.type = type;
+
+    self.paddingState = MTowerPaddingStateNone;
 }
 
 //------------------------------------------------------------------------------

@@ -36,6 +36,7 @@
         self.upperBound = 0.0f;
         self.type = MTowerTypeMenuMain;
         self.canClimb = TRUE;
+        self.padding = 0.0f;
 
         self.itemCollection = [NSMutableArray array];
         self.stepCollection = [NSMutableArray array];
@@ -63,6 +64,27 @@
 //------------------------------------------------------------------------------
 -(void) setPadding:(float)padding
 {
+    if (self->_padding != padding)
+    {
+        CGPoint pt;
+
+        float d = padding - self->_padding;
+
+        for (CCSprite* sprite in self.sprites.children)
+        {
+            pt = sprite.position;
+
+            pt.y += d;
+
+            sprite.position = pt;
+        }
+
+        self.deadLine += d;
+
+        self.upperBound += d;
+
+        self->_padding = padding;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -468,6 +490,8 @@
     [self.stepCollection addObject:step];
 
     self.upperBound = 30.0f;
+    self.deadLine = 0.0f;
+    self.padding = 0.0f;
 }
 
 //------------------------------------------------------------------------------
