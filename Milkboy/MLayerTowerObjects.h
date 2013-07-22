@@ -28,6 +28,7 @@
                                         velocity:(CGPoint*)velocity
                                            bound:(CGRect)bound
                                       frameIndex:(int32_t)frameIndex;
+-(void) updateDeadLine;
 -(void) updateToFrame:(int32_t)frame;
 -(void) transformToType:(MTowerType)type;
 @end

@@ -13,5 +13,5 @@
 
 //------------------------------------------------------------------------------
 @interface MLayerTower : CCLayer
--(void) setType:(MTowerType)type duration:(ccTime)duration;
+-(void) transformToType:(MTowerType)type;
 @end

@@ -20,7 +20,6 @@
 @property (nonatomic, strong) URandomIntegerGeneratorMWC* randomStepVariance;
 @property (nonatomic, strong) UAverageRandomIntegerGeneratorMWC* randomStepColumn;
 @property (nonatomic, assign) float upperBound;
-@property (nonatomic, assign) MTowerType type;
 @end
 
 //------------------------------------------------------------------------------
@@ -34,7 +33,6 @@
     {
         self.deadLine = 0.0f;
         self.upperBound = 0.0f;
-        self.type = MTowerTypeMenuMain;
         self.canClimb = TRUE;
         self.padding = 0.0f;
 
@@ -349,58 +347,57 @@
 }
 
 //------------------------------------------------------------------------------
--(void) updateToFrame:(int32_t)frame
+-(void) updateDeadLine
 {
-    //--parent position
-    if (self.type == MTowerTypeGameSinglePlayer)
+    //--update dead line
+    float deadLineT = -self.parent.position.y;
+
+    if (self.deadLine < deadLineT)
     {
-        //--update dead line
-        float deadLineT = -self.parent.position.y;
+        self.deadLine = deadLineT;
 
-        if (self.deadLine < deadLineT)
+        //--remove objects those under deadline
+        float y;
+
+        NSMutableArray* dead = [NSMutableArray array];
+
+        for (CCSprite* sprite in self.stepCollection)
         {
-            self.deadLine = deadLineT;
+            y = sprite.position.y;
 
-            //--remove objects those under deadline
-            float y;
-
-            NSMutableArray* dead = [NSMutableArray array];
-
-            for (CCSprite* sprite in self.stepCollection)
+            if ((y < deadLineT) && (y > 0.0f))
             {
-                y = sprite.position.y;
+                //--remove objects that under the deadline, except the basement
+                [dead addObject:sprite];
 
-                if ((y < deadLineT) && (y > 0.0f))
-                {
-                    //--remove objects that under the deadline, except the basement
-                    [dead addObject:sprite];
-
-                    [self.sprites removeChild:sprite cleanup:YES];
-                }
+                [self.sprites removeChild:sprite cleanup:YES];
             }
-
-            [self.stepCollection removeObjectsInArray:dead];
-
-            [dead removeAllObjects];
-
-            for (CCSprite* sprite in self.itemCollection)
-            {
-                if (sprite.position.y < deadLineT)
-                {
-                    [dead addObject:sprite];
-
-                    [self.sprites removeChild:sprite cleanup:YES];
-                }
-            }
-
-            [self.itemCollection removeObjectsInArray:dead];
         }
 
-        //--add object to rise upper bound
-        [self raiseUpperBoundOfGameTower];
+        [self.stepCollection removeObjectsInArray:dead];
+
+        [dead removeAllObjects];
+
+        for (CCSprite* sprite in self.itemCollection)
+        {
+            if (sprite.position.y < deadLineT)
+            {
+                [dead addObject:sprite];
+
+                [self.sprites removeChild:sprite cleanup:YES];
+            }
+        }
+
+        [self.itemCollection removeObjectsInArray:dead];
     }
 
-    //
+    //--add object to rise upper bound
+    [self raiseUpperBoundOfGameTower];
+}
+
+//------------------------------------------------------------------------------
+-(void) updateToFrame:(int32_t)frame
+{
     for (MSpriteTowerStepBase* step in self.steps)
     {
         [step updateToFrame:frame];
@@ -415,8 +412,6 @@
 //------------------------------------------------------------------------------
 -(void) transformToType:(MTowerType)type
 {
-    self.deadLine = 0.0f;
-
     //--move all visible steps & items up
     CGPoint pt;
 
@@ -468,9 +463,10 @@
     case MTowerTypeGameSinglePlayer:
         [self buildGameTower];
         break;
+    case MTowerTypeTransition:
+        NSAssert(0, @"[MLayerTowerObjects buildTowerWithType:]");
+        break;
     }
-
-    self.type = type;
 }
 
 //------------------------------------------------------------------------------
@@ -478,16 +474,12 @@
 {
     [self.sprites removeAllChildrenWithCleanup:YES];
 
+    id basement = self.stepCollection[0];
+
     [self.stepCollection removeAllObjects];
     [self.itemCollection removeAllObjects];
 
-    //--basement, the only one step which is not inside the batch node
-    MSpriteTowerStepBase* step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepBasement
-                                                           position:CGPointMake(160.0f, 0.0f)
-                                                               usid:(MTowerObjectGroupStep << 31)
-                                                               seed:0];
-
-    [self.stepCollection addObject:step];
+    [self.stepCollection addObject:basement];
 
     self.upperBound = 30.0f;
     self.deadLine = 0.0f;

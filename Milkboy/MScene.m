@@ -61,7 +61,7 @@
             [self addChild:
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
-                                                      duration:0.5f]];
+                                                      duration:1.0f]];
         }
         break;
     case MTagGotoLayerMenuOption:
@@ -74,7 +74,7 @@
             [self addChild:
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
-                                                      duration:0.5f]];
+                                                      duration:1.0f]];
         }
         break;
     case MTagGotoLayerMenuGift:
@@ -87,12 +87,12 @@
             [self addChild:
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
-                                                      duration:0.5f]];
+                                                      duration:1.0f]];
         }
         break;
     case MTagGotoLayerMenuSinglePlayer:
         {
-            [self.layerTower setType:MTowerTypeMenuMain duration:0.5f];
+            [self.layerTower transformToType:MTowerTypeMenuMain];
 
             CCLayer* layerPrev = self.currentLayer;
             CCLayer* layerNext = [MLayerMenuSinglePlayer new];
@@ -102,7 +102,7 @@
             [self addChild:
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
-                                                      duration:0.5f]];
+                                                      duration:1.0f]];
         }
         break;
     case MTagGotoLayerMenuTutorialBegin:
@@ -115,12 +115,12 @@
             [self addChild:
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
-                                                      duration:0.5f]];
+                                                      duration:1.0f]];
         }
         break;
     case MTagGotoLayerGameSinglePlayer:
         {
-            [self.layerTower setType:MTowerTypeGameSinglePlayer duration:0.5f];
+            [self.layerTower transformToType:MTowerTypeGameSinglePlayer];
 
             //--transition
             CCLayer* layerPrev = self.currentLayer;
@@ -131,7 +131,7 @@
             [self addChild:
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
-                                                      duration:0.5f]];
+                                                      duration:1.0f]];
         }
         break;
     }

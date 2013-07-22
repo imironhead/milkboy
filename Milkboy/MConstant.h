@@ -87,6 +87,7 @@ typedef enum _MTowerType
 {
     MTowerTypeMenuMain,
     MTowerTypeGameSinglePlayer,
+    MTowerTypeTransition,
 } MTowerType;
 
 //------------------------------------------------------------------------------

@@ -31,6 +31,7 @@
 @property (nonatomic, assign) uint32_t seedSmall;
 @property (nonatomic, assign) int32_t frameIndex;
 @property (nonatomic, assign) MTowerPaddingState paddingState;
+@property (nonatomic, assign) BOOL gameOver;
 @end
 
 //------------------------------------------------------------------------------
@@ -49,6 +50,7 @@
         self.seedSmall = self.seedLarge;
         self.frameIndex = 0;
         self.paddingState = MTowerPaddingStateNone;
+        self.gameOver = FALSE;
 
         //--layer darken
         self.layerDarken = [CCLayerColor layerWithColor:ccc4(0x00, 0x00, 0x00, 0x80)];
@@ -88,8 +90,6 @@
 
         //--
         [self scheduleUpdate];
-
-        [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self priority:1 swallowsTouches:TRUE];
     }
 
     return self;
@@ -108,26 +108,18 @@
 
     [self.layerObjects updateToFrame:self.frameIndex];
     [self updateBoy];
-    [self updatePadding];
-    [self updateCamera];
+
+    if (self.type == MTowerTypeGameSinglePlayer)
+    {
+        [self updatePadding];
+        [self updateCamera];
+        [self checkGameOver];
+
+        [self.layerObjects updateDeadLine];
+    }
 
     [self.layerBackground update];
     [self.layerWall update];
-
-    //--check failed game
-    if (self.layerBoy.step && (self.layerBoy.step.type == MTowerObjectTypeStepBasement))
-    {
-        if (self.layerObjects.deadLine > 0.0f)
-        {
-            MScene* target = (MScene*)[[CCDirector sharedDirector] runningScene];
-
-            CCNode* nodeFake = [CCNode new];
-
-            nodeFake.tag = MTagGotoLayerMenuSinglePlayer;
-
-            [target onEvent:nodeFake];
-        }
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -306,34 +298,48 @@
 //------------------------------------------------------------------------------
 -(void) updateCamera
 {
-    if (self.type == MTowerTypeGameSinglePlayer)
+    CGPoint p = self.layerBoy.feetPosition;
+
+    if (p.y > 176.0f /*240.0f - 64.0f*/)
     {
-        CGPoint p = self.layerBoy.feetPosition;
+        p.x = 5.0f;
+        p.y = 240.0f - p.y;
 
-        if (p.y > 176.0f /*240.0f - 64.0f*/)
-        {
-            p.x = 5.0f;
-            p.y = 240.0f - p.y;
+        self.layerCamera.position = p;
+    }
+    else
+    {
+        p.x = 5.0f;
+        p.y = 64.0f;
 
-            self.layerCamera.position = p;
-        }
-        else
-        {
-            p.x = 5.0f;
-            p.y = 64.0f;
+        self.layerCamera.position = p;
+    }
+}
 
-            self.layerCamera.position = p;
-        }
+//------------------------------------------------------------------------------
+-(void) checkGameOver
+{
+    if ((self.gameOver == FALSE) &&
+        (self.paddingState != MTowerPaddingStateNone) &&
+        (self.layerBoy.step != nil) &&
+        (self.layerBoy.step.type == MTowerObjectTypeStepBasement))
+    {
+        self.gameOver = TRUE;
+
+        MScene* target = (MScene*)[[CCDirector sharedDirector] runningScene];
+
+        CCNode* nodeFake = [CCNode new];
+
+        nodeFake.tag = MTagGotoLayerMenuSinglePlayer;
+
+        [target onEvent:nodeFake];
     }
 }
 
 //------------------------------------------------------------------------------
 -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent*)event
 {
-    if (self.type == MTowerTypeGameSinglePlayer)
-    {
-        self.layerBoy.pressed = TRUE;
-    }
+    self.layerBoy.pressed = TRUE;
 
     return TRUE;
 }
@@ -341,31 +347,65 @@
 //------------------------------------------------------------------------------
 -(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent*)event
 {
-    if (self.type == MTowerTypeGameSinglePlayer)
-    {
-        self.layerBoy.pressed = FALSE;
-    }
+    self.layerBoy.pressed = FALSE;
 }
 
 //------------------------------------------------------------------------------
 -(void) ccTouchCancelled:(UITouch*)touch withEvent:(UIEvent*)event
 {
-    if (self.type == MTowerTypeGameSinglePlayer)
-    {
-        self.layerBoy.pressed = FALSE;
-    }
+    self.layerBoy.pressed = FALSE;
 }
 
 //------------------------------------------------------------------------------
--(void) setType:(MTowerType)type duration:(ccTime)duration
+-(void) transformToType:(MTowerType)type;
 {
-    [self.layerDarken runAction:[CCFadeTo actionWithDuration:0.5f opacity:0x00]];
+    if (self.type != type)
+    {
+        if ((self.type == MTowerTypeGameSinglePlayer))
+        {
+            [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+        }
 
-    [self.layerObjects transformToType:type];
+        self.type = MTowerTypeTransition;
 
-    self.type = type;
+        self.paddingState = MTowerPaddingStateNone;
 
-    self.paddingState = MTowerPaddingStateNone;
+        self.gameOver = FALSE;
+
+        if (type == MTowerTypeGameSinglePlayer)
+        {
+            if (self.layerDarken.opacity > 0x00)
+            {
+                [self.layerDarken runAction:[CCFadeTo actionWithDuration:1.0f opacity:0x00]];
+            }
+        }
+        else
+        {
+            if (self.layerDarken.opacity < 0x80)
+            {
+                [self.layerDarken runAction:[CCFadeTo actionWithDuration:1.0f opacity:0x80]];
+            }
+        }
+
+        [self.layerObjects transformToType:type];
+
+        //
+        CCDelayTime* actionDelay = [CCDelayTime actionWithDuration:1.0f];
+
+        CCCallBlock* actionBlock = [CCCallBlock actionWithBlock:
+        ^{
+            self.type = type;
+
+            if (type == MTowerTypeGameSinglePlayer)
+            {
+                [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self
+                                                                          priority:1
+                                                                   swallowsTouches:TRUE];
+            }
+        }];
+
+        [self runAction:[CCSequence actions:actionDelay, actionBlock, nil]];
+    }
 }
 
 //------------------------------------------------------------------------------
