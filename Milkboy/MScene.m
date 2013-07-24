@@ -12,7 +12,7 @@
 #import "MLayerMenuMain.h"
 #import "MLayerMenuOption.h"
 #import "MLayerMenuSinglePlayer.h"
-#import "MLayerMenuTutorials.h"
+#import "MLayerMenuTutorial.h"
 #import "MLayerTower.h"
 #import "MScene.h"
 
@@ -105,10 +105,10 @@
                                                       duration:1.0f]];
         }
         break;
-    case MTagGotoLayerMenuTutorialBegin:
+    case MTagGotoLayerMenuTutorial:
         {
             CCLayer* layerPrev = self.currentLayer;
-            CCLayer* layerNext = [MLayerTutorialBegin new];
+            CCLayer* layerNext = [MLayerTutorial new];
 
             self.currentLayer = layerNext;
 
@@ -132,6 +132,31 @@
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
                                                       duration:1.0f]];
+        }
+        break;
+    case MTagTowerTransformToTutorialMilks:
+        {
+            [self.layerTower transformToType:MTowerTypeTutorialMilks];
+        }
+        break;
+    case MTagTowerTransformToTutorialPower:
+        {
+            [self.layerTower transformToType:MTowerTypeTutorialPower];
+        }
+        break;
+    case MTagTowerTransformToTutorialScore:
+        {
+            [self.layerTower transformToType:MTowerTypeTutorialScore];
+        }
+        break;
+    case MTagTowerTransformToTutorialSteps:
+        {
+            [self.layerTower transformToType:MTowerTypeTutorialSteps];
+        }
+        break;
+    case MTagTowerTransformToTutorialStory:
+        {
+            [self.layerTower transformToType:MTowerTypeTutorialStory];
         }
         break;
     }

@@ -7,9 +7,18 @@
 //
 //------------------------------------------------------------------------------
 #import "MGame.h"
+#import "MLayerTower.h"
 #import "MLayerTowerObjects.h"
 #import "UMath.h"
 
+
+//------------------------------------------------------------------------------
+typedef struct _ObjectPosition
+{
+    MTowerObjectType    type;
+    float               x;
+    float               y;
+} ObjectPosition;
 
 //------------------------------------------------------------------------------
 @interface MLayerTowerObjects ()
@@ -20,6 +29,8 @@
 @property (nonatomic, strong) URandomIntegerGeneratorMWC* randomStepVariance;
 @property (nonatomic, strong) UAverageRandomIntegerGeneratorMWC* randomStepColumn;
 @property (nonatomic, assign) float upperBound;
+@property (nonatomic, assign) NSInteger milkForMilkTutorial;
+@property (nonatomic, assign) NSInteger flagForMilkTutorial;
 @end
 
 //------------------------------------------------------------------------------
@@ -407,6 +418,75 @@
     {
         [item updateToFrame:frame];
     }
+
+    MTowerType type = [(MLayerTower*)self.parent.parent type];
+
+    if (type == MTowerTypeTutorialMilks)
+    {
+        BOOL hasFlavoredMilk = FALSE;
+
+        NSMutableArray* dead = [NSMutableArray array];
+
+        for (MSpriteTowerItemBase* item in self.itemCollection)
+        {
+            if (item.live)
+            {
+                if ((item.type == MTowerObjectTypeItemMilkAgile) ||
+                    (item.type == MTowerObjectTypeItemMilkDash) ||
+                    (item.type == MTowerObjectTypeItemMilkDoubleJump) ||
+                    (item.type == MTowerObjectTypeItemMilkGlide) ||
+                    (item.type == MTowerObjectTypeItemMilkStrength) ||
+                    (item.type == MTowerObjectTypeItemMilkStrengthExtra))
+                {
+                    hasFlavoredMilk = TRUE;
+                }
+            }
+            else
+            {
+                [dead addObject:item];
+
+                [self.sprites removeChild:item cleanup:TRUE];
+            }
+        }
+
+        if (dead.count)
+        {
+            [self.itemCollection removeObjectsInArray:dead];
+        }
+
+        if (!hasFlavoredMilk)
+        {
+            self.flagForMilkTutorial += 1;
+
+            if (self.flagForMilkTutorial > 30)
+            {
+                self.flagForMilkTutorial = 0;
+
+                self.milkForMilkTutorial += 1;
+
+                MTowerObjectType t;
+
+                switch (self.milkForMilkTutorial % 6)
+                {
+                case 0: t = MTowerObjectTypeItemMilkStrength; break;
+                case 1: t = MTowerObjectTypeItemMilkStrengthExtra; break;
+                case 2: t = MTowerObjectTypeItemMilkAgile; break;
+                case 3: t = MTowerObjectTypeItemMilkDash; break;
+                case 4: t = MTowerObjectTypeItemMilkDoubleJump; break;
+                case 5: t = MTowerObjectTypeItemMilkGlide; break;
+                }
+
+                MSpriteTowerItemBase* milk = [MSpriteTowerItemBase itemWithType:t
+                                                                       position:ccp(160.0f, 60.0f)
+                                                                           uiid:0
+                                                                           seed:0];
+
+                [self.itemCollection addObject:milk];
+
+                [self.sprites addChild:milk z:0];
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -463,9 +543,60 @@
     case MTowerTypeGameSinglePlayer:
         [self buildGameTower];
         break;
+    case MTowerTypeTutorialMilks:
+        [self buildTutorialMilksTower];
+        break;
+    case MTowerTypeTutorialPower:
+        [self buildTutorialPowerTower];
+        break;
+    case MTowerTypeTutorialScore:
+        [self buildTutorialScoreTower];
+        break;
+    case MTowerTypeTutorialSteps:
+        [self buildTutorialStepsTower];
+        break;
+    case MTowerTypeTutorialStory:
+        [self buildTutorialStoryTower];
+        break;
     case MTowerTypeTransition:
         NSAssert(0, @"[MLayerTowerObjects buildTowerWithType:]");
         break;
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) buildTableTower:(ObjectPosition*)table
+{
+    ObjectPosition* p = table;
+
+    id object;
+
+    while (p->type != MTowerObjectTypeInvalid)
+    {
+        if (p->type & MTowerObjectTypeItemBase)
+        {
+            object = [MSpriteTowerItemBase itemWithType:p->type
+                                               position:ccp(p->x, p->y)
+                                                   uiid:0
+                                                   seed:0];
+
+            [self.itemCollection addObject:object];
+
+            [self.sprites addChild:object z:0];
+        }
+        else
+        {
+            object = [MSpriteTowerStepBase stepWithType:p->type
+                                               position:ccp(p->x, p->y)
+                                                   usid:0
+                                                   seed:0];
+
+            [self.stepCollection addObject:object];
+
+            [self.sprites addChild:object z:1];
+        }
+
+        p += 1;
     }
 }
 
@@ -489,60 +620,19 @@
 //------------------------------------------------------------------------------
 -(void) buildRegularTower
 {
-    MSpriteTowerStepBase* step;
-    MSpriteTowerItemBase* item;
-
     [self buildCleanTower];
 
-    //
-    step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                                     position:ccp(40.0f, 200.0f)
-                                         usid:0
-                                         seed:0];
+    ObjectPosition table[] =
+    {
+        {MTowerObjectTypeStepSteady,             40.0f, 200.0f},
+        {MTowerObjectTypeStepSteady,            260.0f, 280.0f},
+        {MTowerObjectTypeStepSteady,            160.0f,  40.0f},
+        {MTowerObjectTypeItemCat,               270.0f, 280.0f},
+        {MTowerObjectTypeItemMilkStrength,       60.0f, 200.0f},
+        {MTowerObjectTypeInvalid,                 0.0f,   0.0f},
+    };
 
-    [self.stepCollection addObject:step];
-
-    [self.sprites addChild:step z:1];
-
-    //
-    step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                                     position:ccp(260.0f, 280.0f)
-                                         usid:0
-                                         seed:0];
-
-    [self.stepCollection addObject:step];
-
-    [self.sprites addChild:step z:1];
-
-    //
-    step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepSteady
-                                     position:ccp(160.0f, 40.0f)
-                                         usid:0
-                                         seed:0];
-
-    [self.stepCollection addObject:step];
-
-    [self.sprites addChild:step z:1];
-
-    //
-    item = [MSpriteTowerItemBase itemWithType:MTowerObjectTypeItemCat
-                               position:ccp(270.0f, 280.0f)
-                                   uiid:0
-                                   seed:0];
-
-    [self.itemCollection addObject:item];
-
-    [self.sprites addChild:item z:0];
-
-    //
-    item = [MSpriteTowerItemBase itemWithType:MTowerObjectTypeItemMilkStrength
-                               position:ccp(60.0f, 200.0f)
-                                   uiid:0
-                                   seed:0];
-
-    [self.itemCollection addObject:item];
-
-    [self.sprites addChild:item z:0];
+    [self buildTableTower:table];
 }
 
 //------------------------------------------------------------------------------
@@ -551,6 +641,96 @@
     [self buildCleanTower];
 
     [self raiseUpperBoundOfGameTower];
+}
+
+//------------------------------------------------------------------------------
+-(void) buildTutorialMilksTower
+{
+    self.milkForMilkTutorial = -1;
+    self.flagForMilkTutorial = 0;
+
+    [self buildCleanTower];
+
+    ObjectPosition table[] =
+    {
+        {MTowerObjectTypeStepSteady,             80.0f,   60.0f},
+        {MTowerObjectTypeStepSteady,            160.0f,   60.0f},
+        {MTowerObjectTypeStepSteady,            240.0f,   60.0f},
+        {MTowerObjectTypeItemMilkStrength,       62.0f,   60.0f},
+        {MTowerObjectTypeItemMilkStrength,       80.0f,   60.0f},
+        {MTowerObjectTypeItemMilkStrength,       98.0f,   60.0f},
+        {MTowerObjectTypeItemMilkStrength,      222.0f,   60.0f},
+        {MTowerObjectTypeItemMilkStrength,      240.0f,   60.0f},
+        {MTowerObjectTypeItemMilkStrength,      258.0f,   60.0f},
+        {MTowerObjectTypeInvalid,                 0.0f,    0.0f},
+    };
+
+    [self buildTableTower:table];
+}
+
+//------------------------------------------------------------------------------
+-(void) buildTutorialPowerTower
+{
+    [self buildCleanTower];
+
+    ObjectPosition table[] =
+    {
+        {MTowerObjectTypeStepSteady,             80.0f,  80.0f},
+        {MTowerObjectTypeStepSteady,            160.0f,  60.0f},
+        {MTowerObjectTypeStepSteady,            240.0f,  80.0f},
+        {MTowerObjectTypeInvalid,                 0.0f,   0.0f},
+    };
+
+    [self buildTableTower:table];
+}
+
+//------------------------------------------------------------------------------
+-(void) buildTutorialScoreTower
+{
+    [self buildCleanTower];
+
+    ObjectPosition table[] =
+    {
+        {MTowerObjectTypeStepSteady,            160.0f,  60.0f},
+        {MTowerObjectTypeItemMilkStrength,      160.0f,  60.0f},
+        {MTowerObjectTypeInvalid,                 0.0f,   0.0f},
+    };
+
+    [self buildTableTower:table];
+}
+
+//------------------------------------------------------------------------------
+-(void) buildTutorialStepsTower
+{
+    [self buildCleanTower];
+
+    ObjectPosition table[] =
+    {
+        {MTowerObjectTypeStepDrift,             270.0f, 120.0f},
+        {MTowerObjectTypeStepMovingWalkwayLeft, 190.0f,  90.0f},
+        {MTowerObjectTypeStepSpring,            120.0f,  60.0f},
+        {MTowerObjectTypeStepSteady,             40.0f,  30.0f},
+        {MTowerObjectTypeInvalid,                 0.0f,   0.0f},
+    };
+
+    [self buildTableTower:table];
+}
+
+//------------------------------------------------------------------------------
+-(void) buildTutorialStoryTower
+{
+    [self buildCleanTower];
+
+    ObjectPosition table[] =
+    {
+        {MTowerObjectTypeStepSteady,    155.0f,  90.0f},
+        {MTowerObjectTypeStepSteady,    235.0f,  60.0f},
+        {MTowerObjectTypeStepSteady,     75.0f,  60.0f},
+        {MTowerObjectTypeStepSteady,    155.0f,  30.0f},
+        {MTowerObjectTypeInvalid,         0.0f,   0.0f},
+    };
+
+    [self buildTableTower:table];
 }
 
 //------------------------------------------------------------------------------

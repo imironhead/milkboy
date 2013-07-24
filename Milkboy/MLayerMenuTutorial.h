@@ -1,5 +1,5 @@
 //
-//  MLayerTutorials.h
+//  MLayerTutorial.h
 //  Milkboy
 //
 //  Created by iRonhead on 7/9/13.
@@ -11,9 +11,6 @@
 
 
 //------------------------------------------------------------------------------
-@interface MLayerTutorialBegin : CCLayer
+@interface MLayerTutorial : CCLayer
 @end
 
-//------------------------------------------------------------------------------
-@interface MLayerTutorialEnd : CCLayer
-@end

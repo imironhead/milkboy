@@ -26,7 +26,7 @@
 @property (nonatomic, strong) MLayerTowerObjects* layerObjects;
 @property (nonatomic, strong) MLayerTowerWall* layerWall;
 
-@property (nonatomic, assign) MTowerType type;
+@property (nonatomic, assign, readwrite) MTowerType type;
 @property (nonatomic, assign) uint32_t seedLarge;
 @property (nonatomic, assign) uint32_t seedSmall;
 @property (nonatomic, assign) int32_t frameIndex;
@@ -361,7 +361,10 @@
 {
     if (self.type != type)
     {
-        if ((self.type == MTowerTypeGameSinglePlayer))
+        if ((self.type == MTowerTypeGameSinglePlayer) ||
+            (self.type == MTowerTypeTutorialMilks) ||
+            (self.type == MTowerTypeTutorialPower) ||
+            (self.type == MTowerTypeTutorialSteps))
         {
             [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
         }
@@ -372,7 +375,10 @@
 
         self.gameOver = FALSE;
 
-        if (type == MTowerTypeGameSinglePlayer)
+        if ((type == MTowerTypeGameSinglePlayer) ||
+            (type == MTowerTypeTutorialMilks) ||
+            (type == MTowerTypeTutorialPower) ||
+            (type == MTowerTypeTutorialSteps))
         {
             if (self.layerDarken.opacity > 0x00)
             {
@@ -396,7 +402,10 @@
         ^{
             self.type = type;
 
-            if (type == MTowerTypeGameSinglePlayer)
+            if ((type == MTowerTypeGameSinglePlayer) ||
+                (type == MTowerTypeTutorialMilks) ||
+                (type == MTowerTypeTutorialPower) ||
+                (type == MTowerTypeTutorialSteps))
             {
                 [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self
                                                                           priority:1

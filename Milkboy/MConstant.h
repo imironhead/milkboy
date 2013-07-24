@@ -28,7 +28,7 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeStepSteady,
     MTowerObjectTypeStepMax,
 
-    MTowerObjectTypeItemBase = 1000,
+    MTowerObjectTypeItemBase = 0x00001000,
     MTowerObjectTypeItemBomb = MTowerObjectTypeItemBase,
     MTowerObjectTypeItemBox,
     MTowerObjectTypeItemCat,
@@ -39,6 +39,8 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeItemMilkStrength,
     MTowerObjectTypeItemMilkStrengthExtra,
     MTowerObjectTypeItemMax,
+
+    MTowerObjectTypeInvalid,
 } MTowerObjectType;
 
 //------------------------------------------------------------------------------
@@ -88,6 +90,11 @@ typedef enum _MTowerType
     MTowerTypeMenuMain,
     MTowerTypeGameSinglePlayer,
     MTowerTypeTransition,
+    MTowerTypeTutorialMilks,
+    MTowerTypeTutorialPower,
+    MTowerTypeTutorialScore,
+    MTowerTypeTutorialSteps,
+    MTowerTypeTutorialStory,
 } MTowerType;
 
 //------------------------------------------------------------------------------
@@ -101,6 +108,7 @@ enum
     MTagGotoLayerMenuOption,
     MTagGotoLayerMenuRecord,
     MTagGotoLayerMenuSinglePlayer,
+    MTagGotoLayerMenuTutorial,
     MTagLayerCamera,
     MTagLayerDarken,
     MTagLayerGameSinglePlayer,
@@ -108,11 +116,16 @@ enum
     MTagLayerMenuMain,
     MTagLayerMenuOption,
     MTagLayerMenuSinglePlayer,
+    MTagLayerMenuTutorial,
     MTagLayerTower,
-    MTagGotoLayerMenuTutorialBegin,
     MTagShowLeaderboard,
     MTagToggleMusic,
     MTagToggleSound,
+    MTagTowerTransformToTutorialMilks,
+    MTagTowerTransformToTutorialPower,
+    MTagTowerTransformToTutorialScore,
+    MTagTowerTransformToTutorialSteps,
+    MTagTowerTransformToTutorialStory,
 };
 
 //------------------------------------------------------------------------------

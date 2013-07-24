@@ -4,6 +4,19 @@
     <dict>
         <key>frames</key>
         <dict>
+            <key>menu_billboard.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,79},{127,98}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{127,98}}</string>
+                <key>sourceSize</key>
+                <string>{127,98}</string>
+            </dict>
             <key>menu_credit_cocos2d.png</key>
             <dict>
                 <key>frame</key>
@@ -20,11 +33,11 @@
             <key>menu_credit_ironhead.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,229},{98,25}}</string>
+                <string>{{184,76},{98,25}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <false/>
+                <true/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{98,25}}</string>
                 <key>sourceSize</key>
@@ -46,11 +59,11 @@
             <key>menu_gift_text_0.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{28,79},{83,25}}</string>
+                <string>{{100,76},{83,25}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{83,25}}</string>
                 <key>sourceSize</key>
@@ -98,11 +111,11 @@
             <key>menu_option.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,79},{100,26}}</string>
+                <string>{{83,207},{100,26}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
-                <true/>
+                <false/>
                 <key>sourceColorRect</key>
                 <string>{{0,0},{100,26}}</string>
                 <key>sourceSize</key>
@@ -111,7 +124,7 @@
             <key>menu_play.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{42,163},{40,48}}</string>
+                <string>{{42,207},{40,48}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -137,7 +150,7 @@
             <key>menu_single_player.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,180},{40,48}}</string>
+                <string>{{1,207},{40,48}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -170,7 +183,7 @@
             <key>size</key>
             <string>{256,256}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:33988bf18d91247ddd58858f575c5781$</string>
+            <string>$TexturePacker:SmartUpdate:c1cc69c94337e0c88dcaa88cd558d81c$</string>
             <key>textureFileName</key>
             <string>menu.pvr.ccz</string>
         </dict>

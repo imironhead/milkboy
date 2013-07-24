@@ -13,5 +13,7 @@
 
 //------------------------------------------------------------------------------
 @interface MLayerTower : CCLayer
+@property (nonatomic, assign, readonly) MTowerType type;
+
 -(void) transformToType:(MTowerType)type;
 @end

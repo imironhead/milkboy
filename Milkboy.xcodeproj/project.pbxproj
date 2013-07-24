@@ -150,7 +150,7 @@
 		F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */; };
 		F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */; };
 		F4ED886B178ACADA00388861 /* MLayerTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886A178ACADA00388861 /* MLayerTower.m */; };
-		F4ED886E178B1E2A00388861 /* MLayerMenuTutorials.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886D178B1E2A00388861 /* MLayerMenuTutorials.m */; };
+		F4ED886E178B1E2A00388861 /* MLayerMenuTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886D178B1E2A00388861 /* MLayerMenuTutorial.m */; };
 		F4ED8871178C461B00388861 /* MLayerGameSinglePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED8870178C461B00388861 /* MLayerGameSinglePlayer.m */; };
 /* End PBXBuildFile section */
 
@@ -457,8 +457,8 @@
 		F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerBackground.m; sourceTree = "<group>"; };
 		F4ED8869178ACADA00388861 /* MLayerTower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTower.h; sourceTree = "<group>"; };
 		F4ED886A178ACADA00388861 /* MLayerTower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTower.m; sourceTree = "<group>"; };
-		F4ED886C178B1E2900388861 /* MLayerMenuTutorials.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerMenuTutorials.h; sourceTree = "<group>"; };
-		F4ED886D178B1E2A00388861 /* MLayerMenuTutorials.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerMenuTutorials.m; sourceTree = "<group>"; };
+		F4ED886C178B1E2900388861 /* MLayerMenuTutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerMenuTutorial.h; sourceTree = "<group>"; };
+		F4ED886D178B1E2A00388861 /* MLayerMenuTutorial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerMenuTutorial.m; sourceTree = "<group>"; };
 		F4ED886F178C461A00388861 /* MLayerGameSinglePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerGameSinglePlayer.h; sourceTree = "<group>"; };
 		F4ED8870178C461B00388861 /* MLayerGameSinglePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerGameSinglePlayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -566,8 +566,8 @@
 				F41F2F1817718F7400C8097C /* MLayerMenuOption.m */,
 				F45CB8A31786FC01005FFB98 /* MLayerMenuSinglePlayer.h */,
 				F45CB8A41786FC01005FFB98 /* MLayerMenuSinglePlayer.m */,
-				F4ED886C178B1E2900388861 /* MLayerMenuTutorials.h */,
-				F4ED886D178B1E2A00388861 /* MLayerMenuTutorials.m */,
+				F4ED886C178B1E2900388861 /* MLayerMenuTutorial.h */,
+				F4ED886D178B1E2A00388861 /* MLayerMenuTutorial.m */,
 				F4ED8869178ACADA00388861 /* MLayerTower.h */,
 				F4ED886A178ACADA00388861 /* MLayerTower.m */,
 				F4BF69F8178FB65D006DC604 /* MLayerTowerBackground.h */,
@@ -1301,7 +1301,7 @@
 				F45CB8A51786FC01005FFB98 /* MLayerMenuSinglePlayer.m in Sources */,
 				F45CB8A817871164005FFB98 /* CCLayerTransition.m in Sources */,
 				F4ED886B178ACADA00388861 /* MLayerTower.m in Sources */,
-				F4ED886E178B1E2A00388861 /* MLayerMenuTutorials.m in Sources */,
+				F4ED886E178B1E2A00388861 /* MLayerMenuTutorial.m in Sources */,
 				F4ED8871178C461B00388861 /* MLayerGameSinglePlayer.m in Sources */,
 				F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */,
 				F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */,

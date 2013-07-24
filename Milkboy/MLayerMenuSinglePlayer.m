@@ -47,7 +47,7 @@
                 @"menu_tutorial.png",
                 @-120.0f,
                 @-40.0f,
-                @(MTagGotoLayerMenuTutorialBegin),
+                @(MTagGotoLayerMenuTutorial),
             ],
             @[
                 @"menu_record.png",
