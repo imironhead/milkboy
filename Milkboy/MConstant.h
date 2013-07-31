@@ -126,6 +126,7 @@ enum
     MTagLayerMenuGift,
     MTagLayerMenuMain,
     MTagLayerMenuOption,
+    MTagLayerMenuRecord,
     MTagLayerMenuSinglePlayer,
     MTagLayerMenuTutorial,
     MTagLayerTower,

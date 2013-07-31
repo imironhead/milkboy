@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F41A87F517A94E13000B8C81 /* MLayerMenuRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = F41A87F417A94E13000B8C81 /* MLayerMenuRecord.m */; };
 		F41F2F1017714F9000C8097C /* CCScrollLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F41F2F0F17714F9000C8097C /* CCScrollLayer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F41F2F1917718F7400C8097C /* MLayerMenuOption.m in Sources */ = {isa = PBXBuildFile; fileRef = F41F2F1817718F7400C8097C /* MLayerMenuOption.m */; };
 		F41F2F1C17719ABC00C8097C /* MLayerMenuGift.m in Sources */ = {isa = PBXBuildFile; fileRef = F41F2F1B17719ABC00C8097C /* MLayerMenuGift.m */; };
@@ -155,6 +156,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F41A87F317A94E13000B8C81 /* MLayerMenuRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerMenuRecord.h; sourceTree = "<group>"; };
+		F41A87F417A94E13000B8C81 /* MLayerMenuRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerMenuRecord.m; sourceTree = "<group>"; };
 		F41F2F0B176F5DE000C8097C /* data_function_item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data_function_item.h; sourceTree = "<group>"; };
 		F41F2F0C176F5DE000C8097C /* data_function_step.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = data_function_step.h; sourceTree = "<group>"; };
 		F41F2F0E17714F9000C8097C /* CCScrollLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCScrollLayer.h; path = "cocos2d-iphone-extensions/Extensions/CCScrollLayer/CCScrollLayer.h"; sourceTree = "<group>"; };
@@ -566,6 +569,8 @@
 				F41F2F1817718F7400C8097C /* MLayerMenuOption.m */,
 				F45CB8A31786FC01005FFB98 /* MLayerMenuSinglePlayer.h */,
 				F45CB8A41786FC01005FFB98 /* MLayerMenuSinglePlayer.m */,
+				F41A87F317A94E13000B8C81 /* MLayerMenuRecord.h */,
+				F41A87F417A94E13000B8C81 /* MLayerMenuRecord.m */,
 				F4ED886C178B1E2900388861 /* MLayerMenuTutorial.h */,
 				F4ED886D178B1E2A00388861 /* MLayerMenuTutorial.m */,
 				F4ED8869178ACADA00388861 /* MLayerTower.h */,
@@ -1306,6 +1311,7 @@
 				F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */,
 				F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */,
 				F494580B179670480065DC31 /* MLayerTowerObjects.m in Sources */,
+				F41A87F517A94E13000B8C81 /* MLayerMenuRecord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

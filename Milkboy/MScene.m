@@ -11,6 +11,7 @@
 #import "MLayerMenuGift.h"
 #import "MLayerMenuMain.h"
 #import "MLayerMenuOption.h"
+#import "MLayerMenuRecord.h"
 #import "MLayerMenuSinglePlayer.h"
 #import "MLayerMenuTutorial.h"
 #import "MLayerTower.h"
@@ -141,6 +142,19 @@
         {
             CCLayer* layerPrev = self.currentLayer;
             CCLayer* layerNext = [MLayerMenuOption new];
+
+            self.currentLayer = layerNext;
+
+            [self addChild:
+                [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
+                                                     nextLayer:layerNext
+                                                      duration:1.0f]];
+        }
+        break;
+    case MTagGotoLayerMenuRecord:
+        {
+            CCLayer* layerPrev = self.currentLayer;
+            CCLayer* layerNext = [MLayerMenuRecord new];
 
             self.currentLayer = layerNext;
 
