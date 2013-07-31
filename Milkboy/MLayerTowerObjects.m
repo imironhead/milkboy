@@ -559,6 +559,8 @@ typedef struct _ObjectPosition
         [self buildTutorialStoryTower];
         break;
     case MTowerTypeTransition:
+    case MTowerTypeTransitionPauseToQuit:
+    case MTowerTypeTransitionPauseToRestart:
         NSAssert(0, @"[MLayerTowerObjects buildTowerWithType:]");
         break;
     }
@@ -612,9 +614,10 @@ typedef struct _ObjectPosition
 
     [self.stepCollection addObject:basement];
 
+    //--set padding first, since it will change the other value (upperBound & deadLine)
+    self.padding = 0.0f;
     self.upperBound = 30.0f;
     self.deadLine = 0.0f;
-    self.padding = 0.0f;
 }
 
 //------------------------------------------------------------------------------

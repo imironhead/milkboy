@@ -15,5 +15,7 @@
 @interface MLayerTower : CCLayer
 @property (nonatomic, assign, readonly) MTowerType type;
 
+-(void) resume;
+-(void) pause;
 -(void) transformToType:(MTowerType)type;
 @end

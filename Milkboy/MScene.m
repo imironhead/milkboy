@@ -51,6 +51,79 @@
 {
     switch ([(CCNode*)sender tag])
     {
+    case MTagGamePause:
+        {
+            [self.layerTower pause];
+        }
+        break;
+    case MTagGamePauseQuit:
+        {
+            [self.layerTower transformToType:MTowerTypeTransitionPauseToQuit];
+
+            [self.layerTower resume];
+        }
+        break;
+    case MTagGamePauseRestart:
+        {
+            [self.layerTower transformToType:MTowerTypeTransitionPauseToRestart];
+
+            [self.layerTower resume];
+        }
+        break;
+    case MTagGameQuitFromPause:
+        {
+            [self.layerTower transformToType:MTowerTypeMenuMain];
+
+            CCLayer* layerPrev = self.currentLayer;
+            CCLayer* layerNext = [MLayerMenuSinglePlayer new];
+
+            self.currentLayer = layerNext;
+
+            [self addChild:
+                [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
+                                                     nextLayer:layerNext
+                                                      duration:1.0f]];
+        }
+        break;
+    case MTagGameRestartFromPause:
+        {
+            [self.layerTower transformToType:MTowerTypeGameSinglePlayer];
+        }
+        break;
+    case MTagGameScoreQuit:
+        {
+            [self.layerTower transformToType:MTowerTypeMenuMain];
+
+            [self.layerTower resume];
+
+            CCLayer* layerPrev = self.currentLayer;
+            CCLayer* layerNext = [MLayerMenuSinglePlayer new];
+
+            self.currentLayer = layerNext;
+
+            [self addChild:
+                [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
+                                                     nextLayer:layerNext
+                                                      duration:1.0f]];
+        }
+        break;
+    case MTagGameScoreRestart:
+        {
+            [self.layerTower transformToType:MTowerTypeGameSinglePlayer];
+        }
+        break;
+    case MTagGameResume:
+        {
+            [self.layerTower resume];
+        }
+        break;
+    case MTagGameScore:
+        {
+            NSAssert([self.currentLayer class] == [MLayerGameSinglePlayer class], @"[MScene onEvent:MTagGameScore]");
+
+            [(MLayerGameSinglePlayer*)self.currentLayer showMenuScore:sender];
+        }
+        break;
     case MTagGotoLayerMenuMain:
         {
             CCLayer* layerPrev = self.currentLayer;
@@ -132,6 +205,10 @@
                 [CCLayerTransitionCrossFade layerWithPrevLayer:layerPrev
                                                      nextLayer:layerNext
                                                       duration:1.0f]];
+        }
+        break;
+    case MTagShowLeaderboard:
+        {
         }
         break;
     case MTagTowerTransformToTutorialMilks:

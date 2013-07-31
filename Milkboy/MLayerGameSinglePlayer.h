@@ -12,4 +12,6 @@
 
 //------------------------------------------------------------------------------
 @interface MLayerGameSinglePlayer : CCLayer
+-(void) showMenuPause:(id)sender;
+-(void) showMenuScore:(id)sender;
 @end

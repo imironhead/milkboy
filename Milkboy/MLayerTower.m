@@ -32,6 +32,7 @@
 @property (nonatomic, assign) int32_t frameIndex;
 @property (nonatomic, assign) MTowerPaddingState paddingState;
 @property (nonatomic, assign) BOOL gameOver;
+@property (nonatomic, assign) BOOL paused;
 @end
 
 //------------------------------------------------------------------------------
@@ -51,6 +52,7 @@
         self.frameIndex = 0;
         self.paddingState = MTowerPaddingStateNone;
         self.gameOver = FALSE;
+        self.paused = FALSE;
 
         //--layer darken
         self.layerDarken = [CCLayerColor layerWithColor:ccc4(0x00, 0x00, 0x00, 0x80)];
@@ -109,7 +111,9 @@
     [self.layerObjects updateToFrame:self.frameIndex];
     [self updateBoy];
 
-    if (self.type == MTowerTypeGameSinglePlayer)
+    if ((self.type == MTowerTypeGameSinglePlayer) ||
+        (self.type == MTowerTypeTransitionPauseToQuit) ||
+        (self.type == MTowerTypeTransitionPauseToRestart))
     {
         [self updatePadding];
         [self updateCamera];
@@ -125,7 +129,17 @@
 //------------------------------------------------------------------------------
 -(void) updateBoy
 {
+    BOOL inTransition =
+        ((self.type == MTowerTypeTransition) ||
+         (self.type == MTowerTypeTransitionPauseToQuit) ||
+         (self.type == MTowerTypeTransitionPauseToRestart));
+
     MLayerTowerBoy* boy = self.layerBoy;
+
+    if (inTransition && boy.step && (boy.step.type != MTowerObjectTypeStepBasement))
+    {
+        boy.step = nil;
+    }
 
     //--power
     [boy updatePower];
@@ -224,6 +238,8 @@
     }
     else
     {
+        CGPoint vT = vO;
+
         step = [self.layerObjects collideStepWithPosition:vP
                                                  velocity:&vO
                                                     bound:boundBoy
@@ -231,11 +247,29 @@
 
         if (step)
         {
-            boy.step = step;
+            if (inTransition)
+            {
+                if (step.type == MTowerObjectTypeStepBasement)
+                {
+                    boy.step = step;
 
-            vV.y = 0.0f;
+                    vV.y = 0.0f;
 
-            vO.x = floorf(vO.x);
+                    vO.x = floorf(vO.x);
+                }
+                else
+                {
+                    vO = vT;
+                }
+            }
+            else
+            {
+                boy.step = step;
+
+                vV.y = 0.0f;
+
+                vO.x = floorf(vO.x);
+            }
         }
     }
 
@@ -244,13 +278,16 @@
     boy.velocity = vV;
 
     //--collide item
-    NSArray* items = [self.layerObjects collideItemWithPosition:vP velocity:vO bound:boundBoy];
-
-    if (items && [items count])
+    if (!inTransition)
     {
-        for (MSpriteTowerItemBase* item in items)
+        NSArray* items = [self.layerObjects collideItemWithPosition:vP velocity:vO bound:boundBoy];
+
+        if (items && [items count])
         {
-            [boy collectItem:item];
+            for (MSpriteTowerItemBase* item in items)
+            {
+                [boy collectItem:item];
+            }
         }
     }
 }
@@ -320,19 +357,40 @@
 -(void) checkGameOver
 {
     if ((self.gameOver == FALSE) &&
-        (self.paddingState != MTowerPaddingStateNone) &&
         (self.layerBoy.step != nil) &&
         (self.layerBoy.step.type == MTowerObjectTypeStepBasement))
     {
-        self.gameOver = TRUE;
+        NSInteger tag;
 
-        MScene* target = (MScene*)[[CCDirector sharedDirector] runningScene];
+        if (self.type == MTowerTypeGameSinglePlayer)
+        {
+            self.gameOver = (self.paddingState != MTowerPaddingStateNone);
 
-        CCNode* nodeFake = [CCNode new];
+            tag = MTagGameScore;
+        }
+        else if (self.type == MTowerTypeTransitionPauseToQuit)
+        {
+            self.gameOver = TRUE;
 
-        nodeFake.tag = MTagGotoLayerMenuSinglePlayer;
+            tag = MTagGameQuitFromPause;
+        }
+        else if (self.type == MTowerTypeTransitionPauseToRestart)
+        {
+            self.gameOver = TRUE;
 
-        [target onEvent:nodeFake];
+            tag = MTagGameRestartFromPause;
+        }
+
+        if (self.gameOver)
+        {
+            MScene* target = (MScene*)[[CCDirector sharedDirector] runningScene];
+
+            CCNode* nodeFake = [CCNode new];
+
+            nodeFake.tag = tag;
+
+            [target onEvent:nodeFake];
+        }
     }
 }
 
@@ -357,64 +415,103 @@
 }
 
 //------------------------------------------------------------------------------
+-(void) resume
+{
+    if (self.paused)
+    {
+        self.paused = FALSE;
+
+        [self scheduleUpdate];
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) pause
+{
+    if (!self.paused)
+    {
+        self.paused = TRUE;
+
+        [self unscheduleUpdate];
+    }
+}
+
+//------------------------------------------------------------------------------
 -(void) transformToType:(MTowerType)type;
 {
-    if (self.type != type)
+    if ((type == MTowerTypeTransitionPauseToQuit) ||
+        (type == MTowerTypeTransitionPauseToRestart))
     {
-        if ((self.type == MTowerTypeGameSinglePlayer) ||
-            (self.type == MTowerTypeTutorialMilks) ||
-            (self.type == MTowerTypeTutorialPower) ||
-            (self.type == MTowerTypeTutorialSteps))
+        //--user wanna quit or restart from pause menu
+        //--mark the type, let the boy drop to 1st floor
+
+        self.type = type;
+
+        //--remove touch if quit to menu
+        //--remove touch if rastart since MTowerTypeGameSinglePlayer will register again
+        [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+
+        return;
+    }
+
+    //--those type have touches, remove touches when leaving them
+    if ((self.type == MTowerTypeGameSinglePlayer) ||
+        (self.type == MTowerTypeTutorialMilks) ||
+        (self.type == MTowerTypeTutorialPower) ||
+        (self.type == MTowerTypeTutorialSteps))
+    {
+        [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+    }
+
+    //--mark the type as transition, boy can only collide the basement during transition
+    self.type = MTowerTypeTransition;
+
+    self.paddingState = MTowerPaddingStateNone;
+
+    self.gameOver = FALSE;
+
+    //--those tower types do not need darken
+    if ((type == MTowerTypeGameSinglePlayer) ||
+        (type == MTowerTypeTutorialMilks) ||
+        (type == MTowerTypeTutorialPower) ||
+        (type == MTowerTypeTutorialSteps))
+    {
+        if (self.layerDarken.opacity > 0x00)
         {
-            [[[CCDirector sharedDirector] touchDispatcher] removeDelegate:self];
+            [self.layerDarken runAction:[CCFadeTo actionWithDuration:1.0f opacity:0x00]];
         }
+    }
+    else
+    {
+        if (self.layerDarken.opacity < 0x80)
+        {
+            [self.layerDarken runAction:[CCFadeTo actionWithDuration:1.0f opacity:0x80]];
+        }
+    }
 
-        self.type = MTowerTypeTransition;
+    //--re-arrange all objects for type
+    [self.layerObjects transformToType:type];
 
-        self.paddingState = MTowerPaddingStateNone;
+    //
+    CCDelayTime* actionDelay = [CCDelayTime actionWithDuration:1.0f];
 
-        self.gameOver = FALSE;
+    CCCallBlock* actionBlock = [CCCallBlock actionWithBlock:
+    ^{
+        self.type = type;
 
+        //--register touch events for these types
         if ((type == MTowerTypeGameSinglePlayer) ||
             (type == MTowerTypeTutorialMilks) ||
             (type == MTowerTypeTutorialPower) ||
             (type == MTowerTypeTutorialSteps))
         {
-            if (self.layerDarken.opacity > 0x00)
-            {
-                [self.layerDarken runAction:[CCFadeTo actionWithDuration:1.0f opacity:0x00]];
-            }
+            [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self
+                                                                      priority:1
+                                                               swallowsTouches:TRUE];
         }
-        else
-        {
-            if (self.layerDarken.opacity < 0x80)
-            {
-                [self.layerDarken runAction:[CCFadeTo actionWithDuration:1.0f opacity:0x80]];
-            }
-        }
+    }];
 
-        [self.layerObjects transformToType:type];
-
-        //
-        CCDelayTime* actionDelay = [CCDelayTime actionWithDuration:1.0f];
-
-        CCCallBlock* actionBlock = [CCCallBlock actionWithBlock:
-        ^{
-            self.type = type;
-
-            if ((type == MTowerTypeGameSinglePlayer) ||
-                (type == MTowerTypeTutorialMilks) ||
-                (type == MTowerTypeTutorialPower) ||
-                (type == MTowerTypeTutorialSteps))
-            {
-                [[[CCDirector sharedDirector] touchDispatcher] addTargetedDelegate:self
-                                                                          priority:1
-                                                                   swallowsTouches:TRUE];
-            }
-        }];
-
-        [self runAction:[CCSequence actions:actionDelay, actionBlock, nil]];
-    }
+    [self runAction:[CCSequence actions:actionDelay, actionBlock, nil]];
 }
 
 //------------------------------------------------------------------------------
