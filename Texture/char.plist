@@ -4,10 +4,140 @@
     <dict>
         <key>frames</key>
         <dict>
+            <key>char_astronaut_down_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{86,159},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{86,139},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{63,231},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_02.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{66,139},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_03.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{65,162},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_04.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{64,185},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_05.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{63,208},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_06.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{43,231},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_move_07.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{43,208},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
+            <key>char_astronaut_up_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{45,162},{19,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{19,22}}</string>
+                <key>sourceSize</key>
+                <string>{19,22}</string>
+            </dict>
             <key>char_cat.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{1,116},{11,8}}</string>
+                <string>{{109,8},{11,8}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -17,10 +147,270 @@
                 <key>sourceSize</key>
                 <string>{11,8}</string>
             </dict>
-            <key>char_down.png</key>
+            <key>char_football_down_00.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{70,24},{22,22}}</string>
+                <string>{{45,139},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{43,185},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{22,231},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_02.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{22,208},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_03.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{24,162},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_04.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{24,139},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_05.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{22,185},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_06.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,231},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_move_07.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,208},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_football_up_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,185},{20,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{20,22}}</string>
+                <key>sourceSize</key>
+                <string>{20,22}</string>
+            </dict>
+            <key>char_ninja_down_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{28,47},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,47},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{82,24},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_02.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{55,24},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_03.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{28,24},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_04.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,24},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_05.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{82,1},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_06.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{55,1},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_move_07.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{28,1},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_ninja_up_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,1},{26,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{26,22}}</string>
+                <key>sourceSize</key>
+                <string>{26,22}</string>
+            </dict>
+            <key>char_normal_down_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,162},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -30,10 +420,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_hat_dash.png</key>
+            <key>char_normal_move_00.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{47,24},{22,22}}</string>
+                <string>{{1,139},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -43,10 +433,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_hat_double.png</key>
+            <key>char_normal_move_01.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{24,93},{22,22}}</string>
+                <string>{{93,116},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -56,10 +446,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_hat_fly.png</key>
+            <key>char_normal_move_02.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{24,70},{22,22}}</string>
+                <string>{{70,116},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -69,10 +459,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_hat_magnet.png</key>
+            <key>char_normal_move_03.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{24,47},{22,22}}</string>
+                <string>{{47,116},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -82,10 +472,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_hat_power.png</key>
+            <key>char_normal_move_04.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{24,24},{22,22}}</string>
+                <string>{{24,116},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -95,10 +485,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_jump.png</key>
+            <key>char_normal_move_05.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{95,1},{22,22}}</string>
+                <string>{{1,116},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -108,10 +498,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_move_00.png</key>
+            <key>char_normal_move_06.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{72,1},{22,22}}</string>
+                <string>{{93,93},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -121,10 +511,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_move_01.png</key>
+            <key>char_normal_move_07.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{49,1},{22,22}}</string>
+                <string>{{70,93},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -134,75 +524,10 @@
                 <key>sourceSize</key>
                 <string>{22,22}</string>
             </dict>
-            <key>char_move_02.png</key>
+            <key>char_normal_up_00.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{26,1},{22,22}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,22}}</string>
-                <key>sourceSize</key>
-                <string>{22,22}</string>
-            </dict>
-            <key>char_move_03.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1,93},{22,22}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,22}}</string>
-                <key>sourceSize</key>
-                <string>{22,22}</string>
-            </dict>
-            <key>char_move_04.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1,70},{22,22}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,22}}</string>
-                <key>sourceSize</key>
-                <string>{22,22}</string>
-            </dict>
-            <key>char_move_05.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1,47},{22,22}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,22}}</string>
-                <key>sourceSize</key>
-                <string>{22,22}</string>
-            </dict>
-            <key>char_move_06.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1,24},{22,22}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{22,22}}</string>
-                <key>sourceSize</key>
-                <string>{22,22}</string>
-            </dict>
-            <key>char_move_07.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{1,1},{22,22}}</string>
+                <string>{{47,93},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -215,7 +540,7 @@
             <key>char_power_back.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{13,116},{12,6}}</string>
+                <string>{{109,1},{12,6}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -228,15 +553,145 @@
             <key>char_power_mark.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{13,123},{10,4}}</string>
+                <string>{{122,1},{10,4}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{10,4}}</string>
+                <key>sourceSize</key>
+                <string>{10,4}</string>
+            </dict>
+            <key>char_superman_down_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{24,93},{22,22}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{10,4}}</string>
+                <string>{{0,0},{22,22}}</string>
                 <key>sourceSize</key>
-                <string>{10,4}</string>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,93},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_01.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{93,70},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_02.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{70,70},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_03.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{47,70},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_04.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{24,70},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_05.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{1,70},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_06.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{101,47},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_move_07.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{78,47},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
+            </dict>
+            <key>char_superman_up_00.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{55,47},{22,22}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{22,22}}</string>
+                <key>sourceSize</key>
+                <string>{22,22}</string>
             </dict>
         </dict>
         <key>metadata</key>
@@ -246,9 +701,9 @@
             <key>realTextureFileName</key>
             <string>char.pvr.ccz</string>
             <key>size</key>
-            <string>{128,128}</string>
+            <string>{128,256}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:a675f635fca1c6c8713e4c8382889e38$</string>
+            <string>$TexturePacker:SmartUpdate:3b958b68293884474f25996bb6cde34a$</string>
             <key>textureFileName</key>
             <string>char.pvr.ccz</string>
         </dict>
