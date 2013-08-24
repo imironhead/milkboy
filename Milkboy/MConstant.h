@@ -8,6 +8,15 @@
 //------------------------------------------------------------------------------
 
 
+//------------------------------------------------------------------------------
+#define MGAMECONFIG_BACK_COUNT_TILE_PER_FLOOR       (20)
+#define MGAMECONFIG_BACK_HEIGHT_FLOOR               (1280.0f)
+#define MGAMECONFIG_BACK_HEIGHT_TILE                (64.0f)
+#define MGAMECONFIG_DROP_LOST_POWER                 (1)
+#define MGAMECONFIG_POWER_DECIMAL_DELTA             (1)
+#define MGAMECONFIG_POWER_DECIMAL_MAX               (10)
+#define MGAMECONFIG_TOWER_PADDING_RISE              (1280.0f)
+
 
 //------------------------------------------------------------------------------
 typedef enum _MTowerObjectType

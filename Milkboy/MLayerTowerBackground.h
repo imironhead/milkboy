@@ -8,9 +8,12 @@
 //------------------------------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
+#import "MConstant.h"
 
 
 //------------------------------------------------------------------------------
 @interface MLayerTowerBackground : CCLayer
+@property (nonatomic, assign) MTowerPaddingState paddingState;
+
 -(void) update;
 @end

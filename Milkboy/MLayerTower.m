@@ -302,13 +302,15 @@
         {
             self.paddingState = MTowerPaddingStatePadded;
 
+            self.layerBackground.paddingState = MTowerPaddingStatePadded;
+
             CGPoint pt = self.layerBoy.feetPosition;
 
-            pt.y += 1000.0f;
+            pt.y += MGAMECONFIG_TOWER_PADDING_RISE;
 
             self.layerBoy.feetPosition = pt;
 
-            self.layerObjects.padding = 1000.0f;
+            self.layerObjects.padding = MGAMECONFIG_TOWER_PADDING_RISE;
         }
         break;
     case MTowerPaddingStatePadded:
@@ -316,15 +318,22 @@
         {
             self.paddingState = MTowerPaddingStateRemoved;
 
-            float base = self.layerObjects.deadLine;
+            self.layerBackground.paddingState = MTowerPaddingStateRemoved;
 
             CGPoint pt = self.layerBoy.feetPosition;
 
-            pt.y += 600.0f - base;
+            int32_t bottom = (int32_t)(pt.y - 240.0f);
+
+            int32_t indexB = bottom / MGAMECONFIG_BACK_HEIGHT_FLOOR;
+
+            float diff = indexB * MGAMECONFIG_BACK_HEIGHT_FLOOR;
+
+            pt.y -= diff;
 
             self.layerBoy.feetPosition = pt;
 
-            self.layerObjects.padding = 1000.0f + 600.0f - base;
+            self.layerObjects.padding =
+                MGAMECONFIG_TOWER_PADDING_RISE - diff;
         }
         break;
     default:

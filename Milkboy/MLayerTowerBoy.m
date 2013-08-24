@@ -96,8 +96,8 @@ typedef enum _MBoySpriteFrame
         self.powerInteger      = 0;
         self.powerIntegerMax   = 3;
         self.powerDecimal      = 0;
-        self.powerDecimalMax   = 5;
-        self.powerDecimalDelta = 1;
+        self.powerDecimalMax   = MGAMECONFIG_POWER_DECIMAL_MAX;
+        self.powerDecimalDelta = MGAMECONFIG_POWER_DECIMAL_DELTA;
 
         self.state = MBoyStateInvalid;
 
@@ -393,6 +393,18 @@ typedef enum _MBoySpriteFrame
                 }
             }
         }
+#if MGAMECONFIG_DROP_LOST_POWER
+        else
+        {
+            if (self.powerInteger || self.powerDecimal)
+            {
+                self.powerInteger = 0;
+                self.powerDecimal = 0;
+
+                updateUI = TRUE;
+            }
+        }
+#endif
     }
     else
     {
