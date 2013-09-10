@@ -13,33 +13,17 @@
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-@interface MSpriteTowerItemBase : CCSprite
+@interface MSpriteTowerItem : CCSprite
 @property (nonatomic, assign, readonly) MTowerObjectType type;
-@property (nonatomic, assign, readonly) uint32_t uiid;
 @property (nonatomic, assign, readonly) BOOL live;
 @property (nonatomic, assign, readonly) NSRange range;
+@property (nonatomic, assign, readonly) uint32_t parameter;
 
-+(id) itemWithType:(MTowerObjectType)type
-          position:(CGPoint)position
-              uiid:(uint32_t)uiid
-              seed:(uint32_t)seed;
++(id)   factoryCreateItemWithType:(MTowerObjectType)type position:(CGPoint)position;
++(void) factoryDeleteItem:(MSpriteTowerItem*)item;
 
 -(void) updateToFrame:(int32_t)frame;
--(void) collected;
+-(void) collectedWithFlag:(NSNumber*)flag;
 @end
 
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MSpriteTowerItemBox : MSpriteTowerItemBase
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MSpriteTowerItemCat : MSpriteTowerItemBase
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MSpriteTowerItemMilk : MSpriteTowerItemBase
-@end
 

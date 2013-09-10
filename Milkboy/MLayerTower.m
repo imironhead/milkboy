@@ -119,7 +119,7 @@
         [self updateCamera];
         [self checkGameOver];
 
-        [self.layerObjects updateDeadLine];
+        [self.layerObjects updateDeadLineWithBoy:self.layerBoy];
     }
 
     [self.layerBackground update];
@@ -284,7 +284,7 @@
 
         if (items && [items count])
         {
-            for (MSpriteTowerItemBase* item in items)
+            for (MSpriteTowerItem* item in items)
             {
                 [boy collectItem:item];
             }

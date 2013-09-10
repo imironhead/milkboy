@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
 #import "MConstant.h"
+#import "MLayerTowerBoy.h"
 #import "MSpriteTowerItem.h"
 #import "MSpriteTowerStep.h"
 
@@ -28,7 +29,7 @@
                                         velocity:(CGPoint*)velocity
                                            bound:(CGRect)bound
                                       frameIndex:(int32_t)frameIndex;
--(void) updateDeadLine;
+-(void) updateDeadLineWithBoy:(MLayerTowerBoy*)boy;
 -(void) updateToFrame:(int32_t)frame;
 -(void) transformToType:(MTowerType)type;
 @end

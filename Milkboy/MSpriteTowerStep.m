@@ -42,7 +42,7 @@
             step = [[MSpriteTowerStepBasement alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
-    case MTowerObjectTypeStepBrittle:
+    case MTowerObjectTypeStepDisposable:
         {
             step = [[MSpriteTowerStepBrittle alloc] initWithPosition:position usid:usid seed:seed];
         }
@@ -87,11 +87,6 @@
     case MTowerObjectTypeStepSpring:
         {
             step = [[MSpriteTowerStepSpring alloc] initWithPosition:position usid:usid seed:seed];
-        }
-        break;
-    case MTowerObjectTypeStepStation:
-        {
-            step = [[MSpriteTowerStepStation alloc] initWithPosition:position usid:usid seed:seed];
         }
         break;
     case MTowerObjectTypeStepSteady:
@@ -302,7 +297,7 @@
     self = [super initWithType:MTowerObjectTypeStepDrift
                           usid:usid
                           seed:seed
-               spriteFrameName:@"step_bubble.png"
+               spriteFrameName:@"step_drift.png"
                       position:position];
 
     if (self)
@@ -397,7 +392,7 @@
     self = [super initWithType:type
                           usid:usid
                           seed:seed
-               spriteFrameName:@"step_scroll_01.png"
+               spriteFrameName:@"step_moving_walkway_01.png"
                       position:position];
 
     if (self)
@@ -406,10 +401,15 @@
 
         self.frames =
         @[
-            [cache spriteFrameByName:@"step_scroll_01.png"],
-            [cache spriteFrameByName:@"step_scroll_02.png"],
-            [cache spriteFrameByName:@"step_scroll_03.png"],
+            [cache spriteFrameByName:@"step_moving_walkway_01.png"],
+            [cache spriteFrameByName:@"step_moving_walkway_02.png"],
+            [cache spriteFrameByName:@"step_moving_walkway_03.png"],
         ];
+
+        if (self.type == MTowerObjectTypeStepMovingWalkwayLeft)
+        {
+            self.flipX = TRUE;
+        }
     }
 
     return self;
@@ -419,11 +419,6 @@
 -(void) updateToFrame:(int32_t)frame
 {
     uint32_t k = frame % self.frames.count;
-
-    if (self.type != MTowerObjectTypeStepMovingWalkwayRight)
-    {
-        k = self.frames.count - k - 1;
-    }
 
     self.displayFrame = self.frames[k];
 }
@@ -435,6 +430,7 @@
 //------------------------------------------------------------------------------
 @interface MSpriteTowerStepPatrol()
 @property (nonatomic, assign) CGPoint positionOrigin;
+@property (nonatomic, assign) int32_t token;
 @end
 
 //------------------------------------------------------------------------------
@@ -459,6 +455,8 @@
     {
         self.positionOrigin = position;
 
+        self.token = arc4random_uniform(10);
+
         if (type == MTowerObjectTypeStepPatrolVertical)
         {
             CGRect rect = self.boundingBox;
@@ -479,7 +477,7 @@
 
     if (self.type == MTowerObjectTypeStepPatrolHorizontal)
     {
-        int32_t dx = (60 + 2 * frame) % 240;
+        int32_t dx = (60 + self.token + 2 * frame) % 240;
 
         if (dx > 120)
         {
@@ -490,7 +488,7 @@
     }
     else
     {
-        int32_t dy = (40 + 2 * frame) % 160;
+        int32_t dy = (40 + self.token + 2 * frame) % 160;
 
         if (dy > 80)
         {
@@ -582,31 +580,6 @@
 
     if (self)
     {
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepStation
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(int32_t)seed
-{
-    self = [super initWithType:MTowerObjectTypeStepStation
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_steady.png"
-                      position:position];
-
-    if (self)
-    {
-        self.scaleX = 10.0f;
     }
 
     return self;

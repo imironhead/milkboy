@@ -28,7 +28,8 @@ typedef struct _ObjectPosition
 @property (nonatomic, strong) CCSpriteBatchNode* sprites;
 @property (nonatomic, strong) URandomIntegerGeneratorMWC* randomStepVariance;
 @property (nonatomic, strong) UAverageRandomIntegerGeneratorMWC* randomStepColumn;
-@property (nonatomic, assign) float upperBound;
+@property (nonatomic, assign) float upperBoundStep;
+@property (nonatomic, assign) float upperBoundItem;
 @property (nonatomic, assign) NSInteger milkForMilkTutorial;
 @property (nonatomic, assign) NSInteger flagForMilkTutorial;
 @end
@@ -43,7 +44,8 @@ typedef struct _ObjectPosition
     if (self)
     {
         self.deadLine = 0.0f;
-        self.upperBound = 0.0f;
+        self.upperBoundStep = 0.0f;
+        self.upperBoundItem = 0.0f;
         self.canClimb = TRUE;
         self.padding = 0.0f;
 
@@ -90,18 +92,19 @@ typedef struct _ObjectPosition
 
         self.deadLine += d;
 
-        self.upperBound += d;
+        self.upperBoundStep += d;
+        self.upperBoundItem += d;
 
         self->_padding = padding;
     }
 }
 
 //------------------------------------------------------------------------------
--(void) setUpperBound:(float)upperBound
+-(void) setUpperBoundStep:(float)upperBoundStep
 {
-    NSAssert(floorf(upperBound) == upperBound, @"[MLayerTowerObjects setUpperBound:] accept integer only");
+    NSAssert(floorf(upperBoundStep) == upperBoundStep, @"[MLayerTowerObjects setUpperBoundStep:] accept integer only");
 
-    self->_upperBound = upperBound;
+    self->_upperBoundStep = upperBoundStep;
 }
 
 //------------------------------------------------------------------------------
@@ -169,7 +172,7 @@ typedef struct _ObjectPosition
             pLower = positionNew;
         }
 
-        for (MSpriteTowerItemBase* item in self.items)
+        for (MSpriteTowerItem* item in self.items)
         {
             if (!item.live)
             {
@@ -358,7 +361,41 @@ typedef struct _ObjectPosition
 }
 
 //------------------------------------------------------------------------------
--(void) updateDeadLine
+-(void) addItemWithType:(MTowerObjectType)type position:(CGPoint)position
+{
+    MSpriteTowerItem* item = [MSpriteTowerItem factoryCreateItemWithType:type position:position];
+
+    [self.itemCollection addObject:item];
+
+    [self.sprites addChild:item];
+}
+
+//------------------------------------------------------------------------------
+-(void) removeItem:(id)item
+{
+    if ([item class] == [MSpriteTowerItem class])
+    {
+        [MSpriteTowerItem factoryDeleteItem:item];
+
+        [self.itemCollection removeObject:item];
+
+        [self.sprites removeChild:item cleanup:TRUE];
+    }
+    else
+    {
+        for (MSpriteTowerItem* i in item)
+        {
+            [MSpriteTowerItem factoryDeleteItem:i];
+
+            [self.itemCollection removeObject:i];
+
+            [self.sprites removeChild:i cleanup:TRUE];
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) updateDeadLineWithBoy:(MLayerTowerBoy*)boy
 {
     //--update dead line
     float deadLineT = -self.parent.position.y;
@@ -394,16 +431,14 @@ typedef struct _ObjectPosition
             if (sprite.position.y < deadLineT)
             {
                 [dead addObject:sprite];
-
-                [self.sprites removeChild:sprite cleanup:YES];
             }
         }
 
-        [self.itemCollection removeObjectsInArray:dead];
+        [self removeItem:dead];
     }
 
     //--add object to rise upper bound
-    [self raiseUpperBoundOfGameTower];
+    [self raiseUpperBoundOfGameTowerWithBoy:boy];
 }
 
 //------------------------------------------------------------------------------
@@ -414,79 +449,79 @@ typedef struct _ObjectPosition
         [step updateToFrame:frame];
     }
 
-    for (MSpriteTowerItemBase* item in self.items)
+    for (MSpriteTowerItem* item in self.items)
     {
         [item updateToFrame:frame];
     }
 
-    MTowerType type = [(MLayerTower*)self.parent.parent type];
-
-    if (type == MTowerTypeTutorialMilks)
-    {
-        BOOL hasFlavoredMilk = FALSE;
-
-        NSMutableArray* dead = [NSMutableArray array];
-
-        for (MSpriteTowerItemBase* item in self.itemCollection)
-        {
-            if (item.live)
-            {
-                if ((item.type == MTowerObjectTypeItemMilkAgile) ||
-                    (item.type == MTowerObjectTypeItemMilkDash) ||
-                    (item.type == MTowerObjectTypeItemMilkDoubleJump) ||
-                    (item.type == MTowerObjectTypeItemMilkGlide) ||
-                    (item.type == MTowerObjectTypeItemMilkStrength) ||
-                    (item.type == MTowerObjectTypeItemMilkStrengthExtra))
-                {
-                    hasFlavoredMilk = TRUE;
-                }
-            }
-            else
-            {
-                [dead addObject:item];
-
-                [self.sprites removeChild:item cleanup:TRUE];
-            }
-        }
-
-        if (dead.count)
-        {
-            [self.itemCollection removeObjectsInArray:dead];
-        }
-
-        if (!hasFlavoredMilk)
-        {
-            self.flagForMilkTutorial += 1;
-
-            if (self.flagForMilkTutorial > 30)
-            {
-                self.flagForMilkTutorial = 0;
-
-                self.milkForMilkTutorial += 1;
-
-                MTowerObjectType t;
-
-                switch (self.milkForMilkTutorial % 6)
-                {
-                case 0: t = MTowerObjectTypeItemMilkStrength; break;
-                case 1: t = MTowerObjectTypeItemMilkStrengthExtra; break;
-                case 2: t = MTowerObjectTypeItemMilkAgile; break;
-                case 3: t = MTowerObjectTypeItemMilkDash; break;
-                case 4: t = MTowerObjectTypeItemMilkDoubleJump; break;
-                case 5: t = MTowerObjectTypeItemMilkGlide; break;
-                }
-
-                MSpriteTowerItemBase* milk = [MSpriteTowerItemBase itemWithType:t
-                                                                       position:ccp(160.0f, 60.0f)
-                                                                           uiid:0
-                                                                           seed:0];
-
-                [self.itemCollection addObject:milk];
-
-                [self.sprites addChild:milk z:0];
-            }
-        }
-    }
+//    MTowerType type = [(MLayerTower*)self.parent.parent type];
+//
+//    if (type == MTowerTypeTutorialMilks)
+//    {
+//        BOOL hasFlavoredMilk = FALSE;
+//
+//        NSMutableArray* dead = [NSMutableArray array];
+//
+//        for (MSpriteTowerItemBase* item in self.itemCollection)
+//        {
+//            if (item.live)
+//            {
+//                if ((item.type == MTowerObjectTypeItemMilkAgile) ||
+//                    (item.type == MTowerObjectTypeItemMilkDash) ||
+//                    (item.type == MTowerObjectTypeItemMilkDoubleJump) ||
+//                    (item.type == MTowerObjectTypeItemMilkGlide) ||
+//                    (item.type == MTowerObjectTypeItemMilkStrength) ||
+//                    (item.type == MTowerObjectTypeItemMilkStrengthExtra))
+//                {
+//                    hasFlavoredMilk = TRUE;
+//                }
+//            }
+//            else
+//            {
+//                [dead addObject:item];
+//
+//                [self.sprites removeChild:item cleanup:TRUE];
+//            }
+//        }
+//
+//        if (dead.count)
+//        {
+//            [self.itemCollection removeObjectsInArray:dead];
+//        }
+//
+//        if (!hasFlavoredMilk)
+//        {
+//            self.flagForMilkTutorial += 1;
+//
+//            if (self.flagForMilkTutorial > 30)
+//            {
+//                self.flagForMilkTutorial = 0;
+//
+//                self.milkForMilkTutorial += 1;
+//
+//                MTowerObjectType t;
+//
+//                switch (self.milkForMilkTutorial % 6)
+//                {
+//                case 0: t = MTowerObjectTypeItemMilkStrength; break;
+//                case 1: t = MTowerObjectTypeItemMilkStrengthExtra; break;
+//                case 2: t = MTowerObjectTypeItemMilkAgile; break;
+//                case 3: t = MTowerObjectTypeItemMilkDash; break;
+//                case 4: t = MTowerObjectTypeItemMilkDoubleJump; break;
+//                case 5: t = MTowerObjectTypeItemMilkGlide; break;
+//                }
+//
+//                MSpriteTowerItemBase* milk = [MSpriteTowerItemBase itemWithType:t
+//                                                                       position:ccp(160.0f, 60.0f)
+//                                                                           uiid:0
+//                                                                           seed:0];
+//
+//                [self.itemCollection addObject:milk];
+//
+//                [self.sprites addChild:milk z:0];
+//            }
+//        }
+//    }
 }
 
 //------------------------------------------------------------------------------
@@ -571,27 +606,18 @@ typedef struct _ObjectPosition
 {
     ObjectPosition* p = table;
 
-    id object;
-
     while (p->type != MTowerObjectTypeInvalid)
     {
         if (p->type & MTowerObjectTypeItemBase)
         {
-            object = [MSpriteTowerItemBase itemWithType:p->type
-                                               position:ccp(p->x, p->y)
-                                                   uiid:0
-                                                   seed:0];
-
-            [self.itemCollection addObject:object];
-
-            [self.sprites addChild:object z:0];
+            [self addItemWithType:p->type position:ccp(p->x, p->y)];
         }
         else
         {
-            object = [MSpriteTowerStepBase stepWithType:p->type
-                                               position:ccp(p->x, p->y)
-                                                   usid:0
-                                                   seed:0];
+            id object = [MSpriteTowerStepBase stepWithType:p->type
+                                                  position:ccp(p->x, p->y)
+                                                      usid:0
+                                                      seed:0];
 
             [self.stepCollection addObject:object];
 
@@ -605,19 +631,24 @@ typedef struct _ObjectPosition
 //------------------------------------------------------------------------------
 -(void) buildCleanTower
 {
-    [self.sprites removeAllChildrenWithCleanup:YES];
-
     id basement = self.stepCollection[0];
 
+    [self removeItem:[NSArray arrayWithArray:self.itemCollection]];
+
     [self.stepCollection removeAllObjects];
-    [self.itemCollection removeAllObjects];
+
+    [self.sprites removeAllChildrenWithCleanup:YES];
 
     [self.stepCollection addObject:basement];
 
     //--set padding first, since it will change the other value (upperBound & deadLine)
     self.padding = 0.0f;
-    self.upperBound = 30.0f;
+    self.upperBoundStep = 30.0f;
+    self.upperBoundItem = 30.0f;
     self.deadLine = 0.0f;
+
+    //--
+    [self.randomStepColumn reset];
 }
 
 //------------------------------------------------------------------------------
@@ -631,7 +662,7 @@ typedef struct _ObjectPosition
         {MTowerObjectTypeStepSteady,            260.0f, 280.0f},
         {MTowerObjectTypeStepSteady,            160.0f,  40.0f},
         {MTowerObjectTypeItemCat,               270.0f, 280.0f},
-        {MTowerObjectTypeItemMilkStrength,       60.0f, 200.0f},
+        {MTowerObjectTypeItemCoinGold,           60.0f, 200.0f},
         {MTowerObjectTypeInvalid,                 0.0f,   0.0f},
     };
 
@@ -643,7 +674,7 @@ typedef struct _ObjectPosition
 {
     [self buildCleanTower];
 
-    [self raiseUpperBoundOfGameTower];
+    [self raiseUpperBoundOfGameTowerWithBoy:nil];
 }
 
 //------------------------------------------------------------------------------
@@ -659,12 +690,12 @@ typedef struct _ObjectPosition
         {MTowerObjectTypeStepSteady,             80.0f,   60.0f},
         {MTowerObjectTypeStepSteady,            160.0f,   60.0f},
         {MTowerObjectTypeStepSteady,            240.0f,   60.0f},
-        {MTowerObjectTypeItemMilkStrength,       62.0f,   60.0f},
-        {MTowerObjectTypeItemMilkStrength,       80.0f,   60.0f},
-        {MTowerObjectTypeItemMilkStrength,       98.0f,   60.0f},
-        {MTowerObjectTypeItemMilkStrength,      222.0f,   60.0f},
-        {MTowerObjectTypeItemMilkStrength,      240.0f,   60.0f},
-        {MTowerObjectTypeItemMilkStrength,      258.0f,   60.0f},
+        {MTowerObjectTypeItemCoinGold,           62.0f,   60.0f},
+        {MTowerObjectTypeItemCoinGold,           80.0f,   60.0f},
+        {MTowerObjectTypeItemCoinGold,           98.0f,   60.0f},
+        {MTowerObjectTypeItemCoinGold,          222.0f,   60.0f},
+        {MTowerObjectTypeItemCoinGold,          240.0f,   60.0f},
+        {MTowerObjectTypeItemCoinGold,          258.0f,   60.0f},
         {MTowerObjectTypeInvalid,                 0.0f,    0.0f},
     };
 
@@ -695,7 +726,7 @@ typedef struct _ObjectPosition
     ObjectPosition table[] =
     {
         {MTowerObjectTypeStepSteady,            160.0f,  60.0f},
-        {MTowerObjectTypeItemMilkStrength,      160.0f,  60.0f},
+        {MTowerObjectTypeItemCoinGold,          160.0f,  60.0f},
         {MTowerObjectTypeInvalid,                 0.0f,   0.0f},
     };
 
@@ -737,12 +768,10 @@ typedef struct _ObjectPosition
 }
 
 //------------------------------------------------------------------------------
--(void) raiseUpperBoundOfGameTower
+-(void) raiseUpperBoundOfGameTowerWithBoy:(MLayerTowerBoy*)boy
 {
     //
-    const float stepInterval       = 30.0f;
-    const float stepColumnWidth    = 72.0f;
-    const float stepColumnVariance = 16.0f;
+    const float stepColumnVariance = 22.0f;
 
     //
     if (!self.randomStepVariance)
@@ -761,29 +790,58 @@ typedef struct _ObjectPosition
                                              seedB:2];
     }
 
+    MGame* game = [MGame sharedGame];
+
     CGPoint pos = self.parent.position;
 
     float top = 600.0f - pos.y;
 
     CGPoint position;
 
-    int32_t stepWeightTotal = [[MGame sharedGame] weightFunctionStep];
-    int32_t itemWeightTotal = [[MGame sharedGame] weightFunctionItem];
+    int32_t stepWeightTotal = [game weightFunctionStep];
+    int32_t itemWeightTotal = [game weightFunctionItem];
 
-    MTowerObjectType type;
+    MTowerObjectType typeItem;
+    MTowerObjectType typeStep;
 
     MSpriteTowerStepBase* step;
-    MSpriteTowerItemBase* item;
 
-    while (self.upperBound < top)
+    uint32_t column;
+    uint32_t stage;
+
+    while (self.upperBoundStep < top)
     {
-        position = CGPointMake(
-            stepColumnWidth * (float)self.randomStepColumn.randomInteger + (float)self.randomStepVariance.randomInteger + 38.0f,
-            self.upperBound);
+        stage = self.upperBoundStep / 600;
 
-        type = [[MGame sharedGame] stepWithParameter:arc4random_uniform(stepWeightTotal) inStage:self.upperBound / 600];
+        column = self.randomStepColumn.randomInteger;
 
-        step = [MSpriteTowerStepBase stepWithType:type
+        position.y = self.upperBoundStep;
+
+        switch (column)
+        {
+        case 0:
+            if (arc4random_uniform(10) >= 8)
+                position.x = 38.0f + 30.0f;
+            else
+                position.x = 38.0f + arc4random_uniform(10);
+            break;
+        case 1:
+            position.x = 107.0f + arc4random_uniform(20);
+            break;
+        case 2:
+            position.x = 183.0f + arc4random_uniform(20);
+            break;
+        case 3:
+            if (arc4random_uniform(10) >= 8)
+                position.x = 272.0f - 30.0f;
+            else
+                position.x = 272.0f - arc4random_uniform(10);
+            break;
+        }
+
+        typeStep = [game stepWithParameter:arc4random_uniform(stepWeightTotal) inStage:stage];
+
+        step = [MSpriteTowerStepBase stepWithType:typeStep
                                          position:position
                                              usid:0
                                              seed:0];
@@ -792,30 +850,80 @@ typedef struct _ObjectPosition
 
         [self.sprites addChild:step];
 
-        if ((type == MTowerObjectTypeStepDrift) ||
-            (type == MTowerObjectTypeStepMovingWalkwayLeft) ||
-            (type == MTowerObjectTypeStepMovingWalkwayRight) ||
-            (type == MTowerObjectTypeStepPulse) ||
-            (type == MTowerObjectTypeStepSpring) ||
-            (type == MTowerObjectTypeStepSteady))
+        self.upperBoundStep += [game stepIntervalInStage:stage];
 
+        if (self.upperBoundItem >= self.upperBoundStep)
         {
-            if (arc4random_uniform(10) <= 1)
-            {
-                type = [[MGame sharedGame] itemWithParameter:arc4random_uniform(itemWeightTotal) inStage:self.upperBound / 600];
-
-                item = [MSpriteTowerItemBase itemWithType:type
-                                           position:position
-                                               uiid:0
-                                               seed:1];
-
-                [self.itemCollection addObject:item];
-
-                [self.sprites addChild:item];
-            }
+            //--some items are generated before, skip
         }
+        else if (arc4random_uniform(1000) <= 500)
+        {
+            //--frequency of new items
 
-        self.upperBound += stepInterval;
+            typeItem = [game itemWithParameter:arc4random_uniform(itemWeightTotal) inStage:stage];
+
+            switch (typeItem)
+            {
+            case MTowerObjectTypeItemCoinGold:
+                {
+                    if (0 && (stage > 1) && (arc4random_uniform(1000) < 50))
+                    {
+                        //--generate a large coin pattern
+                    }
+                    else
+                    {
+                        //--simple coin lines on step
+                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:position];
+                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:CGPointMake(position.x - 24.0f, position.y)];
+                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:CGPointMake(position.x + 24.0f, position.y)];
+                    }
+                }
+                break;
+            case MTowerObjectTypeItemSuitAstronaut:
+            case MTowerObjectTypeItemSuitCEO:
+            case MTowerObjectTypeItemSuitFootballPlayer:
+            case MTowerObjectTypeItemSuitNinja:
+            case MTowerObjectTypeItemSuitSuperhero:
+                {
+                    if (boy)
+                    {
+                        if ((typeItem == MTowerObjectTypeItemSuitAstronaut) && (boy.suit == MBoySuitAstronaut))
+                        {
+                            typeItem = MTowerObjectTypeItemSuitCEO;
+                        }
+                        else if ((typeItem == MTowerObjectTypeItemSuitCEO) && (boy.suit == MBoySuitCEO))
+                        {
+                            typeItem = MTowerObjectTypeItemSuitFootballPlayer;
+                        }
+                        else if ((typeItem == MTowerObjectTypeItemSuitFootballPlayer) && (boy.suit == MBoySuitFootballPlayer))
+                        {
+                            typeItem = MTowerObjectTypeItemSuitNinja;
+                        }
+                        else if ((typeItem == MTowerObjectTypeItemSuitNinja) && (boy.suit == MBoySuitNinja))
+                        {
+                            typeItem = MTowerObjectTypeItemSuitSuperhero;
+                        }
+                        else if ((typeItem == MTowerObjectTypeItemSuitSuperhero) && (boy.suit == MBoySuitSuperhero))
+                        {
+                            typeItem = MTowerObjectTypeItemSuitAstronaut;
+                        }
+
+                        [self addItemWithType:typeItem position:position];
+                    }
+
+                    self.upperBoundItem = self.upperBoundStep;
+                }
+                break;
+            default:
+                {
+                    [self addItemWithType:typeItem position:position];
+
+                    self.upperBoundItem = self.upperBoundStep;
+                }
+                break;
+            }
+            
+        }
     }
 }
 

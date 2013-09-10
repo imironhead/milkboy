@@ -35,11 +35,11 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalDelta;
 @property (nonatomic, assign, readwrite) uint32_t score;
-@property (nonatomic, assign, readwrite) uint32_t catState;
-@property (nonatomic, assign, readwrite) MBoyState boyState;
+@property (nonatomic, assign, readwrite) MBoyPet pet;
+@property (nonatomic, assign, readwrite) MBoySuit suit;
 @property (nonatomic, strong) CCSpriteBatchNode* sprite;
 @property (nonatomic, strong) CCSprite* spriteBoy;
-@property (nonatomic, strong) CCSprite* spriteCat;
+@property (nonatomic, strong) CCSprite* spritePet;
 @property (nonatomic, strong) CCSprite* spritePowerBase;
 @property (nonatomic, strong) CCSprite* spritePowerMask;
 @property (nonatomic, strong) NSMutableArray* framesBoy;
@@ -64,30 +64,31 @@ typedef enum _MBoySpriteFrame
         [self addChild:self.sprite];
 
         //--boy sprite
-        self.spriteBoy = [CCSprite spriteWithSpriteFrameName:@"char_normal_move_00.png"];
+        self.spriteBoy = [CCSprite spriteWithSpriteFrameName:@"char_commoner_move_00.png"];
 
         self.spriteBoy.scale = 2.0f;
-        self.spriteBoy.position = ccp(160.0f, 240.0f);
+        self.spriteBoy.position = ccp(160.0f, 1.0f);
+        self.spriteBoy.anchorPoint = ccp(0.5f, 0.0f);
 
         [self.sprite addChild:self.spriteBoy z:0];
 
         //--cat sprite
-        self.spriteCat = [CCSprite spriteWithSpriteFrameName:@"char_cat.png"];
+        self.spritePet = [CCSprite spriteWithSpriteFrameName:@"char_cat_00_lying_00.png"];
 
-        self.spriteCat.scale = 2.0f;
-        self.spriteCat.visible = FALSE;
-        self.spriteCat.position = ccp(160.0f, 240.0f);
-        self.spriteCat.anchorPoint = ccp(0.5f, 0.0f);
+        self.spritePet.scale = 2.0f;
+        self.spritePet.visible = FALSE;
+        self.spritePet.position = ccp(160.0f, 240.0f);
+        self.spritePet.anchorPoint = ccp(0.5f, 0.0f);
 
-        [self.sprite addChild:self.spriteCat z:0];
+        [self.sprite addChild:self.spritePet z:0];
 
         //--animation frames
-        [self loadDisplayFrames:@"normal"];
+        [self loadDisplayFrames:@"commoner"];
 
         self.indexFrameBoy = 0;
 
         //--initial state
-        self.boundCollision = CGRectMake(-11.0f, -22.0f, 22.0f, 44.0f);
+        self.boundCollision = CGRectMake(-11.0f, 0.0f, 22.0f, 44.0f);
 
         self.feetPosition = CGPointMake(25.0f, 23.0f);
         self.velocity = CGPointMake(3.0f, 0.0f);
@@ -99,7 +100,7 @@ typedef enum _MBoySpriteFrame
         self.powerDecimalMax   = MGAMECONFIG_POWER_DECIMAL_MAX;
         self.powerDecimalDelta = MGAMECONFIG_POWER_DECIMAL_DELTA;
 
-        self.state = MBoyStateInvalid;
+        self.suit = MBoySuitCommoner;
 
         self.highest = 0.0f;
 
@@ -167,11 +168,11 @@ typedef enum _MBoySpriteFrame
 
         CGPoint p = position;
 
-        p.y += 22.0f;
+        p.y += CGRectGetHeight(self.spriteBoy.boundingBox);
 
-        if (self.spriteCat.visible)
+        if (self.spritePet.visible)
         {
-            self.spriteCat.position = p;
+            self.spritePet.position = p;
         }
 
         p.y += 28.0f;
@@ -200,6 +201,7 @@ typedef enum _MBoySpriteFrame
         self->_velocity = velocity;
 
         self.spriteBoy.flipX = (velocity.x < 0.0f);
+        self.spritePet.flipX = self.spriteBoy.flipX;
     }
 }
 
@@ -208,7 +210,7 @@ typedef enum _MBoySpriteFrame
 {
     CGPoint a = self->_acceleration;
 
-    if (self.boyState == MBoyStateGlide)
+    if (self.suit == MBoySuitAstronaut)
     {
         a.y += 1.0f;
     }
@@ -217,53 +219,70 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) setState:(MBoyState)state
+-(void) setSuit:(MBoySuit)suit
 {
-    if (self->_boyState != state)
+    if (self->_suit != suit)
     {
         BOOL needUpdatePowerUI = FALSE;
 
-        if (self->_boyState == MBoyStateStrengthExtra)
+        switch (self->_suit)
         {
-            needUpdatePowerUI = TRUE;
-
-            self.powerIntegerMax -= 2;
-
-            if (self.powerInteger > self.powerIntegerMax)
+        case MBoySuitFootballPlayer:
             {
-                self.powerInteger = self.powerIntegerMax;
+                self.powerDecimalDelta -= 2;
             }
-        }
-        else if (state == MBoyStateStrengthExtra)
-        {
-            needUpdatePowerUI = TRUE;
+            break;
+        case MBoySuitSuperhero:
+            {
+                needUpdatePowerUI = TRUE;
 
-            self.powerIntegerMax += 2;
+                self.powerIntegerMax -= 2;
 
-            [self loadDisplayFrames:@"superman"];
-        }
-
-        if (self->_boyState == MBoyStateAgile)
-        {
-            self.powerDecimalDelta -= 2;
-        }
-        else if (state == MBoyStateAgile)
-        {
-            self.powerDecimalDelta += 2;
-
-            [self loadDisplayFrames:@"football"];
+                if (self.powerInteger > self.powerIntegerMax)
+                {
+                    self.powerInteger = self.powerIntegerMax;
+                }
+            }
+            break;
+        default:
+            break;
         }
 
-        if (state == MBoyStateDoubleJump)
+        switch (suit)
         {
-            [self loadDisplayFrames:@"ninja"];
-        }
-        else if (state == MBoyStateGlide)
-        {
+        case MBoySuitAstronaut:
             [self loadDisplayFrames:@"astronaut"];
+            break;
+        case MBoySuitCEO:
+            [self loadDisplayFrames:@"magician"];
+            break;
+        case MBoySuitCommoner:
+            [self loadDisplayFrames:@"commoner"];
+            break;
+        case MBoySuitFootballPlayer:
+            {
+                self.powerDecimalDelta += 2;
+
+                [self loadDisplayFrames:@"footballplayer"];
+            }
+            break;
+        case MBoySuitNinja:
+            [self loadDisplayFrames:@"ninja"];
+            break;
+        case MBoySuitSuperhero:
+            {
+                needUpdatePowerUI = TRUE;
+
+                self.powerIntegerMax += 2;
+
+                [self loadDisplayFrames:@"superhero"];
+            }
+            break;
+        default:
+            break;
         }
 
-        self->_boyState = state;
+        self->_suit = suit;
 
         if (needUpdatePowerUI)
         {
@@ -309,7 +328,7 @@ typedef enum _MBoySpriteFrame
                     self.score += MScorePerJump;
                 }
             }
-            else if (self.boyState == MBoyStateDoubleJump)
+            else if (self.suit == MBoySuitNinja)
             {
                 if (!self.doubleJumped)
                 {
@@ -321,9 +340,6 @@ typedef enum _MBoySpriteFrame
 
                     self.velocity = v;
                 }
-            }
-            else if (self.boyState == MBoyStateGlide)
-            {
             }
         }
     }
@@ -351,13 +367,37 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) setCatState:(uint32_t)catState
+-(void) setPet:(MBoyPet)pet
 {
-    if (self->_catState != catState)
+    if (self->_pet != pet)
     {
-        self->_catState = catState;
+        self->_pet = pet;
 
-        self.spriteCat.visible = (catState != 0);
+        if (MBoyPetNone == pet)
+        {
+            self.spritePet.visible = FALSE;
+        }
+        else
+        {
+            self.spritePet.visible = TRUE;
+
+            CGPoint p = self.feetPosition;
+
+            p.y += CGRectGetHeight(self.spriteBoy.boundingBox);
+
+            self.spritePet.position = p;
+
+            if (MBoyPetCat == pet)
+            {
+                self.spritePet.displayFrame =
+                    [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_cat_00_lying_00.png"];
+            }
+            else if (MBoyPetDog == pet)
+            {
+                self.spritePet.displayFrame =
+                    [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_dog_00_lying_00.png"];
+            }
+        }
     }
 }
 
@@ -440,75 +480,24 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(BOOL) collectItem:(MSpriteTowerItemBase*)item
+-(BOOL) collectItem:(MSpriteTowerItem*)item
 {
     BOOL collected = TRUE;
 
-    switch (item.type)
+    MTowerObjectType type;
+
+    if (item.type == MTowerObjectTypeItemQuestionMark)
     {
-    case MTowerObjectTypeItemBomb:
-        {
-            if (!self.step)
-            {
-                collected = FALSE;
-            }
-            else if (self.boyState != MBoyStateInvalid)
-            {
-                self.boyState = MBoyStateInvalid;
-            }
-            else if (self.powerIntegerMax > 3)
-            {
-                self.powerIntegerMax -= 1;
+        type = item.parameter;
+    }
+    else
+    {
+        type = item.type;
+    }
 
-                if (self.powerInteger > self.powerIntegerMax)
-                {
-                    self.powerInteger = self.powerIntegerMax;
-                }
-
-                [self updatePowerUI];
-            }
-            else
-            {
-                collected = TRUE;
-            }
-        }
-        break;
-    case MTowerObjectTypeItemBox:
-        {
-            if (self.catState)
-            {
-                self.catState = 0;
-
-                self.score += MScorePerCatBox;
-            }
-            else
-            {
-                collected = FALSE;
-            }
-        }
-        break;
-    case MTowerObjectTypeItemCat:
-        {
-            if (self.catState)
-            {
-                collected = FALSE;
-            }
-            else
-            {
-                self.catState = 1;
-
-                self.score += MScorePerCat;
-            }
-        }
-        break;
-    case MTowerObjectTypeItemMilkAgile:
-        {
-            self.state = MBoyStateAgile;
-
-            self.score += MScorePerFlavoredMilk;
-        }
-        break;
-    case MTowerObjectTypeItemMilkDash:
+    switch (type)
+    {
+    case MTowerObjectTypeItemBombBig:
         {
             CGPoint v = self.velocity;
 
@@ -518,44 +507,132 @@ typedef enum _MBoySpriteFrame
 
             self.velocity = v;
 
-            self.score += MScorePerFlavoredMilk;
+            self.score += MScorePerSuit;
         }
         break;
-    case MTowerObjectTypeItemMilkDoubleJump:
+    case MTowerObjectTypeItemBombSmall:
         {
-            self.state = MBoyStateDoubleJump;
+            CGPoint v = self.velocity;
 
-            self.score += MScorePerFlavoredMilk;
+            v.y = 20.0f;
+
+            self.step = nil;
+
+            self.velocity = v;
+
+            self.score += MScorePerSuit;
         }
         break;
-    case MTowerObjectTypeItemMilkGlide:
+    case MTowerObjectTypeItemCat:
         {
-            self.state = MBoyStateGlide;
-
-            self.score += MScorePerFlavoredMilk;
-        }
-        break;
-    case MTowerObjectTypeItemMilkStrength:
-        {
-            self->_milkCount += 1;
-
-            if (self->_milkCount >= 10)
+            if (self.pet == MBoyPetNone)
             {
-                self->_powerIntegerMax += 1;
+                self.pet = MBoyPetCat;
 
-                self->_milkCount -= 10;
-
-                [self updatePowerUI];
+                self.score += MScorePerCat;
             }
-
-            self.score += MScorePerMilk;
+            else
+            {
+                collected = FALSE;
+            }
         }
         break;
-    case MTowerObjectTypeItemMilkStrengthExtra:
-        {
-            self.state = MBoyStateStrengthExtra;
 
-            self.score += MScorePerFlavoredMilk;
+    case MTowerObjectTypeItemCatBox:
+        {
+            if (self.pet == MBoyPetCat)
+            {
+                self.pet = MBoyPetNone;
+
+                self.score += MScorePerCatBox;
+            }
+            else
+            {
+                collected = FALSE;
+            }
+        }
+        break;
+    case MTowerObjectTypeItemCoinGold:
+        {}
+        break;
+    case MTowerObjectTypeItemCollectionMilk_00:
+    case MTowerObjectTypeItemCollectionMilk_01:
+    case MTowerObjectTypeItemCollectionMilk_02:
+    case MTowerObjectTypeItemCollectionMilk_03:
+    case MTowerObjectTypeItemCollectionMilk_04:
+    case MTowerObjectTypeItemCollectionMilk_05:
+        {
+        }
+        break;
+    case MTowerObjectTypeItemDog:
+        {
+            if (self.pet == MBoyPetNone)
+            {
+                self.pet = MBoyPetDog;
+
+                self.score += MScorePerCat;
+            }
+            else
+            {
+                collected = FALSE;
+            }
+        }
+        break;
+
+    case MTowerObjectTypeItemDogHouse:
+        {
+            if (self.pet == MBoyPetDog)
+            {
+                self.pet = MBoyPetNone;
+
+                self.score += MScorePerCatBox;
+            }
+            else
+            {
+                collected = FALSE;
+            }
+        }
+        break;
+    case MTowerObjectTypeItemSuitAstronaut:
+        {
+            self.suit = MBoySuitAstronaut;
+
+            self.score += MScorePerSuit;
+        }
+        break;
+    case MTowerObjectTypeItemSuitCEO:
+        {
+            self.suit = MBoySuitCEO;
+
+            self.score += MScorePerSuit;
+        }
+        break;
+    case MTowerObjectTypeItemSuitCommoner:
+        {
+            self.suit = MBoySuitCommoner;
+
+            self.score += MScorePerSuit;
+        }
+        break;
+    case MTowerObjectTypeItemSuitFootballPlayer:
+        {
+            self.suit = MBoySuitFootballPlayer;
+
+            self.score += MScorePerSuit;
+        }
+        break;
+    case MTowerObjectTypeItemSuitNinja:
+        {
+            self.suit = MBoySuitNinja;
+
+            self.score += MScorePerSuit;
+        }
+        break;
+    case MTowerObjectTypeItemSuitSuperhero:
+        {
+            self.suit = MBoySuitSuperhero;
+
+            self.score += MScorePerSuit;
         }
         break;
     default:
@@ -567,7 +644,7 @@ typedef enum _MBoySpriteFrame
 
     if (collected)
     {
-        [item collected];
+        [item collectedWithFlag:nil];
     }
 
     return collected;

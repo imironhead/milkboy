@@ -24,6 +24,8 @@
 -(MTowerObjectType) itemWithParameter:(int32_t)parameter inStage:(uint32_t)stage;
 -(MTowerObjectType) stepWithParameter:(int32_t)parameter inStage:(uint32_t)stage;
 
+-(float) stepIntervalInStage:(uint32_t)stage;
+
 //+(float) towerWidth;
 //+(float) towerLeftWallWidth;
 //+(float) towerRightWallWidth;

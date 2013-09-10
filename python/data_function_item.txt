@@ -1,11 +1,22 @@
-0	0	0	0	0	0	0	100	0
-0	0	0	0	5	0	0	95	0
-0	0	0	0	4	2	0	92	2
-0	0	2	0	2	2	0	92	2
-0	2	2	2	2	2	0	90	0
-0	5	0	0	10	4	1	80	0
-0	5	0	0	10	5	2	75	3
-0	25	25	0	0	0	0	50	0
-0	30	30	0	0	0	0	40	0
-0	20	20	0	20	0	0	40	0
-0	0	0	0	15	10	5	60	10
+#title                                      0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19
+MTowerObjectTypeItemBombBig,                0    0    0   50   50   20   10
+MTowerObjectTypeItemBombSmall,              0    0    0   50   50   20   10
+MTowerObjectTypeItemCat,                    0    0    0    0   50   25   10
+MTowerObjectTypeItemCatBox,                 0    0    0    0   50   25   10
+MTowerObjectTypeItemCoinGold,            1000  700  990  840  640  700  780
+MTowerObjectTypeItemCollectionMilk_00,      0    0    0    0    0    0   10
+MTowerObjectTypeItemCollectionMilk_01,      0    0    0    0    0    0   10
+MTowerObjectTypeItemCollectionMilk_02,      0    0    0    0    0    0   10
+MTowerObjectTypeItemCollectionMilk_03,      0    0    0    0    0    0   10
+MTowerObjectTypeItemCollectionMilk_04,      0    0    0    0    0    0   10
+MTowerObjectTypeItemCollectionMilk_05,      0    0    0    0    0    0   10
+MTowerObjectTypeItemDog,                    0    0    0    0   50   25   25
+MTowerObjectTypeItemDogHouse,               0    0    0    0   50   25   25
+MTowerObjectTypeItemQuestionMark,           0    0    0    0    0  100   10
+MTowerObjectTypeItemSuitAstronaut,          0   50    0   10   10   10   10
+MTowerObjectTypeItemSuitCEO,                0   50   10   10   10   10   10
+MTowerObjectTypeItemSuitCommoner,           0   50    0   10   10   10   10
+MTowerObjectTypeItemSuitFootballPlayer,     0   50    0   10   10   10   10
+MTowerObjectTypeItemSuitNinja,              0   50    0   10   10   10   10
+MTowerObjectTypeItemSuitSuperhero,          0   50    0   10   10   10   10
+#end

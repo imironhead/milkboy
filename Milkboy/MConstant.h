@@ -9,21 +9,24 @@
 
 
 //------------------------------------------------------------------------------
+//--value
 #define MGAMECONFIG_BACK_COUNT_TILE_PER_FLOOR       (20)
 #define MGAMECONFIG_BACK_HEIGHT_FLOOR               (1280.0f)
 #define MGAMECONFIG_BACK_HEIGHT_TILE                (64.0f)
-#define MGAMECONFIG_DROP_LOST_POWER                 (1)
 #define MGAMECONFIG_POWER_DECIMAL_DELTA             (1)
-#define MGAMECONFIG_POWER_DECIMAL_MAX               (10)
+#define MGAMECONFIG_POWER_DECIMAL_MAX               (6)
 #define MGAMECONFIG_TOWER_PADDING_RISE              (1280.0f)
-
+//--method
+#define MGAMECONFIG_DROP_LOST_POWER                 (1)
+#define MGAMECONFIG_MILK_UPGRADE_STRENGTH           (0)
 
 //------------------------------------------------------------------------------
 typedef enum _MTowerObjectType
 {
     MTowerObjectTypeStepBase = 0,
     MTowerObjectTypeStepBasement = MTowerObjectTypeStepBase,
-    MTowerObjectTypeStepBrittle,
+    MTowerObjectTypeStepAbsorb,
+    MTowerObjectTypeStepDisposable,
     MTowerObjectTypeStepDrift,
     MTowerObjectTypeStepMoveLeft,
     MTowerObjectTypeStepMoveRight,
@@ -33,20 +36,34 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeStepPatrolVertical,
     MTowerObjectTypeStepPulse,
     MTowerObjectTypeStepSpring,
-    MTowerObjectTypeStepStation,
+    MTowerObjectTypeStepSpringChargeable,
+    MTowerObjectTypeStepSpringChargeAuto,
     MTowerObjectTypeStepSteady,
     MTowerObjectTypeStepMax,
 
     MTowerObjectTypeItemBase = 0x00001000,
-    MTowerObjectTypeItemBomb = MTowerObjectTypeItemBase,
-    MTowerObjectTypeItemBox,
+    MTowerObjectTypeItemBombBig = MTowerObjectTypeItemBase,
+    MTowerObjectTypeItemBombSmall,
     MTowerObjectTypeItemCat,
-    MTowerObjectTypeItemMilkAgile,
-    MTowerObjectTypeItemMilkDash,
-    MTowerObjectTypeItemMilkDoubleJump,
-    MTowerObjectTypeItemMilkGlide,
-    MTowerObjectTypeItemMilkStrength,
-    MTowerObjectTypeItemMilkStrengthExtra,
+    MTowerObjectTypeItemCatBox,
+    MTowerObjectTypeItemCoinGold,
+    MTowerObjectTypeItemCollectionMilk_00,
+    MTowerObjectTypeItemCollectionMilk_01,
+    MTowerObjectTypeItemCollectionMilk_02,
+    MTowerObjectTypeItemCollectionMilk_03,
+    MTowerObjectTypeItemCollectionMilk_04,
+    MTowerObjectTypeItemCollectionMilk_05,
+    MTowerObjectTypeItemDog,
+    MTowerObjectTypeItemDogHouse,
+    MTowerObjectTypeItemQuestionMark,
+    MTowerObjectTypeItemSuitAstronaut,
+    MTowerObjectTypeItemSuitCEO,
+    MTowerObjectTypeItemSuitCommoner,
+    MTowerObjectTypeItemSuitFootballPlayer,
+    MTowerObjectTypeItemSuitNinja,
+//    MTowerObjectTypeItemSuitSanta,
+    MTowerObjectTypeItemSuitSuperhero,
+
     MTowerObjectTypeItemMax,
 
     MTowerObjectTypeInvalid,
@@ -72,14 +89,27 @@ enum
 };
 
 //------------------------------------------------------------------------------
-typedef enum _MBoyState
+typedef enum _MBoySuit
 {
-    MBoyStateInvalid = 0,
-    MBoyStateAgile,
-    MBoyStateDoubleJump,
-    MBoyStateGlide,
-    MBoyStateStrengthExtra,
-} MBoyState;
+    MBoySuitInvalid = 0,
+
+    MBoySuitAstronaut,
+    MBoySuitCEO,            //--double income
+    MBoySuitCommoner,
+//    MBoySuitFatcat,
+    MBoySuitFootballPlayer,
+    MBoySuitNinja,
+//    MBoySuitSanta,          //--christmas
+    MBoySuitSuperhero,
+} MBoySuit;
+
+//------------------------------------------------------------------------------
+typedef enum _MBoyPet
+{
+    MBoyPetNone,
+    MBoyPetCat,
+    MBoyPetDog,
+} MBoyPet;
 
 //------------------------------------------------------------------------------
 typedef enum _MScore
@@ -88,9 +118,7 @@ typedef enum _MScore
     MScorePerMeter          = 10,
     MScorePerCat            = 30,
     MScorePerCatBox         = 200,
-    MScorePerMilk           = 5,
-    MScorePerFlavoredMilk   = 20,
-    MScorePerFrameInFlood   = 10,
+    MScorePerSuit           = 20,
 } MScore;
 
 //------------------------------------------------------------------------------

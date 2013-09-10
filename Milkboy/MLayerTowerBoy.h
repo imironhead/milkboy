@@ -12,7 +12,7 @@
 
 
 //------------------------------------------------------------------------------
-@class MSpriteTowerItemBase;
+@class MSpriteTowerItem;
 @class MSpriteTowerStepBase;
 
 //------------------------------------------------------------------------------
@@ -24,8 +24,8 @@
 @property (nonatomic, assign, readonly) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalDelta;
 @property (nonatomic, assign, readonly) uint32_t score;
-@property (nonatomic, assign, readonly) uint32_t catState;
-@property (nonatomic, assign, readonly) MBoyState boyState;
+@property (nonatomic, assign, readonly) MBoyPet pet;
+@property (nonatomic, assign, readonly) MBoySuit suit;
 @property (nonatomic, assign) CGPoint feetPosition;
 @property (nonatomic, assign) CGPoint velocity;
 @property (nonatomic, assign) CGPoint acceleration;
@@ -34,5 +34,5 @@
 @property (nonatomic, weak) MSpriteTowerStepBase* step;
 
 -(void) updatePower;
--(BOOL) collectItem:(MSpriteTowerItemBase*)item;
+-(BOOL) collectItem:(MSpriteTowerItem*)item;
 @end

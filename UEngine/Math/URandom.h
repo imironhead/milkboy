@@ -68,6 +68,7 @@ static inline URandomIntegerRange URandomIntegerRangeMake(uint32_t min, uint32_t
 -(id) initWithRange:(URandomIntegerRange)range
               seedA:(uint32_t)seedA
               seedB:(uint32_t)seedB;
+-(void) reset;
 @end
 
 //------------------------------------------------------------------------------

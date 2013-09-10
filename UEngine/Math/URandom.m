@@ -166,6 +166,7 @@
 @property (nonatomic, strong) NSMutableData* buffer;
 @property (nonatomic, assign) int32_t count;
 @property (nonatomic, assign) int32_t index;
+@property (nonatomic, assign) uint32_t previous;
 @end
 
 //------------------------------------------------------------------------------
@@ -189,6 +190,7 @@
     {
         self.count = range.max - range.min + 1;
         self.index = -1;
+        self.previous = 0;
 
         self.buffer = [NSMutableData dataWithLength:self.count * sizeof(uint32_t)];
     }
@@ -197,8 +199,17 @@
 }
 
 //------------------------------------------------------------------------------
+-(void) reset
+{
+    self.index = -1;
+    self.previous = 0;
+}
+
+//------------------------------------------------------------------------------
 -(uint32_t) randomInteger
 {
+    bool r = false;
+
     if (self.index < 0)
     {
         self.index = self.count - 1;
@@ -209,20 +220,40 @@
         {
             *t = i;
         }
+
+        r = true;
     }
 
     self.seedA = 36969 * (self.seedA & 65535) + (self.seedA >> 16);
     self.seedB = 18000 * (self.seedB & 65535) + (self.seedB >> 16);
 
-    uint32_t k = ((self.seedA << 16) + self.seedB) % (self.index + 1);
+    uint32_t k = ((self.seedA << 16) + self.seedB);
 
     uint32_t* t = self.buffer.mutableBytes;
+
+    if (r)
+    {
+        NSAssert(self.index > 0, @"[UAverageRandomIntegerGeneratorMWC randomInteger]");
+
+        k %= self.index;
+
+        if (k >= self.previous)
+        {
+            k += 1;
+        }
+    }
+    else
+    {
+        k %= (self.index + 1);
+    }
 
     uint32_t z = t[k];
 
     t[k] = t[self.index];
 
     self.index -= 1;
+
+    self.previous = z;
 
     return z;
 }
