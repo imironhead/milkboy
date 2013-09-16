@@ -320,6 +320,16 @@ typedef enum _MBoySpriteFrame
                     {
                         v.y += 10.0f;
                     }
+                    else if (self.step.type == MTowerObjectTypeStepSpringChargeAuto)
+                    {
+                        int32_t k = [[self.step parameter] intValue];
+
+                        v.y += (float)(2 * (k + 1));
+                    }
+                    else if (self.step.type == MTowerObjectTypeStepAbsorb)
+                    {
+                        v.y -= 4.0f;
+                    }
 
                     self.step = nil;
 
@@ -346,7 +356,7 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) setStep:(MSpriteTowerStepBase*)step
+-(void) setStep:(MSpriteTowerStep*)step
 {
     if (self->_step != step)
     {

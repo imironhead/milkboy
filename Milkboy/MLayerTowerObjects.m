@@ -16,8 +16,7 @@
 typedef struct _ObjectPosition
 {
     MTowerObjectType    type;
-    float               x;
-    float               y;
+    CGPoint             position;
 } ObjectPosition;
 
 //------------------------------------------------------------------------------
@@ -57,13 +56,8 @@ typedef struct _ObjectPosition
 
         [self addChild:self.sprites];
 
-        //--basement, the only one step which is not inside the batch node
-        MSpriteTowerStepBase* step = [MSpriteTowerStepBase stepWithType:MTowerObjectTypeStepBasement
-                                                               position:CGPointMake(160.0f, 0.0f)
-                                                                   usid:(MTowerObjectGroupStep << 31)
-                                                                   seed:0];
-
-        [self.stepCollection addObject:step];
+        //--basement
+        [self addStepWithType:MTowerObjectTypeStepBasement position:CGPointMake(160.0f, 0.0f)];
 
         //
         [self transformToType:MTowerTypeMenuMain];
@@ -84,6 +78,12 @@ typedef struct _ObjectPosition
         for (CCSprite* sprite in self.sprites.children)
         {
             pt = sprite.position;
+
+            if (pt.y <= 0.0f)
+            {
+                //--do not pad the basement
+                continue;
+            }
 
             pt.y += d;
 
@@ -273,13 +273,13 @@ typedef struct _ObjectPosition
 }
 
 //------------------------------------------------------------------------------
--(MSpriteTowerStepBase*) collideStepWithPosition:(CGPoint)positionOld
-                                        velocity:(CGPoint*)velocity
-                                           bound:(CGRect)bound
-                                      frameIndex:(int32_t)frameIndex
+-(MSpriteTowerStep*) collideStepWithPosition:(CGPoint)positionOld
+                                    velocity:(CGPoint*)velocity
+                                       bound:(CGRect)bound
+                                  frameIndex:(int32_t)frameIndex
 {
     //--collide with upper edge of bounding rect of steps
-    MSpriteTowerStepBase* step = nil;
+    MSpriteTowerStep* step = nil;
 
     if (!self.canClimb)
     {
@@ -306,7 +306,7 @@ typedef struct _ObjectPosition
         float boundStepMaxY;
         float boundStepMinY;
 
-        for (MSpriteTowerStepBase* stepT in self.steps)
+        for (MSpriteTowerStep* stepT in self.steps)
         {
             if (!stepT.live)
             {
@@ -367,7 +367,7 @@ typedef struct _ObjectPosition
 
     [self.itemCollection addObject:item];
 
-    [self.sprites addChild:item];
+    [self.sprites addChild:item z:2];
 }
 
 //------------------------------------------------------------------------------
@@ -395,6 +395,40 @@ typedef struct _ObjectPosition
 }
 
 //------------------------------------------------------------------------------
+-(void) addStepWithType:(MTowerObjectType)type position:(CGPoint)position
+{
+    MSpriteTowerStep* step = [MSpriteTowerStep factoryCreateStepWithType:type position:position];
+
+    [self.stepCollection addObject:step];
+
+    [self.sprites addChild:step z:1];
+}
+
+//------------------------------------------------------------------------------
+-(void) removeStep:(id)step
+{
+    if ([step class] == [MSpriteTowerStep class])
+    {
+        [MSpriteTowerStep factoryDeleteStep:step];
+
+        [self.stepCollection removeObject:step];
+
+        [self.sprites removeChild:step cleanup:TRUE];
+    }
+    else
+    {
+        for (MSpriteTowerStep* s in step)
+        {
+            [MSpriteTowerStep factoryDeleteStep:s];
+
+            [self.stepCollection removeObject:s];
+
+            [self.sprites removeChild:s cleanup:TRUE];
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
 -(void) updateDeadLineWithBoy:(MLayerTowerBoy*)boy
 {
     //--update dead line
@@ -417,12 +451,10 @@ typedef struct _ObjectPosition
             {
                 //--remove objects that under the deadline, except the basement
                 [dead addObject:sprite];
-
-                [self.sprites removeChild:sprite cleanup:YES];
             }
         }
 
-        [self.stepCollection removeObjectsInArray:dead];
+        [self removeStep:dead];
 
         [dead removeAllObjects];
 
@@ -444,7 +476,7 @@ typedef struct _ObjectPosition
 //------------------------------------------------------------------------------
 -(void) updateToFrame:(int32_t)frame
 {
-    for (MSpriteTowerStepBase* step in self.steps)
+    for (MSpriteTowerStep* step in self.steps)
     {
         [step updateToFrame:frame];
     }
@@ -534,8 +566,11 @@ typedef struct _ObjectPosition
     {
         pt = sprite.position;
 
-        if (pt.y < 600.0f)
+        if ((pt.y < 600.0f) && (pt.y > 0.0f))
         {
+            //--basement does not need move
+            //--objects outside the screen do not need move
+
             pt.y = 600.0f;
 
             [sprite runAction:[CCMoveTo actionWithDuration:0.5f position:pt]];
@@ -555,8 +590,11 @@ typedef struct _ObjectPosition
         {
             pt = sprite.position;
 
-            if (pt.y < 600.0f)
+            if ((pt.y < 600.0f) && (pt.y > 0.0f))
             {
+                //--basement does not need move
+                //--objects outside the screen do not need move
+
                 sprite.position = ccp(pt.x, 600.0f);
 
                 [sprite runAction:[CCMoveTo actionWithDuration:0.5f position:pt]];
@@ -610,18 +648,11 @@ typedef struct _ObjectPosition
     {
         if (p->type & MTowerObjectTypeItemBase)
         {
-            [self addItemWithType:p->type position:ccp(p->x, p->y)];
+            [self addItemWithType:p->type position:p->position];
         }
         else
         {
-            id object = [MSpriteTowerStepBase stepWithType:p->type
-                                                  position:ccp(p->x, p->y)
-                                                      usid:0
-                                                      seed:0];
-
-            [self.stepCollection addObject:object];
-
-            [self.sprites addChild:object z:1];
+            [self addStepWithType:p->type position:p->position];
         }
 
         p += 1;
@@ -631,15 +662,10 @@ typedef struct _ObjectPosition
 //------------------------------------------------------------------------------
 -(void) buildCleanTower
 {
-    id basement = self.stepCollection[0];
-
     [self removeItem:[NSArray arrayWithArray:self.itemCollection]];
+    [self removeStep:[NSArray arrayWithArray:self.stepCollection]];
 
-    [self.stepCollection removeAllObjects];
-
-    [self.sprites removeAllChildrenWithCleanup:YES];
-
-    [self.stepCollection addObject:basement];
+    [self addStepWithType:MTowerObjectTypeStepBasement position:CGPointMake(160.0f, 0.0f)];
 
     //--set padding first, since it will change the other value (upperBound & deadLine)
     self.padding = 0.0f;
@@ -804,8 +830,6 @@ typedef struct _ObjectPosition
     MTowerObjectType typeItem;
     MTowerObjectType typeStep;
 
-    MSpriteTowerStepBase* step;
-
     uint32_t column;
     uint32_t stage;
 
@@ -841,14 +865,7 @@ typedef struct _ObjectPosition
 
         typeStep = [game stepWithParameter:arc4random_uniform(stepWeightTotal) inStage:stage];
 
-        step = [MSpriteTowerStepBase stepWithType:typeStep
-                                         position:position
-                                             usid:0
-                                             seed:0];
-
-        [self.stepCollection addObject:step];
-
-        [self.sprites addChild:step];
+        [self addStepWithType:typeStep position:position];
 
         self.upperBoundStep += [game stepIntervalInStage:stage];
 
@@ -861,6 +878,23 @@ typedef struct _ObjectPosition
             //--frequency of new items
 
             typeItem = [game itemWithParameter:arc4random_uniform(itemWeightTotal) inStage:stage];
+
+            //--check position and type
+            if ((typeItem != MTowerObjectTypeItemBombBig) &&
+                (typeItem != MTowerObjectTypeItemBombSmall) &&
+                (typeItem != MTowerObjectTypeItemCoinGold))
+            {
+                if ((typeStep == MTowerObjectTypeStepMoveLeft) ||
+                    (typeStep == MTowerObjectTypeStepMoveRight) ||
+                    (typeStep == MTowerObjectTypeStepPatrolHorizontal) ||
+                    (typeStep == MTowerObjectTypeStepPatrolVertical) ||
+                    (typeStep == MTowerObjectTypeStepPulse))
+                {
+                    //--most items does not flow in air
+
+                    return;
+                }
+            }
 
             switch (typeItem)
             {

@@ -10,357 +10,302 @@
 
 
 //------------------------------------------------------------------------------
-@interface MSpriteTowerStepBase()
-{
-    struct
-    {
-        int32_t     live: 1;
-        uint32_t    seed: 15;
-        int32_t     type: 16;
-        uint32_t    usid: 32;
-    } stepInfo;
-}
-
+//------------------------------------------------------------------------------
+@interface MSpriteTowerStep ()
+@property (nonatomic, strong, readwrite) NSNumber* parameter;
+@property (nonatomic, assign, readwrite) MTowerObjectType type;
 @property (nonatomic, assign, readwrite) BOOL live;
 @property (nonatomic, assign, readwrite) NSRange range;
+@property (nonatomic, assign) CGPoint originPosition;
+@property (nonatomic, assign) SEL selectorUpdateToFrame;
+@property (nonatomic, assign) SEL selectorBoyJump;
+@property (nonatomic, assign) SEL selectorBoyLand;
 @end
 
 //------------------------------------------------------------------------------
-@implementation MSpriteTowerStepBase
+@implementation MSpriteTowerStep
 //------------------------------------------------------------------------------
-+(id) stepWithType:(MTowerObjectType)type
-          position:(CGPoint)position
-              usid:(uint32_t)usid
-              seed:(uint32_t)seed
+static NSMutableArray* freeSteps = nil;
+static NSMutableArray* freeSprites = nil;
+
+//------------------------------------------------------------------------------
++(id) factoryCreateStepWithType:(MTowerObjectType)type position:(CGPoint)position
 {
-    id step = nil;
+    MSpriteTowerStep* step = nil;
+
+    if (freeSteps && freeSteps.lastObject)
+    {
+        step = freeSteps.lastObject;
+
+        [freeSteps removeLastObject];
+    }
+    else
+    {
+        step = [MSpriteTowerStep new];
+    }
+
+    NSString* displayFrameName = nil;
+
+    step.type = type;
+    step.live = TRUE;
+    step.flipX = FALSE;
+    step.scale = 2.0f;
+    step.visible = TRUE;
+    step.position = position;
+    step.anchorPoint = ccp(0.5f, 1.0f);
 
     switch (type)
     {
     case MTowerObjectTypeStepBasement:
         {
-            step = [[MSpriteTowerStepBasement alloc] initWithPosition:position usid:usid seed:seed];
+            displayFrameName = @"step_steady.png";
+
+            step.scale = 10.0f;
+            step.visible = FALSE;
+
+            step.selectorUpdateToFrame = @selector(updateToFrameNormal:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
+        }
+        break;
+    case MTowerObjectTypeStepAbsorb:
+        {
+            //--jump lower
+
+            displayFrameName = @"step_absorb.png";
+
+            step.selectorUpdateToFrame = @selector(updateToFrameNormal:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     case MTowerObjectTypeStepDisposable:
         {
-            step = [[MSpriteTowerStepBrittle alloc] initWithPosition:position usid:usid seed:seed];
+            displayFrameName = @"step_disposable_01.png";
+
+            step.parameter = @0;
+
+            step.selectorUpdateToFrame = @selector(updateToFrameNormal:);
+            step.selectorBoyJump = @selector(boyJumpStepDisposable:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     case MTowerObjectTypeStepDrift:
         {
-            step = [[MSpriteTowerStepDrift alloc] initWithPosition:position usid:usid seed:seed];
+            //--can not jump
+
+            displayFrameName = @"step_drift.png";
+
+            step.selectorUpdateToFrame = @selector(updateToFrameNormal:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     case MTowerObjectTypeStepMoveLeft:
     case MTowerObjectTypeStepMoveRight:
         {
-            step = [[MSpriteTowerStepMove alloc] initWithType:type
-                                               position:position
-                                                   usid:usid
-                                                   seed:seed];
+            displayFrameName = @"step_steady.png";
+
+            step.selectorUpdateToFrame = @selector(updateToFrameStepMove:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
+
+            step.originPosition = position;
         }
         break;
     case MTowerObjectTypeStepMovingWalkwayLeft:
     case MTowerObjectTypeStepMovingWalkwayRight:
         {
-            step = [[MSpriteTowerStepMovingWalkway alloc] initWithType:type
-                                                        position:position
-                                                            usid:usid
-                                                            seed:seed];
+            displayFrameName = @"step_moving_walkway_01.png";
+
+            if (type == MTowerObjectTypeStepMovingWalkwayLeft)
+            {
+                step.flipX = TRUE;
+            }
+
+            step.selectorUpdateToFrame = @selector(updateToFrameStepMovingWalkway:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     case MTowerObjectTypeStepPatrolHorizontal:
     case MTowerObjectTypeStepPatrolVertical:
         {
-            step = [[MSpriteTowerStepPatrol alloc] initWithType:type
-                                                 position:position
-                                                     usid:usid
-                                                     seed:seed];
+            displayFrameName = @"step_steady.png";
+
+            step.originPosition = position;
+
+            if (type == MTowerObjectTypeStepPatrolVertical)
+            {
+                step.parameter = [NSNumber numberWithInt:arc4random_uniform(80)];
+
+                CGRect rect = step.boundingBox;
+
+                step.range = NSMakeRange(
+                    position.y - 40.0f - rect.size.height,
+                    80.0f + rect.size.height);
+            }
+            else
+            {
+                step.parameter = [NSNumber numberWithInt:arc4random_uniform(120)];
+            }
+
+            step.selectorUpdateToFrame = @selector(updateToFrameStepPatrol:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     case MTowerObjectTypeStepPulse:
         {
-            step = [[MSpriteTowerStepPulse alloc] initWithPosition:position usid:usid seed:seed];
+            displayFrameName = @"step_pulse_off.png";
+
+            CCSprite* spriteOff;
+
+            if (freeSprites && freeSprites.lastObject)
+            {
+                spriteOff = freeSprites.lastObject;
+
+                [freeSprites removeLastObject];
+            }
+            else
+            {
+                spriteOff = [CCSprite spriteWithSpriteFrameName:@"step_pulse_on.png"];
+            }
+
+            spriteOff.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"step_pulse_on.png"];
+
+            spriteOff.tag = 0xcdcdcdcd;
+            spriteOff.position = ccp(0.0f, 0.0f);
+            spriteOff.anchorPoint = ccp(0.0f, 0.0f);
+
+            [step addChild:spriteOff z:-1];
+
+            step.parameter = [NSNumber numberWithInt:arc4random_uniform(255)];
+
+            step.selectorUpdateToFrame = @selector(updateToFrameStepPulse:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     case MTowerObjectTypeStepSpring:
         {
-            step = [[MSpriteTowerStepSpring alloc] initWithPosition:position usid:usid seed:seed];
+            displayFrameName = @"step_spring.png";
+
+            step.selectorUpdateToFrame = @selector(updateToFrameNormal:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
+        }
+        break;
+    case MTowerObjectTypeStepSpringChargeAuto:
+        {
+            displayFrameName = @"step_spring_charge_auto_00.png";
+
+            step.parameter = @0;
+
+            step.selectorUpdateToFrame = @selector(updateToFrameStepSpringChargeAuto:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     case MTowerObjectTypeStepSteady:
         {
-            step = [[MSpriteTowerStepSteady alloc] initWithPosition:position usid:usid seed:seed];
+            displayFrameName = @"step_steady.png";
+
+            step.selectorUpdateToFrame = @selector(updateToFrameNormal:);
+            step.selectorBoyJump = @selector(boyJumpNormal:);
+            step.selectorBoyLand = @selector(boyLandNormal:);
         }
         break;
     default:
         {
-            NSAssert(0, @"[MSpriteTowerStepBase stepWithType: position: usid: seed:]");
+            NSAssert(0, @"[MSpriteTowerStep factoryCreateStepWithType: position:]");
         }
         break;
+    }
+
+    step.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:displayFrameName];
+
+    //--
+    if (type != MTowerObjectTypeStepPatrolVertical)
+    {
+        CGRect rect = step.boundingBox;
+
+        step.range = NSMakeRange((NSUInteger)rect.origin.y, (NSUInteger)rect.size.height);
     }
 
     return step;
 }
 
 //------------------------------------------------------------------------------
--(id) initWithType:(MTowerObjectType)type
-              usid:(uint32_t)usid
-              seed:(uint32_t)seed
-   spriteFrameName:(NSString*)spriteFramename
-          position:(CGPoint)position
++(void) factoryDeleteStep:(MSpriteTowerStep*)step
 {
-    self = [super initWithSpriteFrameName:spriteFramename];
-
-    if (self)
+    if (!freeSteps)
     {
-        //
-        self.position = position;
-
-        self.anchorPoint = CGPointMake(0.5f, 1.0f);
-
-        self.scale = 2.0f;
-
-        //--
-        CGRect rect = self.boundingBox;
-
-        self.range = NSMakeRange((NSUInteger)rect.origin.y, (NSUInteger)rect.size.height);
-
-        //
-        self->stepInfo.live = 1;
-        self->stepInfo.seed = seed;
-        self->stepInfo.type = type;
-        self->stepInfo.usid = usid;
+        freeSteps = [NSMutableArray array];
     }
 
-    return self;
-}
+    if (!freeSprites)
+    {
+        freeSprites = [NSMutableArray array];
+    }
 
-//------------------------------------------------------------------------------
--(id) initWithType:(MTowerObjectType)type
-          position:(CGPoint)position
-              usid:(uint32_t)usid
-              seed:(int32_t)seed
-{
-    NSAssert(0, @"[MSpriteTowerStepBase initWithType: position: usid: seed]");
+    for (CCSprite* sprite in step.children)
+    {
+        [freeSprites addObject:sprite];
+    }
 
-    return nil;
-}
+    [step removeAllChildrenWithCleanup:TRUE];
 
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(uint32_t)seed
-{
-    NSAssert(0, @"[MSpriteTowerStepBase initWithPosition: usid: seed]");
-
-    return nil;
-}
-
-//------------------------------------------------------------------------------
--(MTowerObjectType) type
-{
-    return self->stepInfo.type;
-}
-
-//------------------------------------------------------------------------------
--(void) setType:(MTowerObjectType)type
-{
-    self->stepInfo.type = type;
-}
-
-//------------------------------------------------------------------------------
--(uint32_t) usid
-{
-    return self->stepInfo.usid;
-}
-
-//------------------------------------------------------------------------------
--(uint32_t) seed
-{
-    return self->stepInfo.seed;
-}
-
-//------------------------------------------------------------------------------
--(BOOL) live
-{
-    return (self->stepInfo.live != 0);
-}
-
-//------------------------------------------------------------------------------
--(void) setLive:(BOOL)live
-{
-    self->stepInfo.live = live;
+    [freeSteps addObject:step];
 }
 
 //------------------------------------------------------------------------------
 -(void) updateToFrame:(int32_t)frame
-{}
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:self.selectorUpdateToFrame withObject:[NSNumber numberWithInt:frame]];
+#pragma clang diagnostic pop
+}
 
 //------------------------------------------------------------------------------
 -(void) boyJump:(MLayerTowerBoy*)boy
-{}
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:self.selectorBoyJump withObject:boy];
+#pragma clang diagnostic pop
+}
 
 //------------------------------------------------------------------------------
 -(void) boyLand:(MLayerTowerBoy*)boy
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [self performSelector:self.selectorBoyLand withObject:boy];
+#pragma clang diagnostic pop
+}
+
+//------------------------------------------------------------------------------
+-(void) updateToFrameNormal:(NSNumber*)frame
 {}
 
 //------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepBasement
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(int32_t)seed
-{
-    self = [super initWithType:MTowerObjectTypeStepBasement
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_steady.png"
-                      position:position];
-
-    if (self)
-    {
-        self.scale = 10.0f;
-
-        self.visible = FALSE;
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MSpriteTowerStepBrittle()
-@property (nonatomic, assign) int32_t counter;
-@end
-
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepBrittle
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(int32_t)seed
-{
-    self = [super initWithType:MTowerObjectTypeStepSteady
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_disposable_01.png"
-                      position:position];
-
-    if (self)
-    {
-        self.counter = 0;
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
--(void) boyJump:(MLayerTowerBoy*)boy
-{
-    self.counter += 1;
-
-    if (self.counter > 2)
-    {
-        self.live = FALSE;
-
-        self.visible = FALSE;
-    }
-    else
-    {
-        NSString* name = [NSString stringWithFormat:@"step_disposable_%02d.png", self.counter + 1];
-
-        self.displayFrame =
-            [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
-    }
-}
-
-//------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepDrift
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(int32_t)seed
-{
-    self = [super initWithType:MTowerObjectTypeStepDrift
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_drift.png"
-                      position:position];
-
-    if (self)
-    {
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MSpriteTowerStepMove()
-@property (nonatomic, assign) BOOL moveRight;
-@property (nonatomic, assign) CGPoint positionOrigin;
-@end
-
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepMove
-//------------------------------------------------------------------------------
--(id) initWithType:(MTowerObjectType)type
-          position:(CGPoint)position
-              usid:(uint32_t)usid
-              seed:(int32_t)seed
-{
-    NSAssert(
-        (type == MTowerObjectTypeStepMoveLeft) || (type == MTowerObjectTypeStepMoveRight),
-        @"[MSpriteTowerStepMove initWithType: collisionBound: usid: seed:]");
-
-    self = [super initWithType:type
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_steady.png"
-                      position:position];
-
-    if (self)
-    {
-        self.moveRight = (type == MTowerObjectTypeStepMoveRight);
-
-        self.positionOrigin = position;
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
--(void) updateToFrame:(int32_t)frame
+-(void) updateToFrameStepMove:(NSNumber*)frame
 {
     int32_t w = self.boundingBox.size.width;
 
-    CGPoint p = self.positionOrigin;
+    CGPoint p = self.position;
 
     int32_t dx;
 
-    if (self.moveRight)
+    if (self.type == MTowerObjectTypeStepMoveRight)
     {
-        dx = 2 * frame + (w / 2) + (int32_t)p.x;
+        dx = 2 * frame.intValue + (w / 2) + (int32_t)self.originPosition.x;
     }
     else
     {
-        dx = (w + 308) * frame + (w / 2) + (int32_t)p.x;
+        dx = (w + 308) * frame.intValue + (w / 2) + (int32_t)self.originPosition.x;
     }
 
     p.x = (dx % (310 + w)) - (w / 2);
@@ -369,115 +314,24 @@
 }
 
 //------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MSpriteTowerStepMovingWalkway()
-@property (nonatomic, strong) NSArray* frames;
-@end
-
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepMovingWalkway
-//------------------------------------------------------------------------------
--(id) initWithType:(MTowerObjectType)type
-          position:(CGPoint)position
-              usid:(uint32_t)usid
-              seed:(int32_t)seed
+-(void) updateToFrameStepMovingWalkway:(NSNumber*)frame
 {
-    NSAssert(
-        (type == MTowerObjectTypeStepMovingWalkwayLeft) || (type == MTowerObjectTypeStepMovingWalkwayRight),
-        @"[MSpriteTowerStepMove initWithType: collisionBound: usid: seed:]");
+    uint32_t k = frame.intValue % 3;
 
-    self = [super initWithType:type
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_moving_walkway_01.png"
-                      position:position];
+    NSString* displayFrameName =
+        [NSString stringWithFormat:@"step_moving_walkway_%02d.png", k + 1];
 
-    if (self)
-    {
-        CCSpriteFrameCache* cache = [CCSpriteFrameCache sharedSpriteFrameCache];
-
-        self.frames =
-        @[
-            [cache spriteFrameByName:@"step_moving_walkway_01.png"],
-            [cache spriteFrameByName:@"step_moving_walkway_02.png"],
-            [cache spriteFrameByName:@"step_moving_walkway_03.png"],
-        ];
-
-        if (self.type == MTowerObjectTypeStepMovingWalkwayLeft)
-        {
-            self.flipX = TRUE;
-        }
-    }
-
-    return self;
+    self.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:displayFrameName];
 }
 
 //------------------------------------------------------------------------------
--(void) updateToFrame:(int32_t)frame
+-(void) updateToFrameStepPatrol:(NSNumber*)frame
 {
-    uint32_t k = frame % self.frames.count;
-
-    self.displayFrame = self.frames[k];
-}
-
-//------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@interface MSpriteTowerStepPatrol()
-@property (nonatomic, assign) CGPoint positionOrigin;
-@property (nonatomic, assign) int32_t token;
-@end
-
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepPatrol
-//------------------------------------------------------------------------------
--(id) initWithType:(MTowerObjectType)type
-          position:(CGPoint)position
-              usid:(uint32_t)usid
-              seed:(int32_t)seed
-{
-    NSAssert(
-        (type == MTowerObjectTypeStepPatrolHorizontal) || (type == MTowerObjectTypeStepPatrolVertical),
-        @"[MSpriteTowerStepPatrol initWithType: collisionBound: usid: seed:]");
-
-    self = [super initWithType:type
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_steady.png"
-                      position:position];
-
-    if (self)
-    {
-        self.positionOrigin = position;
-
-        self.token = arc4random_uniform(10);
-
-        if (type == MTowerObjectTypeStepPatrolVertical)
-        {
-            CGRect rect = self.boundingBox;
-
-            self.range = NSMakeRange(
-                position.y - 40.0f - rect.size.height,
-                80.0f + rect.size.height);
-        }
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
--(void) updateToFrame:(int32_t)frame
-{
-    CGPoint p = self.positionOrigin;
+    CGPoint p = self.originPosition;
 
     if (self.type == MTowerObjectTypeStepPatrolHorizontal)
     {
-        int32_t dx = (60 + self.token + 2 * frame) % 240;
+        int32_t dx = (60 + self.parameter.intValue + 2 * frame.intValue) % 240;
 
         if (dx > 120)
         {
@@ -488,7 +342,7 @@
     }
     else
     {
-        int32_t dy = (40 + self.token + 2 * frame) % 160;
+        int32_t dy = (40 + self.parameter.intValue + 2 * frame.intValue) % 160;
 
         if (dy > 80)
         {
@@ -502,112 +356,63 @@
 }
 
 //------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepPulse
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(int32_t)seed
+-(void) updateToFrameStepPulse:(NSNumber*)frame
 {
-    self = [super initWithType:MTowerObjectTypeStepPulse
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_pulse_off.png"
-                      position:position];
+    int32_t k = (frame.intValue + self.parameter.intValue) % 75;
 
-    if (self)
-    {
-        CCSprite* spriteOff = [CCSprite spriteWithSpriteFrameName:@"step_pulse_on.png"];
+    CCSprite* sprite = (CCSprite*)[self getChildByTag:0xcdcdcdcd];
 
-        spriteOff.tag = 0xcdcdcdcd;
+    self.live = (k < 60);
 
-        spriteOff.position = ccp(0.0f, 0.0f);
-        spriteOff.anchorPoint = ccp(0.0f, 0.0f);
+    sprite.visible = self.live;
 
-        [self addChild:spriteOff z:-1];
-    }
-
-    return self;
+    sprite.opacity = (self.live ? 0xff - k * 4 : 0xff);
 }
 
 //------------------------------------------------------------------------------
--(void) updateToFrame:(int32_t)frame
+-(void) updateToFrameStepSpringChargeAuto:(NSNumber*)frame
 {
-    frame = (frame + (self.usid & 0xff)) % 75;
+    int32_t token = (int32_t)self.position.x;
 
-    self.live = (frame < 60);
+    int32_t k = ((frame.intValue + token) % 30) / 5;
 
-    if (frame < 60)
+    if (self.parameter.intValue != k)
     {
-        [(CCSprite*)[self getChildByTag:0xcdcdcdcd] setOpacity:0xff - frame * 4];
+        self.parameter = [NSNumber numberWithInt:k];
+
+        self.displayFrame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:
+            [NSString stringWithFormat:@"step_spring_charge_auto_%02d.png", k]];
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) boyJumpNormal:(MLayerTowerBoy*)boy
+{}
+
+//------------------------------------------------------------------------------
+-(void) boyJumpStepDisposable:(MLayerTowerBoy*)boy
+{
+    self.parameter = [NSNumber numberWithInt:self.parameter.intValue + 1];
+
+    if (self.parameter.intValue > 2)
+    {
+        self.live = FALSE;
+
+        self.visible = FALSE;
     }
     else
     {
-        [(CCSprite*)[self getChildByTag:0xcdcdcdcd] setOpacity:0xff];
+        NSString* name = [NSString stringWithFormat:@"step_disposable_%02d.png", self.parameter.intValue + 1];
+
+        self.displayFrame =
+            [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:name];
     }
 }
 
 //------------------------------------------------------------------------------
--(void) setLive:(BOOL)live
-{
-    if (self.live != live)
-    {
-        [super setLive:live];
-
-        [[self getChildByTag:0xcdcdcdcd] setVisible:live];
-    }
-}
+-(void) boyLandNormal:(MLayerTowerBoy*)boy
+{}
 
 //------------------------------------------------------------------------------
 @end
 
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepSpring
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(int32_t)seed
-{
-    self = [super initWithType:MTowerObjectTypeStepSpring
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_spring.png"
-                      position:position];
-
-    if (self)
-    {
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
-@end
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-@implementation MSpriteTowerStepSteady
-//------------------------------------------------------------------------------
--(id) initWithPosition:(CGPoint)position
-                  usid:(uint32_t)usid
-                  seed:(int32_t)seed
-{
-    self = [super initWithType:MTowerObjectTypeStepSteady
-                          usid:usid
-                          seed:seed
-               spriteFrameName:@"step_steady.png"
-                      position:position];
-
-    if (self)
-    {
-    }
-
-    return self;
-}
-
-//------------------------------------------------------------------------------
-@end

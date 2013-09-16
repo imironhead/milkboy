@@ -36,7 +36,6 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeStepPatrolVertical,
     MTowerObjectTypeStepPulse,
     MTowerObjectTypeStepSpring,
-    MTowerObjectTypeStepSpringChargeable,
     MTowerObjectTypeStepSpringChargeAuto,
     MTowerObjectTypeStepSteady,
     MTowerObjectTypeStepMax,

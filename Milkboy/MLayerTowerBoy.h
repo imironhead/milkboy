@@ -13,7 +13,7 @@
 
 //------------------------------------------------------------------------------
 @class MSpriteTowerItem;
-@class MSpriteTowerStepBase;
+@class MSpriteTowerStep;
 
 //------------------------------------------------------------------------------
 @interface MLayerTowerBoy : CCLayer
@@ -31,7 +31,7 @@
 @property (nonatomic, assign) CGPoint acceleration;
 @property (nonatomic, assign) uint32_t milkCount;
 @property (nonatomic, assign) BOOL pressed;
-@property (nonatomic, weak) MSpriteTowerStepBase* step;
+@property (nonatomic, weak) MSpriteTowerStep* step;
 
 -(void) updatePower;
 -(BOOL) collectItem:(MSpriteTowerItem*)item;

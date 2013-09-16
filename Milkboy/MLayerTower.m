@@ -156,7 +156,7 @@
     float boundBoyMinX = vP.x + CGRectGetMinX(boundBoy);
     float boundBoyMaxX = vP.x + CGRectGetMaxX(boundBoy);
 
-    MSpriteTowerStepBase* step = boy.step;
+    MSpriteTowerStep* step = boy.step;
 
     if (step)
     {

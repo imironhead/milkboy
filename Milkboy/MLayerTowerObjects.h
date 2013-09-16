@@ -25,10 +25,10 @@
 -(NSArray*) collideItemWithPosition:(CGPoint)position
                            velocity:(CGPoint)velocity
                               bound:(CGRect)bound;
--(MSpriteTowerStepBase*) collideStepWithPosition:(CGPoint)position
-                                        velocity:(CGPoint*)velocity
-                                           bound:(CGRect)bound
-                                      frameIndex:(int32_t)frameIndex;
+-(MSpriteTowerStep*) collideStepWithPosition:(CGPoint)position
+                                    velocity:(CGPoint*)velocity
+                                       bound:(CGRect)bound
+                                  frameIndex:(int32_t)frameIndex;
 -(void) updateDeadLineWithBoy:(MLayerTowerBoy*)boy;
 -(void) updateToFrame:(int32_t)frame;
 -(void) transformToType:(MTowerType)type;
