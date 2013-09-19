@@ -23,6 +23,8 @@
 @property (nonatomic, assign, readonly) uint32_t powerDecimal;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readonly) uint32_t powerDecimalDelta;
+@property (nonatomic, assign, readonly) uint32_t coin;
+@property (nonatomic, assign, readonly) uint32_t height;
 @property (nonatomic, assign, readonly) uint32_t score;
 @property (nonatomic, assign, readonly) MBoyPet pet;
 @property (nonatomic, assign, readonly) MBoySuit suit;
@@ -35,4 +37,5 @@
 
 -(void) updatePower;
 -(BOOL) collectItem:(MSpriteTowerItem*)item;
+-(void) reset;
 @end

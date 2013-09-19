@@ -9,6 +9,7 @@
 #import "MConstant.h"
 #import "MLayerGameSinglePlayer.h"
 #import "MScene.h"
+#import "MSpriteLabel.h"
 
 
 //------------------------------------------------------------------------------
@@ -16,6 +17,10 @@
 @property (nonatomic, strong) CCMenu* layerMenuGame;
 @property (nonatomic, strong) CCLayer* layerMenuPause;
 @property (nonatomic, strong) CCLayer* layerMenuScore;
+@property (nonatomic, strong) CCLayer* layerHeader;
+@property (nonatomic, strong) MSpriteLabel* labelCoin;
+@property (nonatomic, strong) MSpriteLabel* labelHeight;
+@property (nonatomic, strong) MSpriteLabel* labelScore;
 @end
 
 //------------------------------------------------------------------------------
@@ -45,6 +50,40 @@
         self.layerMenuGame = [CCMenu menuWithItems:button, nil];
 
         [self addChild:self.layerMenuGame z:0];
+
+        //--
+        NSMutableDictionary* table = [NSMutableDictionary dictionary];
+
+        for (NSUInteger i = 0; i < 10; ++i)
+        {
+            table[[NSString stringWithFormat:@"%d", i]] = [NSString stringWithFormat:@"menu_f_%d.png", i];
+        }
+
+        //--
+        self.layerHeader = [CCLayer new];
+
+        [self addChild:self.layerHeader];
+
+        CCSpriteBatchNode* nodeHeader = [CCSpriteBatchNode batchNodeWithFile:@"Texture/menu.pvr.ccz"];
+
+        [self.layerHeader addChild:nodeHeader];
+
+        //
+        self.labelCoin = [MSpriteLabel labelWithTable:table space:1.0f];
+        self.labelHeight = [MSpriteLabel labelWithTable:table space:1.0f];
+        self.labelScore = [MSpriteLabel labelWithTable:table space:1.0f];
+
+        self.labelCoin.position = ccp(10.0f, 470.0f);
+        self.labelHeight.position = ccp(120.0f, 470.0f);
+        self.labelScore.position = ccp(230.0f, 470.0f);
+
+        self.labelCoin.text = @"       0";
+        self.labelHeight.text = @"       0";
+        self.labelScore.text = @"       0";
+
+        [nodeHeader addChild:self.labelCoin];
+        [nodeHeader addChild:self.labelHeight];
+        [nodeHeader addChild:self.labelScore];
     }
 
     return self;
@@ -336,6 +375,29 @@
         MScene* target = (MScene*)[[CCDirector sharedDirector] runningScene];
 
         [target onEvent:fake];
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) updateHeader:(NSDictionary*)info
+{
+    NSNumber* noCoin = info[@"coin"];
+    NSNumber* noHeight = info[@"height"];
+    NSNumber* noScore = info[@"score"];
+
+    if (noCoin)
+    {
+        self.labelCoin.text = [NSString stringWithFormat:@"%8d", noCoin.unsignedIntValue];
+    }
+
+    if (noHeight)
+    {
+        self.labelHeight.text = [NSString stringWithFormat:@"%8d", noHeight.unsignedIntValue];
+    }
+
+    if (noScore)
+    {
+        self.labelScore.text = [NSString stringWithFormat:@"%8d", noScore.unsignedIntValue];
     }
 }
 

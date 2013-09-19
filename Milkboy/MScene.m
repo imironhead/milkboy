@@ -15,6 +15,7 @@
 #import "MLayerMenuSinglePlayer.h"
 #import "MLayerMenuTutorial.h"
 #import "MLayerTower.h"
+#import "MNodeDictionary.h"
 #import "MScene.h"
 
 
@@ -111,6 +112,14 @@
     case MTagGameScoreRestart:
         {
             [self.layerTower transformToType:MTowerTypeGameSinglePlayer];
+        }
+        break;
+    case MTagGameUpdateHeader:
+        {
+            if ([self.currentLayer class] == [MLayerGameSinglePlayer class])
+            {
+                [(MLayerGameSinglePlayer*)self.currentLayer updateHeader:[(MNodeDictionary*)sender info]];
+            }
         }
         break;
     case MTagGameResume:

@@ -521,6 +521,12 @@
     }];
 
     [self runAction:[CCSequence actions:actionDelay, actionBlock, nil]];
+
+    //--
+    if (type == MTowerTypeGameSinglePlayer)
+    {
+        [self.layerBoy reset];
+    }
 }
 
 //------------------------------------------------------------------------------

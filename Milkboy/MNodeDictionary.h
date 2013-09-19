@@ -1,8 +1,8 @@
 //
-//  MLayerGameSinglePlayer.h
+//  MNodeDictionary.h
 //  Milkboy
 //
-//  Created by iRonhead on 7/9/13.
+//  Created by iRonhead on 9/18/13.
 //  Copyright (c) 2013 iRonhead. All rights reserved.
 //
 //------------------------------------------------------------------------------
@@ -11,9 +11,8 @@
 
 
 //------------------------------------------------------------------------------
-@interface MLayerGameSinglePlayer : CCLayer
--(void) showMenuPause:(id)sender;
--(void) showMenuScore:(id)sender;
+@interface MNodeDictionary : CCNode
+@property (nonatomic, strong, readonly) NSDictionary* info;
 
--(void) updateHeader:(NSDictionary*)info;
++(id) nodeWithTag:(NSInteger)tag info:(NSDictionary*)info;
 @end

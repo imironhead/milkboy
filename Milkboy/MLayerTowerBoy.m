@@ -7,6 +7,7 @@
 //
 //------------------------------------------------------------------------------
 #import "MLayerTowerBoy.h"
+#import "MNodeDictionary.h"
 #import "MSpriteTowerItem.h"
 #import "MSpriteTowerStep.h"
 
@@ -34,6 +35,8 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, assign, readwrite) uint32_t powerDecimal;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalDelta;
+@property (nonatomic, assign, readwrite) uint32_t coin;
+@property (nonatomic, assign, readwrite) uint32_t height;
 @property (nonatomic, assign, readwrite) uint32_t score;
 @property (nonatomic, assign, readwrite) MBoyPet pet;
 @property (nonatomic, assign, readwrite) MBoySuit suit;
@@ -46,7 +49,6 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, strong) NSMutableArray* framesHat;
 @property (nonatomic, assign) NSUInteger indexFrameBoy;
 @property (nonatomic, assign) BOOL doubleJumped;
-@property (nonatomic, assign) float highest;
 @end
 
 //------------------------------------------------------------------------------
@@ -101,8 +103,6 @@ typedef enum _MBoySpriteFrame
         self.powerDecimalDelta = MGAMECONFIG_POWER_DECIMAL_DELTA;
 
         self.suit = MBoySuitCommoner;
-
-        self.highest = 0.0f;
 
         //--power ui
         self.spritePowerBase = [CCSprite spriteWithSpriteFrameName:@"char_power_back.png"];
@@ -184,11 +184,22 @@ typedef enum _MBoySpriteFrame
         self.spritePowerMask.position = p;
 
         //
-        if (self.highest < position.y)
-        {
-            self.score += MScorePerMeter * (ceilf(position.y / 30.0f) - ceilf(self.highest / 30.0f));
+        uint32_t h;
 
-            self.highest = position.y;
+        if (position.y > MGAMECONFIG_TOWER_PADDING_RISE)
+        {
+            h = (uint32_t)(position.y - MGAMECONFIG_TOWER_PADDING_RISE);
+        }
+        else
+        {
+            h = (uint32_t)position.y;
+        }
+
+        if (self.height < h)
+        {
+            self.score += MScorePerMeter * (h - self.height);
+
+            self.height = h;
         }
     }
 }
@@ -412,6 +423,57 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
+-(void) setCoin:(uint32_t)coin
+{
+    if (self->_coin != coin)
+    {
+        self->_coin = coin;
+
+        NSNumber* noCoin = [NSNumber numberWithUnsignedInt:coin];
+
+        MNodeDictionary* node = [MNodeDictionary nodeWithTag:MTagGameUpdateHeader info:@{@"coin": noCoin}];
+
+        id target = [[CCDirector sharedDirector] runningScene];
+
+        [target performSelector:@selector(onEvent:) withObject:node];
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) setHeight:(uint32_t)height
+{
+    if (self->_height != height)
+    {
+        self->_height = height;
+
+        NSNumber* noHeight = [NSNumber numberWithUnsignedInt:height];
+
+        MNodeDictionary* node = [MNodeDictionary nodeWithTag:MTagGameUpdateHeader info:@{@"height": noHeight}];
+
+        id target = [[CCDirector sharedDirector] runningScene];
+
+        [target performSelector:@selector(onEvent:) withObject:node];
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) setScore:(uint32_t)score
+{
+    if (self->_score != score)
+    {
+        self->_score = score;
+
+        NSNumber* noScore = [NSNumber numberWithUnsignedInt:score];
+
+        MNodeDictionary* node = [MNodeDictionary nodeWithTag:MTagGameUpdateHeader info:@{@"score": noScore}];
+
+        id target = [[CCDirector sharedDirector] runningScene];
+
+        [target performSelector:@selector(onEvent:) withObject:node];
+    }
+}
+
+//------------------------------------------------------------------------------
 -(void) updatePower
 {
     BOOL updateUI = FALSE;
@@ -563,7 +625,9 @@ typedef enum _MBoySpriteFrame
         }
         break;
     case MTowerObjectTypeItemCoinGold:
-        {}
+        {
+            self.coin += 1;
+        }
         break;
     case MTowerObjectTypeItemCollectionMilk_00:
     case MTowerObjectTypeItemCollectionMilk_01:
@@ -658,6 +722,17 @@ typedef enum _MBoySpriteFrame
     }
 
     return collected;
+}
+
+//------------------------------------------------------------------------------
+-(void) reset
+{
+    self.pet = MBoyPetNone;
+    self.suit = MBoySuitCommoner;
+
+    self.coin = 0;
+    self.height = self.feetPosition.y;
+    self.score = 0;
 }
 
 //------------------------------------------------------------------------------

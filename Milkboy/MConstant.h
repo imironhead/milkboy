@@ -149,6 +149,7 @@ enum
     MTagGameScore,
     MTagGameScoreQuit,
     MTagGameScoreRestart,
+    MTagGameUpdateHeader,
     MTagGotoLayerGameSinglePlayer,
     MTagGotoLayerMenuGift,
     MTagGotoLayerMenuMain,

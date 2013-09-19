@@ -148,8 +148,10 @@
 		F489453F1745ED1800897354 /* UVector3.m in Sources */ = {isa = PBXBuildFile; fileRef = F48945331745ED1800897354 /* UVector3.m */; };
 		F494580B179670480065DC31 /* MLayerTowerObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = F494580A179670470065DC31 /* MLayerTowerObjects.m */; };
 		F4ABCE96175656B600B9FDE9 /* MSpriteTowerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ABCE95175656B600B9FDE9 /* MSpriteTowerItem.m */; };
+		F4B1A98917E6F453004A27BE /* MSpriteLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = F4B1A98817E6F453004A27BE /* MSpriteLabel.m */; };
 		F4BF69F7178F1975006DC604 /* MLayerTowerWall.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */; };
 		F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */; };
+		F4E18D0317E99CE900F2797F /* MNodeDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E18D0217E99CE900F2797F /* MNodeDictionary.m */; };
 		F4ED886B178ACADA00388861 /* MLayerTower.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886A178ACADA00388861 /* MLayerTower.m */; };
 		F4ED886E178B1E2A00388861 /* MLayerMenuTutorial.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED886D178B1E2A00388861 /* MLayerMenuTutorial.m */; };
 		F4ED8871178C461B00388861 /* MLayerGameSinglePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED8870178C461B00388861 /* MLayerGameSinglePlayer.m */; };
@@ -454,10 +456,14 @@
 		F494580A179670470065DC31 /* MLayerTowerObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerObjects.m; sourceTree = "<group>"; };
 		F4ABCE94175656B600B9FDE9 /* MSpriteTowerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSpriteTowerItem.h; sourceTree = "<group>"; };
 		F4ABCE95175656B600B9FDE9 /* MSpriteTowerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSpriteTowerItem.m; sourceTree = "<group>"; };
+		F4B1A98717E6F453004A27BE /* MSpriteLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSpriteLabel.h; sourceTree = "<group>"; };
+		F4B1A98817E6F453004A27BE /* MSpriteLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSpriteLabel.m; sourceTree = "<group>"; };
 		F4BF69F5178F1975006DC604 /* MLayerTowerWall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerWall.h; sourceTree = "<group>"; };
 		F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerWall.m; sourceTree = "<group>"; };
 		F4BF69F8178FB65D006DC604 /* MLayerTowerBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTowerBackground.h; sourceTree = "<group>"; };
 		F4BF69F9178FB65D006DC604 /* MLayerTowerBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTowerBackground.m; sourceTree = "<group>"; };
+		F4E18D0117E99CE900F2797F /* MNodeDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNodeDictionary.h; sourceTree = "<group>"; };
+		F4E18D0217E99CE900F2797F /* MNodeDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNodeDictionary.m; sourceTree = "<group>"; };
 		F4ED8869178ACADA00388861 /* MLayerTower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerTower.h; sourceTree = "<group>"; };
 		F4ED886A178ACADA00388861 /* MLayerTower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLayerTower.m; sourceTree = "<group>"; };
 		F4ED886C178B1E2900388861 /* MLayerMenuTutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLayerMenuTutorial.h; sourceTree = "<group>"; };
@@ -583,8 +589,12 @@
 				F494580A179670470065DC31 /* MLayerTowerObjects.m */,
 				F4BF69F5178F1975006DC604 /* MLayerTowerWall.h */,
 				F4BF69F6178F1975006DC604 /* MLayerTowerWall.m */,
+				F4E18D0117E99CE900F2797F /* MNodeDictionary.h */,
+				F4E18D0217E99CE900F2797F /* MNodeDictionary.m */,
 				F45CB89D1786AEA8005FFB98 /* MScene.h */,
 				F45CB89E1786AEA8005FFB98 /* MScene.m */,
+				F4B1A98717E6F453004A27BE /* MSpriteLabel.h */,
+				F4B1A98817E6F453004A27BE /* MSpriteLabel.m */,
 				F4ABCE94175656B600B9FDE9 /* MSpriteTowerItem.h */,
 				F4ABCE95175656B600B9FDE9 /* MSpriteTowerItem.m */,
 				F489450F1745CB4500897354 /* MSpriteTowerStep.h */,
@@ -1312,6 +1322,8 @@
 				F4BF69FA178FB65D006DC604 /* MLayerTowerBackground.m in Sources */,
 				F494580B179670480065DC31 /* MLayerTowerObjects.m in Sources */,
 				F41A87F517A94E13000B8C81 /* MLayerMenuRecord.m in Sources */,
+				F4B1A98917E6F453004A27BE /* MSpriteLabel.m in Sources */,
+				F4E18D0317E99CE900F2797F /* MNodeDictionary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
