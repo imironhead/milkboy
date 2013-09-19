@@ -844,22 +844,42 @@ typedef struct _ObjectPosition
         switch (column)
         {
         case 0:
-            if (arc4random_uniform(10) >= 8)
-                position.x = 38.0f + 30.0f;
+            if ((stage < 5) || (arc4random_uniform(10) < 8))
+            {
+                int32_t variance = (stage > 20) ? 10 : (stage / 2);
+
+                position.x = (float)(38 + arc4random_uniform(variance));
+            }
             else
-                position.x = 38.0f + arc4random_uniform(10);
+            {
+                position.x = 38.0f + 30.0f;
+            }
             break;
         case 1:
-            position.x = 107.0f + arc4random_uniform(20);
+            {
+                int32_t variance = (stage > 20) ? 20 : stage;
+
+                position.x = (float)(117 - variance / 2 + arc4random_uniform(variance));
+            }
             break;
         case 2:
-            position.x = 183.0f + arc4random_uniform(20);
+            {
+                int32_t variance = (stage > 20) ? 20 : stage;
+
+                position.x = (float)(193.0f - variance / 2 + arc4random_uniform(variance));
+            }
             break;
         case 3:
-            if (arc4random_uniform(10) >= 8)
-                position.x = 272.0f - 30.0f;
+            if ((stage < 5) || (arc4random_uniform(10) < 8))
+            {
+                int32_t variance = (stage > 20) ? 10 : (stage / 2);
+
+                position.x = (float)(272 - arc4random_uniform(variance));
+            }
             else
-                position.x = 272.0f - arc4random_uniform(10);
+            {
+                position.x = 272.0f - 30.0f;
+            }
             break;
         }
 
