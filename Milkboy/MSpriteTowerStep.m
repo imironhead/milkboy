@@ -414,5 +414,44 @@ static NSMutableArray* freeSprites = nil;
 {}
 
 //------------------------------------------------------------------------------
+-(void) pad:(float)pad
+{
+    switch (self.type)
+    {
+    case MTowerObjectTypeStepBasement:
+        {
+        }
+        break;
+    case MTowerObjectTypeStepMoveLeft:
+    case MTowerObjectTypeStepMoveRight:
+    case MTowerObjectTypeStepPatrolHorizontal:
+    case MTowerObjectTypeStepPatrolVertical:
+        {
+            CGPoint p = self.position;
+
+            p.y += pad;
+
+            self.position = p;
+
+            p = self.originPosition;
+
+            p.y += pad;
+
+            self.originPosition = p;
+        }
+        break;
+    default:
+        {
+            CGPoint p = self.position;
+
+            p.y += pad;
+
+            self.position = p;
+        }
+        break;
+    }
+}
+
+//------------------------------------------------------------------------------
 @end
 

@@ -29,6 +29,7 @@
 -(void) updateToFrame:(int32_t)frame;
 -(void) boyJump:(MLayerTowerBoy*)boy;
 -(void) boyLand:(MLayerTowerBoy*)boy;
+-(void) pad:(float)pad;
 @end
 
 

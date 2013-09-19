@@ -71,23 +71,16 @@ typedef struct _ObjectPosition
 {
     if (self->_padding != padding)
     {
-        CGPoint pt;
-
         float d = padding - self->_padding;
 
-        for (CCSprite* sprite in self.sprites.children)
+        for (MSpriteTowerItem* item in self.items)
         {
-            pt = sprite.position;
+            [item pad:d];
+        }
 
-            if (pt.y <= 0.0f)
-            {
-                //--do not pad the basement
-                continue;
-            }
-
-            pt.y += d;
-
-            sprite.position = pt;
+        for (MSpriteTowerStep* step in self.steps)
+        {
+            [step pad:d];
         }
 
         self.deadLine += d;

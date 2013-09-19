@@ -24,6 +24,7 @@
 
 -(void) updateToFrame:(int32_t)frame;
 -(void) collectedWithFlag:(NSNumber*)flag;
+-(void) pad:(float)pad;
 @end
 
 
