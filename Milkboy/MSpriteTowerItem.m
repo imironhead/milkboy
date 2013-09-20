@@ -16,6 +16,7 @@
 @property (nonatomic, assign, readwrite) BOOL live;
 @property (nonatomic, assign, readwrite) NSRange range;
 @property (nonatomic, assign, readwrite) uint32_t parameter;
+@property (nonatomic, assign) uint32_t token;
 @property (nonatomic, assign) SEL selectorUpdateToFrame;
 @property (nonatomic, assign) SEL selectorCollectedWithFlag;
 @end
@@ -26,7 +27,9 @@
 static NSMutableArray* freeItems = nil;
 
 //------------------------------------------------------------------------------
-+(id) factoryCreateItemWithType:(MTowerObjectType)type position:(CGPoint)position
++(id) factoryCreateItemWithType:(MTowerObjectType)type
+                       position:(CGPoint)position
+                          token:(uint32_t)token
 {
     MSpriteTowerItem* item = nil;
 
@@ -45,6 +48,7 @@ static NSMutableArray* freeItems = nil;
 
     item.type = type;
     item.live = TRUE;
+    item.token = token;
     item.visible = TRUE;
     item.position = position;
     item.anchorPoint = ccp(0.5f, 0.0f);

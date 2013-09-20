@@ -19,7 +19,7 @@
 @property (nonatomic, assign, readonly) NSRange range;
 @property (nonatomic, assign, readonly) uint32_t parameter;
 
-+(id)   factoryCreateItemWithType:(MTowerObjectType)type position:(CGPoint)position;
++(id)   factoryCreateItemWithType:(MTowerObjectType)type position:(CGPoint)position token:(uint32_t)token;
 +(void) factoryDeleteItem:(MSpriteTowerItem*)item;
 
 -(void) updateToFrame:(int32_t)frame;

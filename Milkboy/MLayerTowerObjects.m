@@ -354,9 +354,9 @@ typedef struct _ObjectPosition
 }
 
 //------------------------------------------------------------------------------
--(void) addItemWithType:(MTowerObjectType)type position:(CGPoint)position
+-(void) addItemWithType:(MTowerObjectType)type position:(CGPoint)position token:(uint32_t)token
 {
-    MSpriteTowerItem* item = [MSpriteTowerItem factoryCreateItemWithType:type position:position];
+    MSpriteTowerItem* item = [MSpriteTowerItem factoryCreateItemWithType:type position:position token:token];
 
     [self.itemCollection addObject:item];
 
@@ -641,7 +641,7 @@ typedef struct _ObjectPosition
     {
         if (p->type & MTowerObjectTypeItemBase)
         {
-            [self addItemWithType:p->type position:p->position];
+            [self addItemWithType:p->type position:p->position token:0];
         }
         else
         {
@@ -913,16 +913,93 @@ typedef struct _ObjectPosition
             {
             case MTowerObjectTypeItemCoinGold:
                 {
-                    if (0 && (stage > 1) && (arc4random_uniform(1000) < 50))
+                    if (1 && (stage > 1) && (arc4random_uniform(1000) < 50))
                     {
                         //--generate a large coin pattern
+                        switch (arc4random_uniform(5))
+                        {
+                        case 0:
+                            {
+                                float dx = 2.0f;
+                                float dy = 22.0f;
+
+                                if ((position.x + dx > 300.0f) || (position.x + dx < 10.0f))
+                                {
+                                    dx = -dx;
+                                }
+
+                                [self addItemWithType:MTowerObjectTypeItemBombBig position:position token:0];
+
+                                position.x += dx;
+                                position.y += 40.0f;
+
+                                for (int i = 0; i < 20; ++i)
+                                {
+                                    [self addItemWithType:MTowerObjectTypeItemCoinGold position:position token:0];
+
+                                    if ((position.x + dx > 300.0f) || (position.x + dx < 10.0f))
+                                    {
+                                        dx = -dx;
+                                    }
+
+                                    position.x += dx;
+                                    position.y += dy;
+                                }
+                            }
+                            break;
+                        case 1:
+                            {
+                                typedef struct _Coin
+                                {
+                                    CGPoint p;
+                                    int32_t c;
+                                } Coin;
+
+                                Coin coins[] =
+                                {
+                                    {155.0f,   0.0f, 1},
+                                    {144.0f,  22.0f, 2},
+                                    {133.0f,  44.0f, 3},
+                                    {122.0f,  66.0f, 4},
+                                    {111.0f,  88.0f, 5},
+                                    {122.0f, 110.0f, 1}, {177.0f, 110.0f, 1},
+                                    {  0.0f,   0.0f, 0},
+                                };
+
+                                CGPoint p = position;
+
+                                int32_t i = 0;
+
+                                while (coins[i].c > 0)
+                                {
+                                    p.x = coins[i].p.x;
+                                    p.y = coins[i].p.y + position.y;
+
+                                    for (int32_t c = 0; c < coins[i].c; ++c)
+                                    {
+                                        p.x += 22.0f;
+
+                                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:p token:0];
+                                    }
+
+                                    i += 1;
+                                }
+
+                                position.y += 110.0f + 22.0f;
+                            }
+                            break;
+                        }
+
+                        self.upperBoundItem = position.y;
                     }
                     else
                     {
                         //--simple coin lines on step
-                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:position];
-                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:CGPointMake(position.x - 24.0f, position.y)];
-                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:CGPointMake(position.x + 24.0f, position.y)];
+                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:position token:0];
+                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:CGPointMake(position.x - 24.0f, position.y) token:0];
+                        [self addItemWithType:MTowerObjectTypeItemCoinGold position:CGPointMake(position.x + 24.0f, position.y) token:0];
+
+                        self.upperBoundItem = self.upperBoundStep;
                     }
                 }
                 break;
@@ -955,7 +1032,7 @@ typedef struct _ObjectPosition
                             typeItem = MTowerObjectTypeItemSuitAstronaut;
                         }
 
-                        [self addItemWithType:typeItem position:position];
+                        [self addItemWithType:typeItem position:position token:0];
                     }
 
                     self.upperBoundItem = self.upperBoundStep;
@@ -963,7 +1040,7 @@ typedef struct _ObjectPosition
                 break;
             default:
                 {
-                    [self addItemWithType:typeItem position:position];
+                    [self addItemWithType:typeItem position:position token:0];
 
                     self.upperBoundItem = self.upperBoundStep;
                 }
