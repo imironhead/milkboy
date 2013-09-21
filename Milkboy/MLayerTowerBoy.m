@@ -7,6 +7,7 @@
 //
 //------------------------------------------------------------------------------
 #import "MLayerTowerBoy.h"
+#import "MLayerTowerObjects.h"
 #import "MNodeDictionary.h"
 #import "MSpriteTowerItem.h"
 #import "MSpriteTowerStep.h"
@@ -474,84 +475,6 @@ typedef enum _MBoySpriteFrame
 }
 
 //------------------------------------------------------------------------------
--(void) updatePower
-{
-    BOOL updateUI = FALSE;
-
-    if (self.pressed)
-    {
-        if (self.step)
-        {
-            if (self.step.type == MTowerObjectTypeStepDrift)
-            {
-                if (self.powerInteger != 0)
-                {
-                    self.powerInteger = 0;
-
-                    updateUI = TRUE;
-                }
-            }
-            else if (self.powerInteger < self.powerIntegerMax)
-            {
-                self.powerDecimal += self.powerDecimalDelta;
-
-                if (self.powerDecimal >= self.powerDecimalMax)
-                {
-                    self.powerDecimal -= self.powerDecimalMax;
-
-                    self.powerInteger += 1;
-
-                    updateUI = TRUE;
-                }
-            }
-        }
-#if MGAMECONFIG_DROP_LOST_POWER
-        else
-        {
-            if (self.powerInteger || self.powerDecimal)
-            {
-                self.powerInteger = 0;
-                self.powerDecimal = 0;
-
-                updateUI = TRUE;
-            }
-        }
-#endif
-    }
-    else
-    {
-        if (self.powerInteger || self.powerDecimal)
-        {
-            self.powerInteger = 0;
-            self.powerDecimal = 0;
-
-            updateUI = TRUE;
-        }
-    }
-
-    if (updateUI)
-    {
-        [self updatePowerUI];
-    }
-}
-
-//------------------------------------------------------------------------------
--(void) updatePowerUI
-{
-    CGPoint p = self->_feetPosition;
-
-    p.y += 50.0f;
-
-    self.spritePowerBase.scaleX = 4.0f * ((float)(self.powerIntegerMax + 2) / 12.0f);
-
-    self.spritePowerBase.position = p;
-
-    self.spritePowerMask.scaleX = 4.0f * ((float)(self.powerInteger) / 10.0f);
-
-    self.spritePowerMask.position = p;
-}
-
-//------------------------------------------------------------------------------
 -(BOOL) collectItem:(MSpriteTowerItem*)item
 {
     BOOL collected = TRUE;
@@ -733,6 +656,252 @@ typedef enum _MBoySpriteFrame
     self.coin = 0;
     self.height = self.feetPosition.y;
     self.score = 0;
+}
+
+//------------------------------------------------------------------------------
+-(void) updatePower
+{
+    BOOL updateUI = FALSE;
+
+    if (self.pressed)
+    {
+        if (self.step)
+        {
+            if (self.step.type == MTowerObjectTypeStepDrift)
+            {
+                if (self.powerInteger != 0)
+                {
+                    self.powerInteger = 0;
+
+                    updateUI = TRUE;
+                }
+            }
+            else if (self.powerInteger < self.powerIntegerMax)
+            {
+                self.powerDecimal += self.powerDecimalDelta;
+
+                if (self.powerDecimal >= self.powerDecimalMax)
+                {
+                    self.powerDecimal -= self.powerDecimalMax;
+
+                    self.powerInteger += 1;
+
+                    updateUI = TRUE;
+                }
+            }
+        }
+#if MGAMECONFIG_DROP_LOST_POWER
+        else
+        {
+            if (self.powerInteger || self.powerDecimal)
+            {
+                self.powerInteger = 0;
+                self.powerDecimal = 0;
+
+                updateUI = TRUE;
+            }
+        }
+#endif
+    }
+    else
+    {
+        if (self.powerInteger || self.powerDecimal)
+        {
+            self.powerInteger = 0;
+            self.powerDecimal = 0;
+
+            updateUI = TRUE;
+        }
+    }
+
+    if (updateUI)
+    {
+        [self updatePowerUI];
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) updateWithObjects:(MLayerTowerObjects*)objects
+             inTransition:(BOOL)inTransition
+                    frame:(int32_t)frame
+{
+    if (inTransition && self.step && (self.step.type != MTowerObjectTypeStepBasement))
+    {
+        //--drop to 1st floor during transition
+
+        self.step = nil;
+    }
+
+    //--power
+    [self updatePower];
+
+    //--adjust the velocity base on state
+    CGPoint vO;
+    CGPoint vB = ccp(0.0f, 0.0f);
+    CGPoint vP = self.feetPosition;
+    CGPoint vV = self.velocity;
+    CGPoint aC = self.acceleration;
+
+    CGRect boundBoy = self.boundCollision;
+
+    float boundBoyMinX = vP.x + CGRectGetMinX(boundBoy);
+    float boundBoyMaxX = vP.x + CGRectGetMaxX(boundBoy);
+
+    MSpriteTowerStep* step = self.step;
+
+    if (step)
+    {
+        //--adjust velocity base on step
+        switch (step.type)
+        {
+        case MTowerObjectTypeStepMovingWalkwayLeft:
+            {
+                vB.x = -1.0f;
+            }
+            break;
+        case MTowerObjectTypeStepMovingWalkwayRight:
+            {
+                vB.x = 1.0f;
+            }
+            break;
+        case MTowerObjectTypeStepDrift:
+            {
+                vB.x = (vV.x > 0.0f) ? 1.0f : -1.0f;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    //--accelerate
+    vV.x += aC.x;
+
+    if (step)
+    {
+        vV.y = 0.0f;
+    }
+    else
+    {
+        vV.y += aC.y;
+    }
+
+    //--collide wall
+    float wallL = 0.0f;
+    float wallR = 310.0f;
+
+    if (boundBoyMinX + vV.x + vB.x < wallL)
+    {
+        vO.x = wallL + wallL - boundBoyMinX - boundBoyMinX - vB.x - vV.x;
+        vO.y = vV.y;
+
+        vV = CGPointMake(-vV.x, vV.y);
+    }
+    else if (boundBoyMaxX + vV.x + vB.x > wallR)
+    {
+        vO.x = wallR + wallR - boundBoyMaxX - boundBoyMaxX - vB.x - vV.x;
+        vO.y = vV.y;
+
+        vV = CGPointMake(-vV.x, vV.y);
+    }
+    else
+    {
+        vO = vV;
+
+        vO.x += vB.x;
+    }
+
+    //--
+    if (step)
+    {
+        //--collide the step
+        CGRect boundStep = step.boundingBox;
+
+        if ((!step.live) ||
+            (boundBoyMinX > CGRectGetMaxX(boundStep)) ||
+            (boundBoyMaxX < CGRectGetMinX(boundStep)))
+        {
+            self.step = nil;
+        }
+        else if (step.type == MTowerObjectTypeStepPatrolVertical)
+        {
+            vO.y += CGRectGetMaxY(boundStep) - vP.y - CGRectGetMinY(boundBoy);
+        }
+    }
+    else
+    {
+        CGPoint vT = vO;
+
+        step = [objects collideStepWithPosition:vP
+                                       velocity:&vO
+                                          bound:boundBoy
+                                     frameIndex:frame];
+
+        if (step)
+        {
+            if (inTransition)
+            {
+                if (step.type == MTowerObjectTypeStepBasement)
+                {
+                    self.step = step;
+
+                    vV.y = 0.0f;
+
+                    vO.x = floorf(vO.x);
+                }
+                else
+                {
+                    vO = vT;
+                }
+            }
+            else
+            {
+                self.step = step;
+
+                vV.y = 0.0f;
+
+                vO.x = floorf(vO.x);
+            }
+        }
+    }
+
+    //--update before collide item (may dash)
+    self.feetPosition = ccpAdd(vP, vO);
+    self.velocity = vV;
+
+    //--collide item
+    if (inTransition)
+    {
+        //--collide nothin during transition
+    }
+    else
+    {
+        NSArray* items = [objects collideItemWithPosition:vP velocity:vO bound:boundBoy];
+
+        if (items && [items count])
+        {
+            for (MSpriteTowerItem* item in items)
+            {
+                [self collectItem:item];
+            }
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+-(void) updatePowerUI
+{
+    CGPoint p = self->_feetPosition;
+
+    p.y += 50.0f;
+
+    self.spritePowerBase.scaleX = 4.0f * ((float)(self.powerIntegerMax + 2) / 12.0f);
+
+    self.spritePowerBase.position = p;
+
+    self.spritePowerMask.scaleX = 4.0f * ((float)(self.powerInteger) / 10.0f);
+
+    self.spritePowerMask.position = p;
 }
 
 //------------------------------------------------------------------------------

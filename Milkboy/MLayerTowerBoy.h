@@ -12,6 +12,7 @@
 
 
 //------------------------------------------------------------------------------
+@class MLayerTowerObjects;
 @class MSpriteTowerItem;
 @class MSpriteTowerStep;
 
@@ -35,7 +36,9 @@
 @property (nonatomic, assign) BOOL pressed;
 @property (nonatomic, weak) MSpriteTowerStep* step;
 
--(void) updatePower;
 -(BOOL) collectItem:(MSpriteTowerItem*)item;
 -(void) reset;
+-(void) updateWithObjects:(MLayerTowerObjects*)objects
+             inTransition:(BOOL)inTransition
+                    frame:(int32_t)frame;
 @end

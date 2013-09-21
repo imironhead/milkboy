@@ -106,10 +106,17 @@
 //------------------------------------------------------------------------------
 -(void) update:(ccTime)elapsed
 {
+    BOOL inTransition =
+        ((self.type == MTowerTypeTransition) ||
+         (self.type == MTowerTypeTransitionPauseToQuit) ||
+         (self.type == MTowerTypeTransitionPauseToRestart));
+
     self.frameIndex += 1;
 
     [self.layerObjects updateToFrame:self.frameIndex];
-    [self updateBoy];
+    [self.layerBoy updateWithObjects:self.layerObjects
+                        inTransition:inTransition
+                               frame:self.frameIndex];
 
     if ((self.type == MTowerTypeGameSinglePlayer) ||
         (self.type == MTowerTypeTransitionPauseToQuit) ||
@@ -124,172 +131,6 @@
 
     [self.layerBackground update];
     [self.layerWall update];
-}
-
-//------------------------------------------------------------------------------
--(void) updateBoy
-{
-    BOOL inTransition =
-        ((self.type == MTowerTypeTransition) ||
-         (self.type == MTowerTypeTransitionPauseToQuit) ||
-         (self.type == MTowerTypeTransitionPauseToRestart));
-
-    MLayerTowerBoy* boy = self.layerBoy;
-
-    if (inTransition && boy.step && (boy.step.type != MTowerObjectTypeStepBasement))
-    {
-        boy.step = nil;
-    }
-
-    //--power
-    [boy updatePower];
-
-    //--adjust the velocity base on state
-    CGPoint vO;
-    CGPoint vB = ccp(0.0f, 0.0f);
-    CGPoint vP = boy.feetPosition;
-    CGPoint vV = boy.velocity;
-    CGPoint aC = boy.acceleration;
-
-    CGRect boundBoy = boy.boundCollision;
-
-    float boundBoyMinX = vP.x + CGRectGetMinX(boundBoy);
-    float boundBoyMaxX = vP.x + CGRectGetMaxX(boundBoy);
-
-    MSpriteTowerStep* step = boy.step;
-
-    if (step)
-    {
-        switch (step.type)
-        {
-        case MTowerObjectTypeStepMovingWalkwayLeft:
-            {
-                vB.x = -1.0f;
-            }
-            break;
-        case MTowerObjectTypeStepMovingWalkwayRight:
-            {
-                vB.x = 1.0f;
-            }
-            break;
-        case MTowerObjectTypeStepDrift:
-            {
-                vB.x = (vV.x > 0.0f) ? 1.0f : -1.0f;
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-    //--accelerate
-    vV.x += aC.x;
-
-    if (step)
-    {
-        vV.y = 0.0f;
-    }
-    else
-    {
-        vV.y += aC.y;
-    }
-
-    //--collide wall
-    float wallL = 0.0f;
-    float wallR = 310.0f;
-
-    if (boundBoyMinX + vV.x + vB.x < wallL)
-    {
-        vO.x = wallL + wallL - boundBoyMinX - boundBoyMinX - vB.x - vV.x;
-        vO.y = vV.y;
-
-        vV = CGPointMake(-vV.x, vV.y);
-    }
-    else if (boundBoyMaxX + vV.x + vB.x > wallR)
-    {
-        vO.x = wallR + wallR - boundBoyMaxX - boundBoyMaxX - vB.x - vV.x;
-        vO.y = vV.y;
-
-        vV = CGPointMake(-vV.x, vV.y);
-    }
-    else
-    {
-        vO = vV;
-
-        vO.x += vB.x;
-    }
-
-    //--
-    if (step)
-    {
-        //--collide the step
-        CGRect boundStep = step.boundingBox;
-
-        if ((!step.live) ||
-            (boundBoyMinX > CGRectGetMaxX(boundStep)) ||
-            (boundBoyMaxX < CGRectGetMinX(boundStep)))
-        {
-            boy.step = nil;
-        }
-        else if (step.type == MTowerObjectTypeStepPatrolVertical)
-        {
-            vO.y += CGRectGetMaxY(boundStep) - vP.y - CGRectGetMinY(boundBoy);
-        }
-    }
-    else
-    {
-        CGPoint vT = vO;
-
-        step = [self.layerObjects collideStepWithPosition:vP
-                                                 velocity:&vO
-                                                    bound:boundBoy
-                                               frameIndex:self.frameIndex];
-
-        if (step)
-        {
-            if (inTransition)
-            {
-                if (step.type == MTowerObjectTypeStepBasement)
-                {
-                    boy.step = step;
-
-                    vV.y = 0.0f;
-
-                    vO.x = floorf(vO.x);
-                }
-                else
-                {
-                    vO = vT;
-                }
-            }
-            else
-            {
-                boy.step = step;
-
-                vV.y = 0.0f;
-
-                vO.x = floorf(vO.x);
-            }
-        }
-    }
-
-    //--update before collide item (may dash)
-    boy.feetPosition = ccpAdd(vP, vO);
-    boy.velocity = vV;
-
-    //--collide item
-    if (!inTransition)
-    {
-        NSArray* items = [self.layerObjects collideItemWithPosition:vP velocity:vO bound:boundBoy];
-
-        if (items && [items count])
-        {
-            for (MSpriteTowerItem* item in items)
-            {
-                [boy collectItem:item];
-            }
-        }
-    }
 }
 
 //------------------------------------------------------------------------------
