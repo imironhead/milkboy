@@ -96,10 +96,12 @@
 	if( enabled != isAccelerometerEnabled_ ) {
 		isAccelerometerEnabled_ = enabled;
 		if( isRunning_ ) {
-			if( enabled )
-				[[UIAccelerometer sharedAccelerometer] setDelegate:self];
-			else
-				[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
+            NSAssert(0, @"UIAccelerometer [CCLayer setIsAccelerometerEnabled:] is disabled by ironhead");
+
+//			if( enabled )
+//				[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+//			else
+//				[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
 		}
 	}
 }
@@ -240,7 +242,10 @@
 {
 #ifdef __CC_PLATFORM_IOS
 	if( isAccelerometerEnabled_ )
-		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+    {
+        NSAssert(0, @"UIAccelerometer [CCLayer onEnterTransitionDidFinish] is disabled by ironhead");
+		//[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+    }
 #endif
 
 	[super onEnterTransitionDidFinish];
@@ -256,7 +261,10 @@
 		[[director touchDispatcher] removeDelegate:self];
 
 	if( isAccelerometerEnabled_ )
-		[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
+    {
+        NSAssert(0, @"UIAccelerometer in [CCLayer onExit] is disabled by ironhead");
+		//[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
+    }
 
 #elif defined(__CC_PLATFORM_MAC)
 	CCEventDispatcher *eventDispatcher = [director eventDispatcher];
