@@ -1005,7 +1005,7 @@ typedef struct _ObjectPosition
                 break;
             case MTowerObjectTypeItemSuitAstronaut:
             case MTowerObjectTypeItemSuitCEO:
-            case MTowerObjectTypeItemSuitFootballPlayer:
+            case MTowerObjectTypeItemSuitJetpack:
             case MTowerObjectTypeItemSuitNinja:
             case MTowerObjectTypeItemSuitSuperhero:
                 {
@@ -1017,9 +1017,9 @@ typedef struct _ObjectPosition
                         }
                         else if ((typeItem == MTowerObjectTypeItemSuitCEO) && (boy.suit == MBoySuitCEO))
                         {
-                            typeItem = MTowerObjectTypeItemSuitFootballPlayer;
+                            typeItem = MTowerObjectTypeItemSuitJetpack;
                         }
-                        else if ((typeItem == MTowerObjectTypeItemSuitFootballPlayer) && (boy.suit == MBoySuitFootballPlayer))
+                        else if ((typeItem == MTowerObjectTypeItemSuitJetpack) && (boy.suit == MBoySuitJetpack))
                         {
                             typeItem = MTowerObjectTypeItemSuitNinja;
                         }

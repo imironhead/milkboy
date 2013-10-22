@@ -24,9 +24,26 @@ typedef enum _MBoySpriteFrame
     MBoySpriteFrameMove5,
     MBoySpriteFrameMove6,
     MBoySpriteFrameMove7,
-    MBoySpriteFrameJump,
-    MBoySpriteFrameDown,
+    MBoySpriteFrameJump0,
+    MBoySpriteFrameDown0,
 } MBoySpriteFrame;
+
+//------------------------------------------------------------------------------
+typedef enum _MBoySpriteZ
+{
+    MBoySpriteZShadow7 = -8,
+    MBoySpriteZShadow6 = -7,
+    MBoySpriteZShadow5 = -6,
+    MBoySpriteZShadow4 = -5,
+    MBoySpriteZShadow3 = -4,
+    MBoySpriteZShadow2 = -3,
+    MBoySpriteZShadow1 = -2,
+    MBoySpriteZShadow0 = -1,
+
+    MBoySpriteZBody = 0,
+    MBoySpriteZPet,
+    MBoySpriteZEye,
+} MBoySpriteZ;
 
 //------------------------------------------------------------------------------
 @interface MLayerTowerBoy()
@@ -37,6 +54,7 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalMax;
 @property (nonatomic, assign, readwrite) uint32_t powerDecimalDelta;
 @property (nonatomic, assign, readwrite) uint32_t coin;
+@property (nonatomic, assign, readwrite) uint32_t combo;
 @property (nonatomic, assign, readwrite) uint32_t height;
 @property (nonatomic, assign, readwrite) uint32_t score;
 @property (nonatomic, assign, readwrite) MBoyPet pet;
@@ -44,8 +62,13 @@ typedef enum _MBoySpriteFrame
 @property (nonatomic, strong) CCSpriteBatchNode* sprite;
 @property (nonatomic, strong) CCSprite* spriteBoy;
 @property (nonatomic, strong) CCSprite* spritePet;
+@property (nonatomic, strong) CCSprite* spriteEye;
 @property (nonatomic, strong) CCSprite* spritePowerBase;
 @property (nonatomic, strong) CCSprite* spritePowerMask;
+@property (nonatomic, strong) CCSprite* spriteComboBase;
+@property (nonatomic, strong) CCSprite* spriteComboMask;
+@property (nonatomic, strong) NSMutableArray* spritesShadow;
+@property (nonatomic, strong) NSMutableArray* framesShadow;
 @property (nonatomic, strong) NSMutableArray* framesBoy;
 @property (nonatomic, strong) NSMutableArray* framesHat;
 @property (nonatomic, assign) NSUInteger indexFrameBoy;
@@ -73,17 +96,50 @@ typedef enum _MBoySpriteFrame
         self.spriteBoy.position = ccp(160.0f, 1.0f);
         self.spriteBoy.anchorPoint = ccp(0.5f, 0.0f);
 
-        [self.sprite addChild:self.spriteBoy z:0];
+        [self.sprite addChild:self.spriteBoy z:MBoySpriteZBody];
 
-        //--cat sprite
+        //--eye sprite
+        self.spriteEye = [CCSprite spriteWithSpriteFrameName:@"char_eye.png"];
+
+        self.spriteEye.visible = TRUE;
+        self.spriteEye.anchorPoint = ccp(0.0f, 0.0f);
+        self.spriteEye.position = ccp(0.0f, 0.0f);
+
+        [self.spriteBoy addChild:self.spriteEye z:MBoySpriteZEye];
+
+        //--pet sprite
         self.spritePet = [CCSprite spriteWithSpriteFrameName:@"char_cat_00_lying_00.png"];
 
-        self.spritePet.scale = 2.0f;
         self.spritePet.visible = FALSE;
-        self.spritePet.position = ccp(160.0f, 240.0f);
-        self.spritePet.anchorPoint = ccp(0.5f, 0.0f);
+        self.spritePet.anchorPoint = ccp(0.0f, 0.0f);
+        self.spritePet.position = ccp(0.0f, 0.0f);
 
-        [self.sprite addChild:self.spritePet z:0];
+        [self.spriteBoy addChild:self.spritePet z:MBoySpriteZPet];
+
+        //--shadows
+        self.spritesShadow = [NSMutableArray array];
+
+        self.framesShadow = [NSMutableArray array];
+
+        CCSpriteFrame* frameTemp =
+            [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"char_commoner_move_00.png"];
+
+        for (int32_t i = 0; i < 8; ++i)
+        {
+            CCSprite* sprite = [CCSprite spriteWithSpriteFrame:frameTemp];
+
+            sprite.scale = 2.0f;
+            sprite.visible = FALSE;
+            sprite.anchorPoint = ccp(0.5f, 0.0f);
+            sprite.position = self.spriteBoy.position;
+            sprite.opacity = 0x80 - 16 * i;
+
+            [self.sprite addChild:sprite z:MBoySpriteZShadow0 - i];
+
+            [self.spritesShadow addObject:sprite];
+
+            [self.framesShadow addObject:frameTemp];
+        }
 
         //--animation frames
         [self loadDisplayFrames:@"commoner"];
@@ -116,6 +172,18 @@ typedef enum _MBoySpriteFrame
         [self.sprite addChild:self.spritePowerMask z:11];
 
         [self updatePowerUI];
+
+        //--combo ui
+        self.spriteComboBase = [CCSprite spriteWithSpriteFrameName:@"char_power_back.png"];
+        self.spriteComboMask = [CCSprite spriteWithSpriteFrameName:@"char_power_mark.png"];
+
+        self.spriteComboBase.scaleY = 2.0f;
+        self.spriteComboMask.scaleY = 2.0f;
+
+        [self.sprite addChild:self.spriteComboBase z:10];
+        [self.sprite addChild:self.spriteComboMask z:11];
+
+        [self updateComboUI];
     }
 
     return self;
@@ -126,6 +194,40 @@ typedef enum _MBoySpriteFrame
 {
     if (!CGPointEqualToPoint(self->_feetPosition, position))
     {
+        //-update shadow of ninja
+        for (int32_t i = self.spritesShadow.count - 1; i > 0; --i)
+        {
+            CCSprite* spriteNext = self.spritesShadow[i];
+            CCSprite* spritePrev = self.spritesShadow[i - 1];
+
+            if (spritePrev.visible)
+            {
+                spriteNext.visible = TRUE;
+                spriteNext.displayFrame = self.framesShadow[self.framesShadow.count - i];
+                spriteNext.position = spritePrev.position;
+                spriteNext.flipX = spritePrev.flipX;
+            }
+            else
+            {
+                spriteNext.visible = FALSE;
+            }
+        }
+
+        CCSprite* spriteShadow = self.spritesShadow[0];
+
+        if (MBoySuitNinja == self.suit)
+        {
+            spriteShadow.visible = TRUE;
+            spriteShadow.displayFrame = self.framesShadow.lastObject;
+            spriteShadow.position = self.spriteBoy.position;
+            spriteShadow.flipX = self.spriteBoy.flipX;
+        }
+        else
+        {
+            spriteShadow.visible = FALSE;
+        }
+
+        //
         self->_feetPosition = position;
 
         self.spriteBoy.position = position;
@@ -134,20 +236,20 @@ typedef enum _MBoySpriteFrame
 
         if (velocity.y > 0.0f)
         {
-            if (self.indexFrameBoy != MBoySpriteFrameJump)
+            if (self.indexFrameBoy != MBoySpriteFrameJump0)
             {
-                self.indexFrameBoy = MBoySpriteFrameJump;
+                self.indexFrameBoy = MBoySpriteFrameJump0;
 
-                [self.spriteBoy setDisplayFrame:self.framesBoy[MBoySpriteFrameJump]];
+                [self.spriteBoy setDisplayFrame:self.framesBoy[MBoySpriteFrameJump0]];
             }
         }
         else if (velocity.y < 0.0f)
         {
-            if (self.indexFrameBoy != MBoySpriteFrameDown)
+            if (self.indexFrameBoy != MBoySpriteFrameDown0)
             {
-                self.indexFrameBoy = MBoySpriteFrameDown;
+                self.indexFrameBoy = MBoySpriteFrameDown0;
 
-                [self.spriteBoy setDisplayFrame:self.framesBoy[MBoySpriteFrameDown]];
+                [self.spriteBoy setDisplayFrame:self.framesBoy[MBoySpriteFrameDown0]];
             }
         }
         else
@@ -164,17 +266,15 @@ typedef enum _MBoySpriteFrame
             [self.spriteBoy setDisplayFrame:self.framesBoy[self.indexFrameBoy]];
         }
 
+        [self.framesShadow removeObjectAtIndex:0];
+        [self.framesShadow addObject:self.framesBoy[self.indexFrameBoy]];
+
         //
         CGPoint v = ccpSub(self.spritePowerMask.position, self.spritePowerBase.position);
 
         CGPoint p = position;
 
         p.y += CGRectGetHeight(self.spriteBoy.boundingBox);
-
-        if (self.spritePet.visible)
-        {
-            self.spritePet.position = p;
-        }
 
         p.y += 28.0f;
 
@@ -183,6 +283,17 @@ typedef enum _MBoySpriteFrame
         p = ccpAdd(p, v);
 
         self.spritePowerMask.position = p;
+
+        //
+        v = ccpSub(self.spriteComboMask.position, self.spriteComboBase.position);
+
+        p.y += 14.0f;
+
+        self.spriteComboBase.position = p;
+
+        p = ccpAdd(p, v);
+
+        self.spriteComboMask.position = p;
 
         //
         uint32_t h;
@@ -213,6 +324,7 @@ typedef enum _MBoySpriteFrame
         self->_velocity = velocity;
 
         self.spriteBoy.flipX = (velocity.x < 0.0f);
+        self.spriteEye.flipX = self.spriteBoy.flipX;
         self.spritePet.flipX = self.spriteBoy.flipX;
     }
 }
@@ -239,7 +351,7 @@ typedef enum _MBoySpriteFrame
 
         switch (self->_suit)
         {
-        case MBoySuitFootballPlayer:
+        case MBoySuitJetpack:
             {
                 self.powerDecimalDelta -= 2;
             }
@@ -266,16 +378,16 @@ typedef enum _MBoySpriteFrame
             [self loadDisplayFrames:@"astronaut"];
             break;
         case MBoySuitCEO:
-            [self loadDisplayFrames:@"magician"];
+            [self loadDisplayFrames:@"ceo"];
             break;
         case MBoySuitCommoner:
             [self loadDisplayFrames:@"commoner"];
             break;
-        case MBoySuitFootballPlayer:
+        case MBoySuitJetpack:
             {
                 self.powerDecimalDelta += 2;
 
-                [self loadDisplayFrames:@"footballplayer"];
+                [self loadDisplayFrames:@"jetpack"];
             }
             break;
         case MBoySuitNinja:
@@ -406,8 +518,6 @@ typedef enum _MBoySpriteFrame
             CGPoint p = self.feetPosition;
 
             p.y += CGRectGetHeight(self.spriteBoy.boundingBox);
-
-            self.spritePet.position = p;
 
             if (MBoyPetCat == pet)
             {
@@ -550,6 +660,10 @@ typedef enum _MBoySpriteFrame
     case MTowerObjectTypeItemCoinGold:
         {
             self.coin += 1;
+
+            self.combo = MIN(MGAMECONFIG_COMBO_POINT_MAX, self.combo + MGAMECONFIG_COMBO_POINT_INCREASE_PER_COIN);
+
+            [self updateComboUI];
         }
         break;
     case MTowerObjectTypeItemCollectionMilk_00:
@@ -611,9 +725,9 @@ typedef enum _MBoySpriteFrame
             self.score += MScorePerSuit;
         }
         break;
-    case MTowerObjectTypeItemSuitFootballPlayer:
+    case MTowerObjectTypeItemSuitJetpack:
         {
-            self.suit = MBoySuitFootballPlayer;
+            self.suit = MBoySuitJetpack;
 
             self.score += MScorePerSuit;
         }
@@ -654,8 +768,46 @@ typedef enum _MBoySpriteFrame
     self.suit = MBoySuitCommoner;
 
     self.coin = 0;
+    self.combo = 0;
     self.height = self.feetPosition.y;
     self.score = 0;
+
+    [self updateComboUI];
+    [self updatePowerUI];
+}
+
+//------------------------------------------------------------------------------
+-(void) updateEyeWithFrame:(int32_t)frame
+{
+    if (self.suit == MBoySuitJetpack)
+    {
+        self.spriteEye.visible = FALSE;
+    }
+    else
+    {
+        self.spriteEye.visible = TRUE;
+
+        int32_t i = frame % 60;
+
+        GLubyte opacity = 0xff;
+
+        switch (i)
+        {
+        case 8:     opacity = 0x40;     break;
+        case 9:     opacity = 0x60;     break;
+        case 10:    opacity = 0x80;     break;
+        case 11:    opacity = 0x60;     break;
+        case 12:    opacity = 0x40;     break;
+
+        case 28:    opacity = 0x40;     break;
+        case 29:    opacity = 0x60;     break;
+        case 30:    opacity = 0x80;     break;
+        case 31:    opacity = 0x60;     break;
+        case 32:    opacity = 0x40;     break;
+        }
+
+        self.spriteEye.opacity = opacity;
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -725,11 +877,21 @@ typedef enum _MBoySpriteFrame
              inTransition:(BOOL)inTransition
                     frame:(int32_t)frame
 {
+    [self updateEyeWithFrame:frame];
+
     if (inTransition && self.step && (self.step.type != MTowerObjectTypeStepBasement))
     {
         //--drop to 1st floor during transition
 
         self.step = nil;
+    }
+
+    //--combo
+    if (self.combo > MGAMECONFIG_COMBO_POINT_DECREASE_PER_FRAME)
+    {
+        self.combo -= MGAMECONFIG_COMBO_POINT_DECREASE_PER_FRAME;
+
+        [self updateComboUI];
     }
 
     //--power
@@ -891,17 +1053,22 @@ typedef enum _MBoySpriteFrame
 //------------------------------------------------------------------------------
 -(void) updatePowerUI
 {
-    CGPoint p = self->_feetPosition;
-
-    p.y += 50.0f;
-
     self.spritePowerBase.scaleX = 4.0f * ((float)(self.powerIntegerMax + 2) / 12.0f);
 
-    self.spritePowerBase.position = p;
-
     self.spritePowerMask.scaleX = 4.0f * ((float)(self.powerInteger) / 10.0f);
+}
 
-    self.spritePowerMask.position = p;
+//------------------------------------------------------------------------------
+-(void) updateComboUI
+{
+    float c =
+        (self.combo >= MGAMECONFIG_COMBO_POINT_THRESHOLD) ?
+        (MGAMECONFIG_COMBO_POINT_THRESHOLD / MGAMECONFIG_COMBO_POINT_DIVISOR) :
+        (self.combo / MGAMECONFIG_COMBO_POINT_DIVISOR);
+
+    self.spriteComboBase.scaleX = 4.0f * ((float)(5 + 2) / 12.0f);
+
+    self.spriteComboMask.scaleX = 4.0f * (c / 10.0f);
 }
 
 //------------------------------------------------------------------------------
@@ -934,6 +1101,10 @@ typedef enum _MBoySpriteFrame
 
     //
     [self.spriteBoy setDisplayFrame:self.framesBoy[self.indexFrameBoy]];
+
+    //
+    self.framesShadow[self.framesShadow.count - 1] =
+        self.framesBoy[self.indexFrameBoy];
 }
 
 //------------------------------------------------------------------------------

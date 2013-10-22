@@ -13,6 +13,11 @@
 #define MGAMECONFIG_BACK_COUNT_TILE_PER_FLOOR       (20)
 #define MGAMECONFIG_BACK_HEIGHT_FLOOR               (1280.0f)
 #define MGAMECONFIG_BACK_HEIGHT_TILE                (64.0f)
+#define MGAMECONFIG_COMBO_POINT_DECREASE_PER_FRAME  (1)
+#define MGAMECONFIG_COMBO_POINT_DIVISOR             (30)
+#define MGAMECONFIG_COMBO_POINT_INCREASE_PER_COIN   (30)
+#define MGAMECONFIG_COMBO_POINT_MAX                 (300)
+#define MGAMECONFIG_COMBO_POINT_THRESHOLD           (150)
 #define MGAMECONFIG_POWER_DECIMAL_DELTA             (1)
 #define MGAMECONFIG_POWER_DECIMAL_MAX               (6)
 #define MGAMECONFIG_TOWER_PADDING_RISE              (1280.0f)
@@ -58,7 +63,7 @@ typedef enum _MTowerObjectType
     MTowerObjectTypeItemSuitAstronaut,
     MTowerObjectTypeItemSuitCEO,
     MTowerObjectTypeItemSuitCommoner,
-    MTowerObjectTypeItemSuitFootballPlayer,
+    MTowerObjectTypeItemSuitJetpack,
     MTowerObjectTypeItemSuitNinja,
 //    MTowerObjectTypeItemSuitSanta,
     MTowerObjectTypeItemSuitSuperhero,
@@ -96,7 +101,7 @@ typedef enum _MBoySuit
     MBoySuitCEO,            //--double income
     MBoySuitCommoner,
 //    MBoySuitFatcat,
-    MBoySuitFootballPlayer,
+    MBoySuitJetpack,
     MBoySuitNinja,
 //    MBoySuitSanta,          //--christmas
     MBoySuitSuperhero,

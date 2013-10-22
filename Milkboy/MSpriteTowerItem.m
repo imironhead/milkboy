@@ -177,7 +177,7 @@ static NSMutableArray* freeItems = nil;
             item.selectorCollectedWithFlag = @selector(itemCollectedWithFlag:);
         }
         break;
-    case MTowerObjectTypeItemSuitFootballPlayer:
+    case MTowerObjectTypeItemSuitJetpack:
         {
             displayFrameName = @"item_suit_footballplayer_00.png";
 
