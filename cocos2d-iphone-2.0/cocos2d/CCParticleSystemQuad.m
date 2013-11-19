@@ -291,6 +291,8 @@
 		[super setTexture:texture];
 
 	[self initTexCoordsWithRect:rect];
+
+    self.startSize = CC_CONTENT_SCALE_FACTOR() * CGRectGetHeight(rect);
 }
 
 -(void) setTexture:(CCTexture2D *)texture
