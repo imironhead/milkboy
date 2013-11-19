@@ -67,8 +67,11 @@ typedef enum _MBoySpriteZ
 @property (nonatomic, strong) CCSprite* spritePowerMask;
 @property (nonatomic, strong) CCSprite* spriteComboBase;
 @property (nonatomic, strong) CCSprite* spriteComboMask;
+@property (nonatomic, strong) CCParticleBatchNode* emitters;
+@property (nonatomic, strong) CCParticleSystemQuad* emitterMovement;
 @property (nonatomic, strong) NSMutableArray* spritesShadow;
 @property (nonatomic, strong) NSMutableArray* framesShadow;
+@property (nonatomic, strong) NSMutableArray* framesMovementParticle;
 @property (nonatomic, strong) NSMutableArray* framesBoy;
 @property (nonatomic, strong) NSMutableArray* framesHat;
 @property (nonatomic, assign) NSUInteger indexFrameBoy;
@@ -142,7 +145,7 @@ typedef enum _MBoySpriteZ
         }
 
         //--animation frames
-        [self loadDisplayFrames:@"commoner"];
+        [self changeSuit:MBoySuitCommoner];
 
         self.indexFrameBoy = 0;
 
@@ -160,6 +163,48 @@ typedef enum _MBoySpriteZ
         self.powerDecimalDelta = MGAMECONFIG_POWER_DECIMAL_DELTA;
 
         self.suit = MBoySuitCommoner;
+
+        //--particle system
+        CCTexture2D* textureParticle =
+            [[CCTextureCache sharedTextureCache] textureForKey:@"Texture/particle.pvr.ccz"];
+
+        self.emitters =
+            [CCParticleBatchNode batchNodeWithTexture:textureParticle capacity:10];
+
+        [self addChild:self.emitters z:1000];
+
+        CCSpriteFrame* frameParticle =
+            [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"particle_music_note_01.png"];
+
+        self.emitterMovement = [CCParticleSystemQuad new];
+
+        self.emitterMovement.duration = kCCParticleDurationInfinity;
+        self.emitterMovement.emitterMode = kCCParticleModeGravity;
+        self.emitterMovement.emissionRate = 4.0f;
+        self.emitterMovement.life = 0.5f;
+        self.emitterMovement.lifeVar = 0.1f;
+        self.emitterMovement.startColor = ccc4f(1.0f, 0.9f, 0.0f, 1.0f);
+//        self.emitterMovement.startColorVar = ccc4f(0.2f, 0.2f, 0.2f, 0.0f);
+        self.emitterMovement.endColor = ccc4f(1.0f, 0.9f, 0.0f, 0.0f);
+//        self.emitterMovement.endColorVar = ccc4f(0.0f, 0.0f, 0.0f, 0.0f);
+        self.emitterMovement.radialAccel = 0.0f;
+        self.emitterMovement.radialAccelVar = 0.0f;
+//        self.emitterMovement.startSize = 20.0f;
+//        self.emitterMovement.startSizeVar = 0.0f;
+        self.emitterMovement.endSize = kCCParticleStartSizeEqualToEndSize;
+        self.emitterMovement.startSpin = 0.0f;
+        self.emitterMovement.startSpinVar = 0.0f;
+//        self.emitterMovement.speed = 0.0f;
+//        self.emitterMovement.speedVar = 0.0f;
+        self.emitterMovement.gravity = ccp(0.0f, 70.0f);
+        self.emitterMovement.position = self.spriteBoy.position;
+        self.emitterMovement.positionType = kCCPositionTypeRelative;
+        self.emitterMovement.angle = 45.0f;
+        self.emitterMovement.angleVar = 10.0f;
+
+        [self.emitterMovement setDisplayFrame:frameParticle];
+
+        [self.emitters addChild:self.emitterMovement];
 
         //--power ui
         self.spritePowerBase = [CCSprite spriteWithSpriteFrameName:@"char_power_back.png"];
@@ -270,6 +315,9 @@ typedef enum _MBoySpriteZ
         [self.framesShadow addObject:self.framesBoy[self.indexFrameBoy]];
 
         //
+        self.emitterMovement.position = ccpAdd(position, ccp(0.0f, 30.0f));
+
+        //
         CGPoint v = ccpSub(self.spritePowerMask.position, self.spritePowerBase.position);
 
         CGPoint p = position;
@@ -372,34 +420,20 @@ typedef enum _MBoySpriteZ
             break;
         }
 
+        [self changeSuit:suit];
+
         switch (suit)
         {
-        case MBoySuitAstronaut:
-            [self loadDisplayFrames:@"astronaut"];
-            break;
-        case MBoySuitCEO:
-            [self loadDisplayFrames:@"ceo"];
-            break;
-        case MBoySuitCommoner:
-            [self loadDisplayFrames:@"commoner"];
-            break;
         case MBoySuitJetpack:
             {
                 self.powerDecimalDelta += 2;
-
-                [self loadDisplayFrames:@"jetpack"];
             }
-            break;
-        case MBoySuitNinja:
-            [self loadDisplayFrames:@"ninja"];
             break;
         case MBoySuitSuperhero:
             {
                 needUpdatePowerUI = TRUE;
 
                 self.powerIntegerMax += 2;
-
-                [self loadDisplayFrames:@"superhero"];
             }
             break;
         default:
@@ -1072,7 +1106,7 @@ typedef enum _MBoySpriteZ
 }
 
 //------------------------------------------------------------------------------
--(void) loadDisplayFrames:(NSString*)category
+-(void) changeSuit:(MBoySuit)suit
 {
     if (self.framesBoy)
     {
@@ -1081,6 +1115,31 @@ typedef enum _MBoySpriteZ
     else
     {
         self.framesBoy = [NSMutableArray arrayWithCapacity:10];
+    }
+
+    NSString* category;
+
+    switch (suit)
+    {
+    case MBoySuitAstronaut :
+        category = @"astronaut";
+        break;
+    case MBoySuitCEO:
+        category = @"ceo";
+        break;
+    case MBoySuitJetpack:
+        category = @"jetpack";
+        break;
+    case MBoySuitNinja:
+        category = @"ninja";
+        break;
+    case MBoySuitSuperhero:
+        category = @"superhero";
+        break;
+    case MBoySuitCommoner:
+    default:
+        category = @"commoner";
+        break;
     }
 
     CCSpriteFrameCache* cache = [CCSpriteFrameCache sharedSpriteFrameCache];
@@ -1105,6 +1164,8 @@ typedef enum _MBoySpriteZ
     //
     self.framesShadow[self.framesShadow.count - 1] =
         self.framesBoy[self.indexFrameBoy];
+
+    //--suit effect
 }
 
 //------------------------------------------------------------------------------

@@ -97,6 +97,7 @@
         @"Texture/char.plist",
         @"Texture/step.plist",
         @"Texture/wall.plist",
+        @"Texture/particle.plist"
     ];
 
     for (NSString* name in namesSpriteFrameFile)
@@ -111,6 +112,7 @@
         @"Texture/char.pvr.ccz",
         @"Texture/step.pvr.ccz",
         @"Texture/wall.pvr.ccz",
+        @"Texture/particle.pvr.ccz"
     ];
 
     CCTextureCache* textureCache = [CCTextureCache sharedTextureCache];
