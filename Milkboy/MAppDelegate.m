@@ -65,7 +65,8 @@
     self.navController.navigationBarHidden = YES;
 
     //--AddSubView doesn't work on iOS6
-    [self.window addSubview:self.navController.view];
+    //[self.window addSubview:self.navController.view];
+    [self.window setRootViewController:self.navController];
     [self.window makeKeyAndVisible];
 
     //--Default texture format for PNG/BMP/TIFF/JPEG/GIF images
